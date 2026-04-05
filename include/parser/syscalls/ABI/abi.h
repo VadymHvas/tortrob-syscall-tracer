@@ -8,7 +8,7 @@
  * This alias helps distinguish between general numbers and 
  * values extracted directly from the CPU context.
  */
-typedef unsigned long long __raw_reg;
+typedef unsigned long long raw_reg;
 
 /**
  * abi_get_retval - Extract the syscall return value.
@@ -17,7 +17,7 @@ typedef unsigned long long __raw_reg;
  * Note: Errors are typically returned as negative values in the 
  * range [-4095, -1].
  */
-__raw_reg abi_get_retval(struct user_regs_struct *regs);
+raw_reg abi_get_retval(struct user_regs_struct *regs);
 
 /**
  * abi_get_syscall_args - Map CPU registers to a syscall argument array.
@@ -26,4 +26,4 @@ __raw_reg abi_get_retval(struct user_regs_struct *regs);
  * * On x86_64 Linux ABI, arguments are passed in the following order:
  * RDI, RSI, RDX, R10, R8, R9.
  */
-void abi_get_syscall_args(struct user_regs_struct *regs, __raw_reg args[]);
+void abi_get_syscall_args(struct user_regs_struct *regs, raw_reg args[]);

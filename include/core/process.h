@@ -5,7 +5,7 @@
 #include "parser/opt.h"
 
 /**
- * __do_spawn - Low-level create a new child process and prepare it for tracing.
+ * do_spawn - Low-level create a new child process and prepare it for tracing.
  * @argv:   Argument vector for the target program (argv[optind] is the binary).
  * @tracee: Pointer to store the PID of the newly created child.
  *
@@ -16,10 +16,10 @@
  *
  * Return: 0 on success, -1 if fork() or execvp() fails.
  */
-int __do_spawn(char **argv, pid_t *tracee);
+int do_spawn(char **argv, pid_t *tracee);
 
 /**
- * __attach_tracee - Attach to an already running process.
+ * attach_tracee - Attach to an already running process.
  * @argv:   Command line arguments (currently unused in this mode).
  * @opts:   Options containing the target PID string.
  * @tracee: Pointer to store the PID of the attached process.
@@ -30,4 +30,4 @@ int __do_spawn(char **argv, pid_t *tracee);
  *
  * Return: 0 on success, -1 if the PID is invalid or attach fails.
  */
-int __attach_tracee(char **argv, struct trace_opts *opts, pid_t *tracee);
+int attach_tracee(char **argv, struct trace_opts *opts, pid_t *tracee);

@@ -17,7 +17,7 @@
 #include "parser/opt.h"
 
 /* Main spawn process function */
-int __do_spawn(char **argv, pid_t *tracee)
+int do_spawn(char **argv, pid_t *tracee)
 {
         *tracee = fork();
         if (*tracee == -1) {
@@ -51,7 +51,7 @@ static pid_t __get_pid(struct trace_opts *opts)
         return (pid_t)atoi(opts->pid);
 }
 
-int __attach_tracee(char **argv, struct trace_opts *opts, pid_t *tracee)
+int attach_tracee(char **argv, struct trace_opts *opts, pid_t *tracee)
 {
         *tracee = __get_pid(opts);
         if (__do_attach(argv, tracee) == -1)

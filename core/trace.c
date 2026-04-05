@@ -26,10 +26,10 @@ static int __trace_syscall_and_wait(pid_t tracee, int *status);
 int init_trace(char **argv, struct trace_opts *opts, pid_t *tracee)
 {
         if (opts->attach) {
-                if (__attach_tracee(argv, opts, tracee) == -1)
+                if (attach_tracee(argv, opts, tracee) == -1)
                         return -1;
         } else {
-                if (__do_spawn(argv, tracee) == -1)
+                if (do_spawn(argv, tracee) == -1)
                         return -1;
         }
 
