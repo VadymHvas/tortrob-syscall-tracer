@@ -74,3 +74,11 @@ DEFINE_SYSCALL_PARSER(rename)
 
         return 0;
 }
+
+/* unlink(const char *path) */
+DEFINE_SYSCALL_PARSER(unlink)
+{
+        int n;
+
+        return fmt_string_from_mem(ctx, args[0], NAME_MAX, &n);
+}

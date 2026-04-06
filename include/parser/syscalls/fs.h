@@ -26,9 +26,9 @@
         X(open, 2) \
         X(close, 3) \
         X(rename, 82) \
+        X(unlink, 87)
 
-#define FS_SYSCALL_COUNT 5
-
+#define FS_SYSCALL_COUNT 6
 
 /*
  * Generate parser function declarations for each syscall.
