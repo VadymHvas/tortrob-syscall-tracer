@@ -21,9 +21,9 @@ DEFINE_SYSCALL_PARSER(read)
 {
         int n;
 
-        TRY_FMT(fmt_fd, ctx, args[0], &n);
-        TRY_FMT_WITH_SEP(fmt_addr, ctx, args[1], &n);
-        TRY_FMT_WITH_SEP(fmt_int, ctx, args[2], &n);
+        TRY_FMT_1(fmt_fd, ctx, args[0], &n);
+        TRY_FMT_WITH_SEP_1(fmt_addr, ctx, args[1], &n);
+        TRY_FMT_WITH_SEP_1(fmt_int, ctx, args[2], &n);
 
         return 0;
 };
@@ -33,9 +33,9 @@ DEFINE_SYSCALL_PARSER(write)
 {
         int n;
 
-        TRY_FMT(fmt_fd, ctx, args[0], &n);
-        TRY_FMT_WITH_SEP(fmt_addr, ctx, args[1], &n);
-        TRY_FMT_WITH_SEP(fmt_int, ctx, args[2], &n);
+        TRY_FMT_1(fmt_fd, ctx, args[0], &n);
+        TRY_FMT_WITH_SEP_2(fmt_string_from_mem, ctx, args[1], args[2], &n);
+        TRY_FMT_WITH_SEP_1(fmt_int, ctx, args[2], &n);
 
         return 0;
 };
@@ -45,8 +45,8 @@ DEFINE_SYSCALL_PARSER(open)
 {
         int n;
        
-        TRY_FMT(fmt_addr, ctx, args[0], &n);
-        TRY_FMT_WITH_SEP(fmt_int, ctx, args[1], &n);
+        TRY_FMT_2(fmt_string_from_mem, ctx, args[0], args[1], &n);
+        TRY_FMT_WITH_SEP_1(fmt_int, ctx, args[1], &n);
 
         return 0;
 }

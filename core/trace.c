@@ -9,10 +9,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/ptrace.h>
 #include <sys/wait.h>
 #include <sys/user.h>
 #include <sys/types.h>
+#include <errno.h>
 
 #include "core/trace.h"
 #include "core/process.h"
@@ -61,9 +63,27 @@ void cleanup_trace(struct trace_opts *opts, pid_t tracee)
         free(opts);
 }
 
-long trace_read_user_mem()
+int read_tracee_mem(pid_t tracee, const void *addr, char *buf, size_t size)
 {
+        size_t i = 0;
+        size_t word_size = sizeof(long);
 
+        while (i < size) {
+                errno = 0;
+                long data = ptrace(PTRACE_PEEKDATA, tracee, (char *)addr + i, NULL);
+
+                if (data == -1 && errno)
+                        return 1;
+
+                size_t copy_size = word_size;
+                if (i + copy_size > size)
+                        copy_size = size - i;
+
+                memcpy(buf + i, &data, copy_size);
+                i += copy_size;
+        }
+
+        return 0;
 }
 
 static int wait_and_set_tracesysgood(pid_t tracee)

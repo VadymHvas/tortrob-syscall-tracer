@@ -5,6 +5,7 @@
 #include "parser/syscalls/ABI/abi.h"
 #include "parser/syscalls/helpers.h"
 #include "parser/syscalls/parser.h"
+#include "core/trace.h"
 
 /* Format syscall string function decomposition. */
 static int fmt_syscall_name(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall);
@@ -44,11 +45,18 @@ int fmt_addr(struct parser_ctx_struct *ctx, unsigned long long addr, int *n)
         return safe_append(ctx, n);
 }
 
-int fmt_separator(struct parser_ctx_struct *ctx, int *n)
+int fmt_string_from_mem(struct parser_ctx_struct *ctx, unsigned long long addr, size_t size, int *n)
 {
-        *n = snprintf(ctx->buf + *(ctx->offset), ctx->bufsize - *(ctx->offset), ", ");
+        char buf[size];
 
-        return safe_append(ctx, n);
+        if (read_tracee_mem(ctx->tracee, (void *)addr, buf, size) == -1)
+                return 1;
+
+        TRY_FMT_1(fmt_string, ctx, "\"", n);
+        TRY_FMT_1(fmt_string, ctx, buf, n);
+        TRY_FMT_1(fmt_string, ctx, "\"", n);
+
+        return 0;
 }
 
 static int fmt_syscall_name(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall)

@@ -38,3 +38,13 @@ void trace_loop(pid_t tracee);
  * with -p, and frees allocated memory for options.
  */
 void cleanup_trace(struct trace_opts *opts, pid_t tracee);
+
+/**
+ * read_tracee_mem - Reads the memory of the tracee at address addr.
+ * 
+ * @tracee: Tracee process PID.
+ * @addr:   Memory address (src).
+ * @buf:    Buffer address (dest).
+ * @size:   Bytes to read.
+ */
+int read_tracee_mem(pid_t tracee, const void *addr, char *buf, size_t size);
