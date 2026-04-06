@@ -14,30 +14,16 @@ static const char *STDFD_NAMES[] = {
         [2] = "STDERR",
 };
 
+static inline int fmt_fd(struct parser_ctx_struct *ctx, int fd, int *n);
+
 /* read(int fd, void *buf, size_t count) */
 DEFINE_SYSCALL_PARSER(read)
 {
         int n;
 
-        if (args[0] > 2) {
-                if (fmt_int(ctx, args[0], &n))
-                        return 1;
-        } else {
-                if (fmt_string(ctx, STDFD_NAMES[args[0]], &n))
-                        return 1;
-        }
-
-        if (fmt_separator(ctx, &n))
-                return 1;
-
-        if (fmt_addr(ctx, args[1], &n))
-                return 1;
-        
-        if (fmt_separator(ctx, &n))
-                return 1;
-
-        if (fmt_int(ctx, args[2], &n))
-                return 1;
+        TRY_FMT(fmt_fd, ctx, args[0], &n);
+        TRY_FMT_WITH_SEP(fmt_addr, ctx, args[1], &n);
+        TRY_FMT_WITH_SEP(fmt_int, ctx, args[2], &n);
 
         return 0;
 };
@@ -47,25 +33,9 @@ DEFINE_SYSCALL_PARSER(write)
 {
         int n;
 
-        if (args[0] > 2) {
-                if (fmt_int(ctx, args[0], &n))
-                        return 1;
-        } else {
-                if (fmt_string(ctx, STDFD_NAMES[args[0]], &n))
-                        return 1;
-        }
-
-        if (fmt_separator(ctx, &n))
-                return 1;
-
-        if (fmt_addr(ctx, args[1], &n))
-                return 1;
-        
-        if (fmt_separator(ctx, &n))
-                return 1;
-
-        if (fmt_int(ctx, args[2], &n))
-                return 1;
+        TRY_FMT(fmt_fd, ctx, args[0], &n);
+        TRY_FMT_WITH_SEP(fmt_addr, ctx, args[1], &n);
+        TRY_FMT_WITH_SEP(fmt_int, ctx, args[2], &n);
 
         return 0;
 };
@@ -75,14 +45,8 @@ DEFINE_SYSCALL_PARSER(open)
 {
         int n;
        
-        if (fmt_addr(ctx, args[0], &n))
-                return 1;
-
-        if (fmt_separator(ctx, &n))
-                return 1;
-
-        if (fmt_int(ctx, args[1], &n))
-                return 1;
+        TRY_FMT(fmt_addr, ctx, args[0], &n);
+        TRY_FMT_WITH_SEP(fmt_int, ctx, args[1], &n);
 
         return 0;
 }
@@ -92,8 +56,13 @@ DEFINE_SYSCALL_PARSER(close)
 {
         int n;
 
-        if (args[0] > 2)
-                return fmt_int(ctx, args[0], &n);
+        return fmt_fd(ctx, args[0], &n);
+}
+
+static inline int fmt_fd(struct parser_ctx_struct *ctx, int fd, int *n)
+{
+        if (fd > 2)
+                return fmt_int(ctx, fd, &n);
         else
-                return fmt_string(ctx, STDFD_NAMES[args[0]], &n);
+                return fmt_string(ctx, STDFD_NAMES[fd], &n);
 }

@@ -6,6 +6,36 @@
 #include "parser/syscalls/ABI/abi.h"'
 
 /**
+ * INIT_PARSER_CTX(var, buf, bufsize, offset) - Initialization of parser context.
+ * 
+ * Helper macro that initializes 
+ * the struct parser_ctx_struct and fills it with values.
+ */
+#define INIT_PARSER_CTX(var, buf, bufsize, offset) \
+        struct parser_ctx_struct var = { buf, bufsize, offset };
+
+/**
+ * TRY_FMT(fn_call, ctx, value, n) - Try to format argument.
+ * 
+ * Helper macro that tries to format an argument using a function
+ * fn_call, with arguments ctx, value, n.
+ */
+#define TRY_FMT(fn_call, ctx, value, n) \
+        if (fn_call(ctx, value, n)) \
+                return 1
+
+/**
+ * TRY_FMT_WITH_SEP(fn_call, ctx, value, n) - Try to insert separator and format argument.
+ * 
+ * Helper macro that tries to insert separator and format an argument using a function
+ * fn_call, with arguments ctx, value, n.
+ */
+#define TRY_FMT_WITH_SEP(fn_call, ctx, value, n) \
+        if (fmt_separator(ctx, n)) \
+                return 1; \
+        TRY_FMT(fn_call, ctx, value, n)
+
+/**
  * struct parser_ctx_struct - Parser context.
  * 
  * @buf: Buffer addr.
@@ -20,9 +50,6 @@ struct parser_ctx_struct {
         size_t bufsize;
         size_t *offset;
 };
-
-#define INIT_PARSER_CTX(var, buf, bufsize, offset) \
-        struct parser_ctx_struct var = { buf, bufsize, offset };
 
 int fmt_syscall(char *buf, size_t bufsize, 
         const struct syscall_entry *syscall, raw_reg args[]);
