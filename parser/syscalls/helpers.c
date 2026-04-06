@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include <sys/types.h>
 
 #include "parser/syscalls/syscall-table.h"
@@ -12,6 +14,7 @@
 static int fmt_syscall_name(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall);
 static int fmt_syscall_args(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall, raw_reg args[]);
 static inline int safe_append(struct parser_ctx_struct *ctx, int *n);
+static void escape_seq_parse(const char *src, char *dest, size_t dst_size);
 
 int fmt_syscall(char *buf, size_t bufsize, 
         const struct syscall_entry *syscall, pid_t tracee, raw_reg args[])
@@ -48,13 +51,18 @@ int fmt_addr(struct parser_ctx_struct *ctx, unsigned long long addr, int *n)
 
 int fmt_string_from_mem(struct parser_ctx_struct *ctx, unsigned long long addr, size_t size, int *n)
 {
-        char buf[size];
+        char buf[size + 1];
+        char escaped_buf[2 * size + 1];
 
         if (read_tracee_mem(ctx->tracee, (void *)addr, buf, size) == -1)
                 return 1;
 
+        buf[size] = '\0';
+
+        escape_seq_parse(buf, escaped_buf, 2 * size + 1);
+
         TRY_FMT_1(fmt_string, ctx, "\"", n);
-        TRY_FMT_1(fmt_string, ctx, buf, n);
+        TRY_FMT_1(fmt_string, ctx, escaped_buf, n);
         TRY_FMT_1(fmt_string, ctx, "\"", n);
 
         return 0;
@@ -99,4 +107,31 @@ static inline int safe_append(struct parser_ctx_struct *ctx, int *n)
                 return 1;
         
         return 0;
+}
+
+static void escape_seq_parse(const char *src, char *dest, size_t dst_size)
+{
+        size_t i = 0;
+
+        while (src && i < dst_size - 1) {
+                if (*src == '\n') {
+                        if (i + 2 >= dst_size)
+                                break;
+
+                        dest[i++] = '\\';
+                        dest[i++] = 'n';
+                } else if (*src == '\t') {
+                        if (i + 2 >= dst_size)
+                                break;
+                        
+                        dest[i++] = '\\';
+                        dest[i++] = '\t';
+                } else {
+                        dest[i++] = *src;
+                }
+
+                src++;
+        }
+
+        dest[i] = '\0';
 }
