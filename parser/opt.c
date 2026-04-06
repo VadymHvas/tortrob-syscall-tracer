@@ -10,7 +10,7 @@
 
 #include "parser/opt.h"
 
-static struct trace_opts *__init_trace_opts(struct trace_opts *opts)
+static struct trace_opts *init_trace_opts(struct trace_opts *opts)
 {
         opts->attach = 0;
         opts->pid = NULL;
@@ -18,20 +18,20 @@ static struct trace_opts *__init_trace_opts(struct trace_opts *opts)
         return opts;
 }
 
-static struct trace_opts *__alloc_trace_opts()
+static struct trace_opts *alloc_trace_opts()
 {
         struct trace_opts *opts = (struct trace_opts *)malloc(sizeof(struct trace_opts));
 
         if (!opts)
                 return NULL;
 
-        return __init_trace_opts(opts);
+        return init_trace_opts(opts);
 }
 
 struct trace_opts *parse_opts(int argc, char **argv)
 {
         int opt;
-        struct trace_opts *opts = __alloc_trace_opts();
+        struct trace_opts *opts = alloc_trace_opts();
 
         if (!opts)
                 return NULL;
@@ -39,7 +39,7 @@ struct trace_opts *parse_opts(int argc, char **argv)
         while ((opt = getopt(argc, argv, ":p:")) != -1) {
                 switch (opt)
                 {
-                case 't':
+                case 'p':
                         opts->attach = 1;
                         opts->pid = optarg;
                         break;

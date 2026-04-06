@@ -9,10 +9,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/ptrace.h>
 #include <sys/wait.h>
 #include <sys/user.h>
 #include <sys/types.h>
+#include <errno.h>
 
 #include "core/trace.h"
 #include "core/process.h"
@@ -20,8 +22,8 @@
 #include "parser/syscall.h"
 #include "parser/opt.h"
 
-static int __wait_and_set_tracesysgood(pid_t tracee);
-static int __trace_syscall_and_wait(pid_t tracee, int *status);
+static int wait_and_set_tracesysgood(pid_t tracee);
+static int trace_syscall_and_wait(pid_t tracee, int *status);
 
 int init_trace(char **argv, struct trace_opts *opts, pid_t *tracee)
 {
@@ -33,7 +35,7 @@ int init_trace(char **argv, struct trace_opts *opts, pid_t *tracee)
                         return -1;
         }
 
-        return __wait_and_set_tracesysgood(*tracee);
+        return wait_and_set_tracesysgood(*tracee);
 }
 
 void trace_loop(pid_t tracee)
@@ -41,14 +43,14 @@ void trace_loop(pid_t tracee)
         int status;
 
         while (1) {
-                if (__trace_syscall_and_wait(tracee, &status))
+                if (trace_syscall_and_wait(tracee, &status))
                         break;
                 
-                /* 0x80 bit is set by __wait_and_set_tracesysgood(). */
+                /* 0x80 bit is set by wait_and_set_tracesysgood(). */
                 if (WIFSTOPPED(status) && (WSTOPSIG(status) & 0x80)) {
                         struct user_regs_struct regs;
                         ptrace(PTRACE_GETREGS, tracee, NULL, &regs);
-                        entry_or_exit_syscall(&regs);
+                        entry_or_exit_syscall(&regs, tracee);
                 }
         }
 }
@@ -61,7 +63,30 @@ void cleanup_trace(struct trace_opts *opts, pid_t tracee)
         free(opts);
 }
 
-static int __wait_and_set_tracesysgood(pid_t tracee)
+int read_tracee_mem(pid_t tracee, const void *addr, char *buf, size_t size)
+{
+        size_t i = 0;
+        size_t word_size = sizeof(long);
+
+        while (i < size) {
+                errno = 0;
+                long data = ptrace(PTRACE_PEEKDATA, tracee, (char *)addr + i, NULL);
+
+                if (data == -1 && errno)
+                        return 1;
+
+                size_t copy_size = word_size;
+                if (i + copy_size > size)
+                        copy_size = size - i;
+
+                memcpy(buf + i, &data, copy_size);
+                i += copy_size;
+        }
+
+        return 0;
+}
+
+static int wait_and_set_tracesysgood(pid_t tracee)
 {
         int status;
         waitpid(tracee, &status, 0);
@@ -74,7 +99,7 @@ static int __wait_and_set_tracesysgood(pid_t tracee)
         return 0;
 }
 
-static int __trace_syscall_and_wait(pid_t tracee, int *status)
+static int trace_syscall_and_wait(pid_t tracee, int *status)
 {
         ptrace(PTRACE_SYSCALL, tracee, NULL, NULL);
         waitpid(tracee, status, 0);
