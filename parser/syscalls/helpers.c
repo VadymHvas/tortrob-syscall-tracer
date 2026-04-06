@@ -81,7 +81,7 @@ static int fmt_syscall_args(struct parser_ctx_struct *ctx, const struct syscall_
         return 0;
 }
 
-inline int fmt_fd(struct parser_ctx_struct *ctx, int fd, int *n)
+int fmt_fd(struct parser_ctx_struct *ctx, int fd, int *n)
 {
         if (fd > 2)
                 return fmt_int(ctx, fd, n);

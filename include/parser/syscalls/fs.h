@@ -25,6 +25,9 @@
         X(write, 1) \
         X(open, 2) \
         X(close, 3) \
+        X(rename, 82) \
+
+#define FS_SYSCALL_COUNT 5
 
 
 /*
@@ -37,6 +40,7 @@
 FS_SYSCALL_LIST
 #undef X
 
+#define NAME_MAX 255
 
 /*
  * fs_syscalls
@@ -50,10 +54,6 @@ FS_SYSCALL_LIST
  * This table is later used by the central dispatcher to route
  * syscalls to the appropriate parser.
  */
-const struct parser_struct fs_syscalls[] = {
-#define X(name, nr) { nr, SYSCALL_PARSER_NAME(name) },
-FS_SYSCALL_LIST
-#undef X
-};
+extern const struct parser_struct fs_syscalls[FS_SYSCALL_COUNT];
 
 extern const char *STDFD_NAMES[3];

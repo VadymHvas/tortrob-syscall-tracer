@@ -7,6 +7,13 @@
 #include "parser/syscalls/syscall-table.h"
 #include "parser/syscalls/parser.h"
 #include "parser/syscalls/helpers.h"
+#include "parser/syscalls/fs.h"
+
+const struct parser_struct fs_syscalls[] = {
+#define X(name, nr) { nr, SYSCALL_PARSER_NAME(name) },
+FS_SYSCALL_LIST
+#undef X
+};
 
 const char *STDFD_NAMES[] = {
         [0] = "STDIN",
@@ -55,4 +62,15 @@ DEFINE_SYSCALL_PARSER(close)
         int n;
 
         return fmt_fd(ctx, args[0], &n);
+}
+
+/* rename(const char *oldpath, const char *newpath) */
+DEFINE_SYSCALL_PARSER(rename)
+{
+        int n;
+
+        TRY_FMT_2(fmt_string_from_mem, ctx, args[0], NAME_MAX, &n);
+        TRY_FMT_WITH_SEP_2(fmt_string_from_mem, ctx, args[1], NAME_MAX, &n);
+
+        return 0;
 }

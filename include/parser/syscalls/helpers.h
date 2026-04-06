@@ -67,4 +67,4 @@ int fmt_string(struct parser_ctx_struct *ctx, char *src, int *n);
 int fmt_int(struct parser_ctx_struct *ctx, int num, int *n);
 int fmt_addr(struct parser_ctx_struct *ctx, unsigned long long addr, int *n);
 int fmt_string_from_mem(struct parser_ctx_struct *ctx, unsigned long long addr, size_t size, int *n);
-inline int fmt_fd(struct parser_ctx_struct *ctx, int fd, int *n);
+int fmt_fd(struct parser_ctx_struct *ctx, int fd, int *n);
