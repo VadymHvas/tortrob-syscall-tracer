@@ -69,3 +69,31 @@ DEFINE_SYSCALL_PARSER(write)
 
         return 0;
 };
+
+/* open(const char *path, int flags) */
+DEFINE_SYSCALL_PARSER(open)
+{
+        int n;
+       
+        if (fmt_addr(ctx, args[0], &n))
+                return 1;
+
+        if (fmt_separator(ctx, &n))
+                return 1;
+
+        if (fmt_int(ctx, args[1], &n))
+                return 1;
+
+        return 0;
+}
+
+/* close(int fd) */
+DEFINE_SYSCALL_PARSER(close)
+{
+        int n;
+
+        if (args[0] > 2)
+                return fmt_int(ctx, args[0], &n);
+        else
+                return fmt_string(ctx, STDFD_NAMES[args[0]], &n);
+}
