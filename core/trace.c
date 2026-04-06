@@ -48,7 +48,7 @@ void trace_loop(pid_t tracee)
                 if (WIFSTOPPED(status) && (WSTOPSIG(status) & 0x80)) {
                         struct user_regs_struct regs;
                         ptrace(PTRACE_GETREGS, tracee, NULL, &regs);
-                        entry_or_exit_syscall(&regs);
+                        entry_or_exit_syscall(&regs, tracee);
                 }
         }
 }
@@ -59,6 +59,11 @@ void cleanup_trace(struct trace_opts *opts, pid_t tracee)
                 ptrace(PTRACE_DETACH, tracee, NULL, NULL);
 
         free(opts);
+}
+
+long trace_read_user_mem()
+{
+
 }
 
 static int wait_and_set_tracesysgood(pid_t tracee)

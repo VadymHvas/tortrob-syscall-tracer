@@ -58,15 +58,12 @@ struct parser_group_struct {
  * the appropriate parser. If no specific parser is found, a default
  * fallback parser is used.
  * 
- * @buf: Output buffer.
- * @bufsize: Max size of the buffer.
+ * @ctx: Parser context.
  * @syscall: Syscall metadata (nr and arguments count).
- * @offset: Current write position in the buffer.
  * @args: Syscall arguments in raw format (unsigned long long).
  * 
  * @returns:
  *      - 0 on success
  *      - non-zero on failure
  */
-int syscall_parse(char *buf, size_t bufsize, 
-        const struct syscall_entry *syscall, size_t *offset, raw_reg args[]);
+int syscall_parse(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall, raw_reg args[]);

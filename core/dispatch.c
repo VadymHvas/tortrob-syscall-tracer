@@ -29,24 +29,24 @@ static syscall_state_t in_syscall = SYSCALL_ENTRY;
  * syscall with arguments 
  * 
  */
-static void entry_syscall(struct user_regs_struct *regs)
+static void entry_syscall(struct user_regs_struct *regs, pid_t tracee)
 {
         char buf[SYSCALL_BUF_SIZE];
-        get_syscall_with_args(regs, buf, SYSCALL_BUF_SIZE);
+        get_syscall_with_args(regs, buf, SYSCALL_BUF_SIZE, tracee);
         printf("%s", buf);
 }
 
-static void exit_syscall(struct user_regs_struct *regs)
+static void exit_syscall(struct user_regs_struct *regs, pid_t tracee)
 {
         printf("(ret=%llu)\n", regs->rax);
 }
 
-void entry_or_exit_syscall(struct user_regs_struct *regs)
+void entry_or_exit_syscall(struct user_regs_struct *regs, pid_t tracee)
 {
         if (!in_syscall) {
-                entry_syscall(regs);
+                entry_syscall(regs, tracee);
         } else {
-                exit_syscall(regs);
+                exit_syscall(regs, tracee);
         }
 
         SWAP_SYSCALL_STATE(in_syscall);

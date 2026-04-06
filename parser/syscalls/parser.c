@@ -26,41 +26,36 @@ static const struct parser_group_struct syscall_parsers[] = {
         INIT_PARSER_GROUP(fs_syscalls)
 };
 
-static int default_syscall_parser(char *buf, size_t bufsize, int nr_args,
-        size_t *offset, raw_reg args[]);
+static int default_syscall_parser(struct parser_ctx_struct *ctx, int nr_args, raw_reg args[]);
 
-int syscall_parse(char *buf, size_t bufsize, 
-        const struct syscall_entry *syscall, size_t *offset, raw_reg args[])
+int syscall_parse(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall, raw_reg args[])
 {
         /*
         * Perform a linear search across all parser groups to find
         * a matching syscall number and dispatch to its parser.
         *
-        * NOTE: This is O(N) and may be optimized in the futureю
+        * NOTE: This is O(N) and may be optimized in the future.
         */
         for (int i = 0; i < sizeof(syscall_parsers) / sizeof(syscall_parsers[0]); i++) {
                 for (int j = 0; j < syscall_parsers[i].len; j++) {
                         if (syscall->nr == syscall_parsers[i].entry[j].nr) {
-                                INIT_PARSER_CTX(ctx, buf, bufsize, offset);
-
-                                return syscall_parsers[i].entry[j].parse_func(&ctx, args);
+                                return syscall_parsers[i].entry[j].parse_func(ctx, args);
                         }
                 }
         }
 
-        return default_syscall_parser(buf, bufsize, syscall->args, offset, args);
+        return default_syscall_parser(ctx, syscall->args, args);
 }
 
-static int default_syscall_parser(char *buf, size_t bufsize, 
-        int nr_args, size_t *offset, raw_reg args[])
+static int default_syscall_parser(struct parser_ctx_struct *ctx, int nr_args, raw_reg args[])
 {
         for (int i = 0; i < nr_args; i++) {
-                if (*offset >= bufsize)
+                if (*(ctx->offset) >= ctx->bufsize)
                         break;
 
                 const char *sep = (i == 0) ? "" : ", "; 
 
-                *offset += snprintf(buf + (*offset), bufsize - (*offset), "%s%llu", sep, args[i]);
+                *(ctx->offset) += snprintf(ctx->buf + *(ctx->offset), ctx->bufsize - *(ctx->offset), "%s%llu", sep, args[i]);
         }
 
         return 0;

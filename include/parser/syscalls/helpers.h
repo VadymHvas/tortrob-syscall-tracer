@@ -11,8 +11,8 @@
  * Helper macro that initializes 
  * the struct parser_ctx_struct and fills it with values.
  */
-#define INIT_PARSER_CTX(var, buf, bufsize, offset) \
-        struct parser_ctx_struct var = { buf, bufsize, offset };
+#define INIT_PARSER_CTX(var, buf, bufsize, offset, tracee) \
+        struct parser_ctx_struct var = { buf, bufsize, offset, tracee };
 
 /**
  * TRY_FMT(fn_call, ctx, value, n) - Try to format argument.
@@ -49,10 +49,11 @@ struct parser_ctx_struct {
         char *buf;
         size_t bufsize;
         size_t *offset;
+        pid_t tracee;
 };
 
 int fmt_syscall(char *buf, size_t bufsize, 
-        const struct syscall_entry *syscall, raw_reg args[]);
+        const struct syscall_entry *syscall, pid_t tracee, raw_reg args[]);
 
 int fmt_string(struct parser_ctx_struct *ctx, char *src, int *n);
 int fmt_int(struct parser_ctx_struct *ctx, int num, int *n);

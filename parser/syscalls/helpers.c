@@ -4,23 +4,23 @@
 #include "parser/syscalls/syscall-table.h"
 #include "parser/syscalls/ABI/abi.h"
 #include "parser/syscalls/helpers.h"
+#include "parser/syscalls/parser.h"
 
 /* Format syscall string function decomposition. */
-static int fmt_syscall_name(char *buf, size_t bufsize, 
-        const struct syscall_entry *syscall, size_t *offset);
-static int fmt_syscall_args(char *buf, size_t bufsize, 
-        const struct syscall_entry *syscall, size_t *offset, raw_reg args[]);
+static int fmt_syscall_name(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall);
+static int fmt_syscall_args(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall, raw_reg args[]);
 static inline int safe_append(struct parser_ctx_struct *ctx, int *n);
 
 int fmt_syscall(char *buf, size_t bufsize, 
-        const struct syscall_entry *syscall, raw_reg args[])
+        const struct syscall_entry *syscall, pid_t tracee, raw_reg args[])
 {
         size_t offset = 0;
+        INIT_PARSER_CTX(ctx, buf, bufsize, &offset, tracee);
 
-        if (fmt_syscall_name(buf, bufsize, syscall, &offset))
+        if (fmt_syscall_name(&ctx, syscall))
                 return 1;
 
-        return fmt_syscall_args(buf, bufsize, syscall, &offset, args);
+        return fmt_syscall_args(&ctx, syscall, args);
 }
 
 int fmt_string(struct parser_ctx_struct *ctx, char *src, int *n)
@@ -51,25 +51,23 @@ int fmt_separator(struct parser_ctx_struct *ctx, int *n)
         return safe_append(ctx, n);
 }
 
-static int fmt_syscall_name(char *buf, size_t bufsize, 
-        const struct syscall_entry *syscall, size_t *offset)
+static int fmt_syscall_name(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall)
 {
-        *offset += snprintf(buf + (*offset), bufsize - (*offset), "%s(", syscall->name);
+        *(ctx->offset) += snprintf(ctx->buf + *(ctx->offset), ctx->bufsize - *(ctx->offset), "%s(", syscall->name);
 
-        if (*offset >= bufsize)
+        if (*(ctx->offset) >= ctx->bufsize)
                 return 1;
         
         return 0;
 }
 
-static int fmt_syscall_args(char *buf, size_t bufsize,
-        const struct syscall_entry *syscall, size_t *offset, raw_reg args[])
+static int fmt_syscall_args(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall, raw_reg args[])
 {
         if (syscall->args)
-                syscall_parse(buf, bufsize, syscall, offset, args);
+                syscall_parse(ctx, syscall, args);
 
-        if (*offset < bufsize)
-                snprintf(buf + (*offset), bufsize - (*offset), ")");
+        if (*(ctx->offset) < ctx->bufsize)
+                snprintf(ctx->buf + *(ctx->offset), ctx->bufsize - *(ctx->offset), ")");
 
         return 0;
 }
