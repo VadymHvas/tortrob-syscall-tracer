@@ -20,23 +20,23 @@ DEFINE_SYSCALL_PARSER(read)
         int n;
 
         if (args[0] > 2) {
-                if (fmt_int(buf, bufsize, offset, args[0], &n))
+                if (fmt_int(ctx, args[0], &n))
                         return 1;
         } else {
-                if (fmt_string(buf, bufsize, offset, STDFD_NAMES[args[0]], &n))
+                if (fmt_string(ctx, STDFD_NAMES[args[0]], &n))
                         return 1;
         }
 
-        if (fmt_separator(buf, bufsize, offset, &n))
+        if (fmt_separator(ctx, &n))
                 return 1;
 
-        if (fmt_addr(buf, bufsize, offset, args[1], &n))
+        if (fmt_addr(ctx, args[1], &n))
                 return 1;
         
-        if (fmt_separator(buf, bufsize, offset, &n))
+        if (fmt_separator(ctx, &n))
                 return 1;
 
-        if (fmt_int(buf, bufsize, offset, args[2], &n))
+        if (fmt_int(ctx, args[2], &n))
                 return 1;
 
         return 0;
@@ -48,23 +48,23 @@ DEFINE_SYSCALL_PARSER(write)
         int n;
 
         if (args[0] > 2) {
-                if (fmt_int(buf, bufsize, offset, args[0], &n))
+                if (fmt_int(ctx, args[0], &n))
                         return 1;
         } else {
-                if (fmt_string(buf, bufsize, offset, STDFD_NAMES[args[0]], &n))
+                if (fmt_string(ctx, STDFD_NAMES[args[0]], &n))
                         return 1;
         }
 
-        if (fmt_separator(buf, bufsize, offset, &n))
+        if (fmt_separator(ctx, &n))
                 return 1;
 
-        if (fmt_addr(buf, bufsize, offset, args[1], &n))
+        if (fmt_addr(ctx, args[1], &n))
                 return 1;
         
-        if (fmt_separator(buf, bufsize, offset, &n))
+        if (fmt_separator(ctx, &n))
                 return 1;
 
-        if (fmt_int(buf, bufsize, offset, args[2], &n))
+        if (fmt_int(ctx, args[2], &n))
                 return 1;
 
         return 0;

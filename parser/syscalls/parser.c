@@ -13,6 +13,7 @@
 #include "parser/syscalls/parser.h"
 #include "parser/syscalls/fs.h"
 #include "parser/syscalls/ABI/abi.h"
+#include "parser/syscalls/helpers.h"
 
 #define INIT_PARSER_GROUP(g) { g, sizeof(g) / sizeof(g[0]) },
 
@@ -31,6 +32,8 @@ static int default_syscall_parser(char *buf, size_t bufsize, int nr_args,
 int syscall_parse(char *buf, size_t bufsize, 
         const struct syscall_entry *syscall, size_t *offset, raw_reg args[])
 {
+        INIT_PARSER_CTX(ctx, buf, bufsize, offset);
+
         /*
         * Perform a linear search across all parser groups to find
         * a matching syscall number and dispatch to its parser.
@@ -40,7 +43,7 @@ int syscall_parse(char *buf, size_t bufsize,
         for (int i = 0; i < sizeof(syscall_parsers) / sizeof(syscall_parsers[0]); i++) {
                 for (int j = 0; j < syscall_parsers[i].len; j++) {
                         if (syscall->nr == syscall_parsers[i].entry[j].nr)
-                                return syscall_parsers[i].entry[j].parse_func(buf, bufsize, offset, args);
+                                return syscall_parsers[i].entry[j].parse_func(&ctx, args);
                 }
         }
 

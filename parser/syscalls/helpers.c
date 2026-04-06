@@ -22,59 +22,58 @@ int fmt_syscall(char *buf, size_t bufsize,
         return fmt_syscall_args(buf, bufsize, syscall, &offset, args);
 }
 
-int fmt_string(char *buf, size_t bufsize, size_t *offset, char *src, int *n)
+int fmt_string(struct parser_ctx_struct *ctx, char *src, int *n)
 {
-        *n = snprintf(buf + *offset, bufsize - *offset, "%s", src);
+        *n = snprintf(ctx->buf + *(ctx->offset), ctx->bufsize - *(ctx->offset), "%s", src);
 
-        if (n < 0) 
+        if (*n < 0) 
                 return 1;
                 
-        *offset += *n;
-        if (*offset >= bufsize)
+        *(ctx->offset) += *n;
+        if (*(ctx->offset) >= ctx->bufsize)
                 return 1;
 
         return 0;
 }
 
-int fmt_int(char *buf, size_t bufsize, size_t *offset, int num, int *n)
+int fmt_int(struct parser_ctx_struct *ctx, int num, int *n)
 {
-        *n = snprintf(buf + *offset, bufsize - *offset, "%d", num);
+        *n = snprintf(ctx->buf + *(ctx->offset), ctx->bufsize - *(ctx->offset), "%d", num);
 
         if (*n < 0) 
                 return 1;
 
-        *offset += *n;
-        if (*offset >= bufsize)
+        *(ctx->offset) += *n;
+        if (*(ctx->offset) >= ctx->bufsize)
                 return 1;
 
         return 0;
 }
 
-int fmt_addr(char *buf, size_t bufsize, size_t *offset, unsigned long long addr, int *n)
+int fmt_addr(struct parser_ctx_struct *ctx, unsigned long long addr, int *n)
 {
-        *n = snprintf(buf + *offset, bufsize - *offset, "0x%llx",addr);
+        *n = snprintf(ctx->buf + *(ctx->offset), ctx->bufsize - *(ctx->offset), "0x%llx",addr);
 
         if (*n < 0) 
                 return 1;
 
-        *offset += *n;
-        if (*offset >= bufsize)
+         *(ctx->offset) += *n;
+        if (*(ctx->offset) >= ctx->bufsize)
                 return 1;
 
         return 0;
 }
 
-int fmt_separator(char *buf, size_t bufsize, size_t *offset, int *n)
+int fmt_separator(struct parser_ctx_struct *ctx, int *n)
 {
-        *n = snprintf(buf + *offset, bufsize - *offset, ", ");
+        *n = snprintf(ctx->buf + *(ctx->offset), ctx->bufsize - *(ctx->offset), ", ");
 
         if (n < 0)
                 return 1;
 
-        *offset += *n;
-
-        if (*offset >= bufsize) 
-                *offset = bufsize;
+         *(ctx->offset) += *n;
+        if (*(ctx->offset) >= ctx->bufsize)
+                return 1;
         
         return 0;
 }

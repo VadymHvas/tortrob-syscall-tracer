@@ -4,6 +4,7 @@
 
 #include "parser/syscalls/syscall-table.h"
 #include "parser/syscalls/ABI/abi.h"
+#include "parser/syscalls/helpers.h"
 
 /*
  * DEFINE_SYSCALL_PARSER(name)
@@ -15,23 +16,17 @@
  * the provided buffer and updating the offset.
  */
 #define DEFINE_SYSCALL_PARSER(name)\
-        int syscall_##name##_parser(\ 
-                char *buf,\ 
-                size_t bufsize,\
-                size_t *offset,\ 
-                raw_reg args[])
+        int syscall_##name##_parser(struct parser_ctx_struct *ctx, raw_reg args[])
 
 #define SYSCALL_PARSER_NAME(name) syscall_##name##_parser
 
 /**
  * parse_func_t - Callback type for syscall arguments formatting.
  * 
- * @buf:     Buffer addr.
- * @bufsize: Max size of buffer.
- * @offset:  Pointer to offset variable.
- * @regs:    Array of arguments in raw format (unsigned long long).
+ * @ctx:  Parser context.
+ * @regs: Array of arguments in raw format (unsigned long long).
  */
-typedef (*parse_func_t) (char *buf, size_t bufsize, size_t *offset, raw_reg regs[]);
+typedef (*parse_func_t) (struct parser_ctx_struct *ctx, raw_reg regs[]);
 
 /**
  * struct parser_struct - Represents single syscall parsers entry.
