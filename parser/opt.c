@@ -39,7 +39,7 @@ struct trace_opts *parse_opts(int argc, char **argv)
         while ((opt = getopt(argc, argv, ":p:")) != -1) {
                 switch (opt)
                 {
-                case 't':
+                case 'p':
                         opts->attach = 1;
                         opts->pid = optarg;
                         break;
