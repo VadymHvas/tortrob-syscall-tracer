@@ -10,6 +10,7 @@ static int fmt_syscall_name(char *buf, size_t bufsize,
         const struct syscall_entry *syscall, size_t *offset);
 static int fmt_syscall_args(char *buf, size_t bufsize, 
         const struct syscall_entry *syscall, size_t *offset, raw_reg args[]);
+static inline int safe_append(struct parser_ctx_struct *ctx, int *n);
 
 int fmt_syscall(char *buf, size_t bufsize, 
         const struct syscall_entry *syscall, raw_reg args[])
@@ -26,56 +27,28 @@ int fmt_string(struct parser_ctx_struct *ctx, char *src, int *n)
 {
         *n = snprintf(ctx->buf + *(ctx->offset), ctx->bufsize - *(ctx->offset), "%s", src);
 
-        if (*n < 0) 
-                return 1;
-                
-        *(ctx->offset) += *n;
-        if (*(ctx->offset) >= ctx->bufsize)
-                return 1;
-
-        return 0;
+        return safe_append(ctx, n);
 }
 
 int fmt_int(struct parser_ctx_struct *ctx, int num, int *n)
 {
         *n = snprintf(ctx->buf + *(ctx->offset), ctx->bufsize - *(ctx->offset), "%d", num);
 
-        if (*n < 0) 
-                return 1;
-
-        *(ctx->offset) += *n;
-        if (*(ctx->offset) >= ctx->bufsize)
-                return 1;
-
-        return 0;
+        return safe_append(ctx, n);
 }
 
 int fmt_addr(struct parser_ctx_struct *ctx, unsigned long long addr, int *n)
 {
         *n = snprintf(ctx->buf + *(ctx->offset), ctx->bufsize - *(ctx->offset), "0x%llx",addr);
 
-        if (*n < 0) 
-                return 1;
-
-         *(ctx->offset) += *n;
-        if (*(ctx->offset) >= ctx->bufsize)
-                return 1;
-
-        return 0;
+        return safe_append(ctx, n);
 }
 
 int fmt_separator(struct parser_ctx_struct *ctx, int *n)
 {
         *n = snprintf(ctx->buf + *(ctx->offset), ctx->bufsize - *(ctx->offset), ", ");
 
-        if (n < 0)
-                return 1;
-
-         *(ctx->offset) += *n;
-        if (*(ctx->offset) >= ctx->bufsize)
-                return 1;
-        
-        return 0;
+        return safe_append(ctx, n);
 }
 
 static int fmt_syscall_name(char *buf, size_t bufsize, 
@@ -101,3 +74,14 @@ static int fmt_syscall_args(char *buf, size_t bufsize,
         return 0;
 }
 
+static inline int safe_append(struct parser_ctx_struct *ctx, int *n)
+{
+        if (n < 0)
+                return 1;
+
+         *(ctx->offset) += *n;
+        if (*(ctx->offset) >= ctx->bufsize)
+                return 1;
+        
+        return 0;
+}
