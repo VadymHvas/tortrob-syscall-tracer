@@ -14,9 +14,11 @@
 #include "parser/syscall.h"
 #include "parser/syscalls/syscall-table.h"
 #include "parser/syscalls/ABI/abi.h"
+#include "parser/syscalls/parser.h"
 
 static const struct syscall_entry *__get_syscall_by_nr(long nr);
 
+/* Format syscall string function decomposition. */
 static int __fmt_syscall_name(char *buf, size_t bufsize, 
         const struct syscall_entry *syscall, size_t *offset);
 static int __fmt_syscall_args(char *buf, size_t bufsize, 
@@ -71,14 +73,8 @@ static int __fmt_syscall_name(char *buf, size_t bufsize,
 static int __fmt_syscall_args(char *buf, size_t bufsize,
         const struct syscall_entry *syscall, size_t *offset, raw_reg args[])
 {
-        for (int i = 0; i < syscall->args; i++) {
-                if (*offset >= bufsize)
-                        break;
-
-                const char *sep = (i == 0) ? "" : ", "; 
-
-                *offset += snprintf(buf + (*offset), bufsize - (*offset), "%s%llu", sep, args[i]);
-        }
+        if (syscall->args)
+                syscall_parse(buf, bufsize, syscall, offset, args);
 
         if (*offset < bufsize)
                 snprintf(buf + (*offset), bufsize - (*offset), ")");

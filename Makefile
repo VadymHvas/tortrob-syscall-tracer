@@ -2,7 +2,8 @@ CC = gcc
 CFLAGS = -Wall -gdwarf -g3 -O0 -Iinclude
 LDFLAGS =
 
-SRCS = main.c parser/opt.c parser/syscall.c parser/syscalls/ABI/abi.c core/trace.c core/process.c core/dispatch.c
+SRCS = main.c parser/opt.c parser/syscall.c parser/syscalls/ABI/abi.c parser/syscalls/parser.c \
+	parser/syscalls/fs.c core/trace.c core/process.c core/dispatch.c
 
 OBJS = $(SRCS:.c=.o)
 
