@@ -8,7 +8,7 @@
 #include "parser/syscalls/parser.h"
 #include "parser/syscalls/helpers.h"
 
-static const char *STDFD_NAMES[] = {
+const char *STDFD_NAMES[] = {
         [0] = "STDIN",
         [1] = "STDOUT",
         [2] = "STDERR",

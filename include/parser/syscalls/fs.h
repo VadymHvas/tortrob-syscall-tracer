@@ -55,3 +55,5 @@ const struct parser_struct fs_syscalls[] = {
 FS_SYSCALL_LIST
 #undef X
 };
+
+extern const char *STDFD_NAMES[3];
