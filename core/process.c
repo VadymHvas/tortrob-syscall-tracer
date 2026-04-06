@@ -36,7 +36,7 @@ int do_spawn(char **argv, pid_t *tracee)
 }
 
 /* Main process attaching function */
-static int __do_attach(char **argv, pid_t *tracee)
+static int do_attach(char **argv, pid_t *tracee)
 {
         if (ptrace(PTRACE_ATTACH, *tracee, NULL, NULL) == -1) {
                 perror("tortrob-strace");
@@ -46,15 +46,15 @@ static int __do_attach(char **argv, pid_t *tracee)
         return 0;
 }
 
-static pid_t __get_pid(struct trace_opts *opts)
+static pid_t get_pid(struct trace_opts *opts)
 {
         return (pid_t)atoi(opts->pid);
 }
 
 int attach_tracee(char **argv, struct trace_opts *opts, pid_t *tracee)
 {
-        *tracee = __get_pid(opts);
-        if (__do_attach(argv, tracee) == -1)
+        *tracee = get_pid(opts);
+        if (do_attach(argv, tracee) == -1)
                 return -1;        
 
         printf("Attached to process %d\n", *tracee);

@@ -15,13 +15,13 @@
  * the provided buffer and updating the offset.
  */
 #define DEFINE_SYSCALL_PARSER(name) \
-        int __syscall_##name##_parser( \ 
+        int syscall_##name##_parser( \ 
                 char *buf, \ 
                 size_t bufsize, \
                 size_t *offset, \ 
                 raw_reg args[])
 
-#define SYSCALL_PARSER_NAME(name) __syscall_##name##_parser
+#define SYSCALL_PARSER_NAME(name) syscall_##name##_parser
 
 /**
  * parse_func_t - Callback type for syscall arguments formatting.

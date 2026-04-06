@@ -20,8 +20,8 @@
 #include "parser/syscall.h"
 #include "parser/opt.h"
 
-static int __wait_and_set_tracesysgood(pid_t tracee);
-static int __trace_syscall_and_wait(pid_t tracee, int *status);
+static int wait_and_set_tracesysgood(pid_t tracee);
+static int trace_syscall_and_wait(pid_t tracee, int *status);
 
 int init_trace(char **argv, struct trace_opts *opts, pid_t *tracee)
 {
@@ -33,7 +33,7 @@ int init_trace(char **argv, struct trace_opts *opts, pid_t *tracee)
                         return -1;
         }
 
-        return __wait_and_set_tracesysgood(*tracee);
+        return wait_and_set_tracesysgood(*tracee);
 }
 
 void trace_loop(pid_t tracee)
@@ -41,10 +41,10 @@ void trace_loop(pid_t tracee)
         int status;
 
         while (1) {
-                if (__trace_syscall_and_wait(tracee, &status))
+                if (trace_syscall_and_wait(tracee, &status))
                         break;
                 
-                /* 0x80 bit is set by __wait_and_set_tracesysgood(). */
+                /* 0x80 bit is set by wait_and_set_tracesysgood(). */
                 if (WIFSTOPPED(status) && (WSTOPSIG(status) & 0x80)) {
                         struct user_regs_struct regs;
                         ptrace(PTRACE_GETREGS, tracee, NULL, &regs);
@@ -61,7 +61,7 @@ void cleanup_trace(struct trace_opts *opts, pid_t tracee)
         free(opts);
 }
 
-static int __wait_and_set_tracesysgood(pid_t tracee)
+static int wait_and_set_tracesysgood(pid_t tracee)
 {
         int status;
         waitpid(tracee, &status, 0);
@@ -74,7 +74,7 @@ static int __wait_and_set_tracesysgood(pid_t tracee)
         return 0;
 }
 
-static int __trace_syscall_and_wait(pid_t tracee, int *status)
+static int trace_syscall_and_wait(pid_t tracee, int *status)
 {
         ptrace(PTRACE_SYSCALL, tracee, NULL, NULL);
         waitpid(tracee, status, 0);

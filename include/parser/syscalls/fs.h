@@ -31,7 +31,7 @@
  * Generate parser function declarations for each syscall.
  *
  * Expands to:
- *      int __syscall_<name>_parser(...);
+ *      int syscall_<name>_parser(...);
  */
 #define X(name, _) DEFINE_SYSCALL_PARSER(name);
 FS_SYSCALL_LIST
