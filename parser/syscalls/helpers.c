@@ -5,6 +5,7 @@
 #include "parser/syscalls/ABI/abi.h"
 #include "parser/syscalls/helpers.h"
 #include "parser/syscalls/parser.h"
+#include "parser/syscalls/fs.h"
 #include "core/trace.h"
 
 /* Format syscall string function decomposition. */
@@ -78,6 +79,14 @@ static int fmt_syscall_args(struct parser_ctx_struct *ctx, const struct syscall_
                 snprintf(ctx->buf + *(ctx->offset), ctx->bufsize - *(ctx->offset), ")");
 
         return 0;
+}
+
+inline int fmt_fd(struct parser_ctx_struct *ctx, int fd, int *n)
+{
+        if (fd > 2)
+                return fmt_int(ctx, fd, n);
+        else
+                return fmt_string(ctx, STDFD_NAMES[fd], n);
 }
 
 static inline int safe_append(struct parser_ctx_struct *ctx, int *n)

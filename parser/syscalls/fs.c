@@ -14,8 +14,6 @@ const char *STDFD_NAMES[] = {
         [2] = "STDERR",
 };
 
-static inline int fmt_fd(struct parser_ctx_struct *ctx, int fd, int *n);
-
 /* read(int fd, void *buf, size_t count) */
 DEFINE_SYSCALL_PARSER(read)
 {
@@ -57,12 +55,4 @@ DEFINE_SYSCALL_PARSER(close)
         int n;
 
         return fmt_fd(ctx, args[0], &n);
-}
-
-static inline int fmt_fd(struct parser_ctx_struct *ctx, int fd, int *n)
-{
-        if (fd > 2)
-                return fmt_int(ctx, fd, &n);
-        else
-                return fmt_string(ctx, STDFD_NAMES[fd], &n);
 }
