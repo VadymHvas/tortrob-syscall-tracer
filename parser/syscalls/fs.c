@@ -2,33 +2,70 @@
  * parser/syscalls/fs.c - Implementation of filesystem syscall parsers.
  */
 
+#include <stdio.h>
+
 #include "parser/syscalls/syscall-table.h"
 #include "parser/syscalls/parser.h"
+#include "parser/syscalls/helpers.h"
 
+static const char *STDFD_NAMES[] = {
+        [0] = "STDIN",
+        [1] = "STDOUT",
+        [2] = "STDERR",
+};
+
+/* read(int fd, void *buf, size_t count) */
 DEFINE_SYSCALL_PARSER(read)
 {
         int n;
 
-        /* TODO: Refactor this stuff. */
-        n = snprintf(buf + *offset, bufsize - *offset, "%d", (int)args[0]);
-        if (n < 0) return 1;
+        if (args[0] > 2) {
+                if (fmt_int(buf, bufsize, offset, args[0], &n))
+                        return 1;
+        } else {
+                if (fmt_string(buf, bufsize, offset, STDFD_NAMES[args[0]], &n))
+                        return 1;
+        }
 
-        *offset += n;
-        if (*offset >= bufsize) return 1;
+        if (fmt_separator(buf, bufsize, offset, &n))
+                return 1;
 
-        n = snprintf(buf + *offset, bufsize - *offset, ", 0x%llx",
-                        (unsigned long long)args[1]);
-        if (n < 0) return 1;
+        if (fmt_addr(buf, bufsize, offset, args[1], &n))
+                return 1;
+        
+        if (fmt_separator(buf, bufsize, offset, &n))
+                return 1;
 
-        *offset += n;
-        if (*offset >= bufsize) return 1;
+        if (fmt_int(buf, bufsize, offset, args[2], &n))
+                return 1;
 
-        n = snprintf(buf + *offset, bufsize - *offset, ", %llu",
-                        (unsigned long long)args[2]);
-        if (n < 0) return 1;
+        return 0;
+};
 
-        *offset += n;
-        if (*offset >= bufsize) return 1;
+/* write(int fd, const void *buf, size_t count) */
+DEFINE_SYSCALL_PARSER(write)
+{
+        int n;
+
+        if (args[0] > 2) {
+                if (fmt_int(buf, bufsize, offset, args[0], &n))
+                        return 1;
+        } else {
+                if (fmt_string(buf, bufsize, offset, STDFD_NAMES[args[0]], &n))
+                        return 1;
+        }
+
+        if (fmt_separator(buf, bufsize, offset, &n))
+                return 1;
+
+        if (fmt_addr(buf, bufsize, offset, args[1], &n))
+                return 1;
+        
+        if (fmt_separator(buf, bufsize, offset, &n))
+                return 1;
+
+        if (fmt_int(buf, bufsize, offset, args[2], &n))
+                return 1;
 
         return 0;
 };

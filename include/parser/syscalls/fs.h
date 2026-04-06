@@ -22,7 +22,7 @@
  */
 #define FS_SYSCALL_LIST \
         X(read, 0) \
-        // X(write, 1) \
+        X(write, 1) \
         // X(open, 2) \
         // X(close, 3) \
 
