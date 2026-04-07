@@ -126,7 +126,7 @@ static void escape_seq_parse(const char *src, char *dest, size_t dst_size)
                                 break;
                         
                         dest[i++] = '\\';
-                        dest[i++] = '\t';
+                        dest[i++] = 't';
                 } else {
                         dest[i++] = *src;
                 }
