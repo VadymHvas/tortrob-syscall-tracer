@@ -3,6 +3,7 @@
  */
 
 #include <stdio.h>
+#include <fcntl.h>
 
 #include "parser/syscalls/syscall-table.h"
 #include "parser/syscalls/parser.h"
@@ -50,7 +51,7 @@ DEFINE_SYSCALL_PARSER(open)
 {
         FMT_STRING_MEM(ctx, args[0], NAME_MAX);
         FMT_SEPARATOR(ctx);
-        FMT_INT(ctx, args[1]);
+        FMT_OPEN_FLAGS(ctx, args[1]);
 
         return 0;
 }

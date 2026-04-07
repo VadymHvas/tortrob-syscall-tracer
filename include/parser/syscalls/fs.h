@@ -62,6 +62,8 @@ FS_SYSCALL_LIST
 
 #define NAME_MAX 255
 
+#define OPEN_FLAGS_COUNT 9
+
 /*
  * fs_syscalls
  *
@@ -77,3 +79,4 @@ FS_SYSCALL_LIST
 extern const struct parser_struct fs_syscalls[FS_SYSCALL_COUNT];
 
 extern const char *STDFD_NAMES[3];
+extern const struct flag_desc open_flags[OPEN_FLAGS_COUNT];

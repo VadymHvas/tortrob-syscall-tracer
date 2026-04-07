@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <fcntl.h>
 #include <sys/types.h>
 
 #include "parser/syscalls/syscall-table.h"
@@ -101,6 +102,29 @@ int fmt_fd(struct parser_ctx_struct *ctx, int fd)
                 return fmt_int(ctx, fd);
         else
                 return fmt_string(ctx, STDFD_NAMES[fd]);
+}
+
+int fmt_open_flags(struct parser_ctx_struct *ctx, int flags)
+{
+        int access_mode = flags & O_ACCMODE;
+
+        if (access_mode == O_RDONLY)
+                FMT_STRING(ctx, "O_RDONLY");
+        if (access_mode == O_WRONLY)
+                FMT_STRING(ctx, "O_WRONLY");
+        if (access_mode == O_RDWR)
+                FMT_STRING(ctx, "O_RDWR");
+
+        if (flags & O_CREAT)
+                FMT_STRING(ctx, "|O_CREAT");
+        if (flags & O_TRUNC)
+                FMT_STRING(ctx, "|O_TRUNC");
+        if (flags & O_APPEND)
+                FMT_STRING(ctx, "|O_APPEND");
+        if (flags & O_NONBLOCK)
+                FMT_STRING(ctx, "|O_NONBLOCK");
+
+        return 0;
 }
 
 static inline int safe_append(struct parser_ctx_struct *ctx, int *n)
