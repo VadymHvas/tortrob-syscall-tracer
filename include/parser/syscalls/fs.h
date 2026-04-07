@@ -28,9 +28,12 @@
         X(rename, 82) \
         X(unlink, 87) \
         X(link, 86) \
-        X(symlink, 88)
+        X(symlink, 88) \
+        X(lseek, 8) \
+        X(pread64, 17) \
+        X(pwrite64, 18)
 
-#define FS_SYSCALL_COUNT 8
+#define FS_SYSCALL_COUNT 11
 
 /*
  * Generate parser function declarations for each syscall.
