@@ -61,7 +61,9 @@ DEFINE_SYSCALL_PARSER(close)
 {
         int n;
 
-        return fmt_fd(ctx, args[0], &n);
+        TRY_FMT_1(fmt_fd, ctx, args[0], &n);
+
+        return 0;
 }
 
 /* rename(const char *oldpath, const char *newpath) */
@@ -80,7 +82,9 @@ DEFINE_SYSCALL_PARSER(unlink)
 {
         int n;
 
-        return fmt_string_from_mem(ctx, args[0], NAME_MAX, &n);
+        TRY_FMT_2(fmt_string_from_mem, ctx, args[0], NAME_MAX, &n);
+
+        return 0;
 }
 
 /* link(const char *oldpath, const char *newpath) */
