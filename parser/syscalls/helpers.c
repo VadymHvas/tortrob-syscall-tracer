@@ -16,6 +16,12 @@ static int fmt_syscall_args(struct parser_ctx_struct *ctx, const struct syscall_
 static inline int safe_append(struct parser_ctx_struct *ctx, int *n);
 static void escape_seq_parse(const char *src, char *dest, size_t dst_size);
 
+#define APPEND_FMT(ctx, fmt, ...) \
+        int n = snprintf(ctx->buf + *(ctx->offset), \
+                         ctx->bufsize - *(ctx->offset), \
+                         fmt, __VA_ARGS__); \
+        return safe_append(ctx, &n)
+
 int fmt_syscall(char *buf, size_t bufsize, 
         const struct syscall_entry *syscall, pid_t tracee, raw_reg args[])
 {
@@ -30,23 +36,17 @@ int fmt_syscall(char *buf, size_t bufsize,
 
 int fmt_string(struct parser_ctx_struct *ctx, char *src)
 {
-        int n = snprintf(ctx->buf + *(ctx->offset), ctx->bufsize - *(ctx->offset), "%s", src);
-
-        return safe_append(ctx, &n);
+        APPEND_FMT(ctx, "%s", src);
 }
 
 int fmt_int(struct parser_ctx_struct *ctx, int num)
 {
-        int n = snprintf(ctx->buf + *(ctx->offset), ctx->bufsize - *(ctx->offset), "%d", num);
-
-        return safe_append(ctx, &n);
+        APPEND_FMT(ctx, "%d", num);
 }
 
 int fmt_addr(struct parser_ctx_struct *ctx, unsigned long long addr)
 {
-        int n = snprintf(ctx->buf + *(ctx->offset), ctx->bufsize - *(ctx->offset), "0x%llx",addr);
-
-        return safe_append(ctx, &n);
+        APPEND_FMT(ctx, "0x%llx", addr);
 }
 
 int fmt_string_from_mem(struct parser_ctx_struct *ctx, unsigned long long addr, size_t size)
