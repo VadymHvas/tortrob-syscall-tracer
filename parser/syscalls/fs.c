@@ -82,3 +82,25 @@ DEFINE_SYSCALL_PARSER(unlink)
 
         return fmt_string_from_mem(ctx, args[0], NAME_MAX, &n);
 }
+
+/* link(const char *oldpath, const char *newpath) */
+DEFINE_SYSCALL_PARSER(link)
+{
+        int n;
+
+        TRY_FMT_2(fmt_string_from_mem, ctx, args[0], NAME_MAX, &n);
+        TRY_FMT_WITH_SEP_2(fmt_string_from_mem, ctx, args[1], NAME_MAX, &n);
+
+        return 0;
+}
+
+/* symlink(const char *target, const char *linkpath) */
+DEFINE_SYSCALL_PARSER(symlink)
+{
+        int n;
+
+        TRY_FMT_2(fmt_string_from_mem, ctx, args[0], NAME_MAX, &n);
+        TRY_FMT_WITH_SEP_2(fmt_string_from_mem, ctx, args[1], NAME_MAX, &n);
+
+        return 0;
+}
