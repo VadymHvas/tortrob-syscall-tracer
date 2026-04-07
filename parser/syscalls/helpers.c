@@ -44,6 +44,11 @@ int fmt_int(struct parser_ctx_struct *ctx, int num)
         APPEND_FMT(ctx, "%d", num);
 }
 
+int fmt_oct(struct parser_ctx_struct *ctx, int num)
+{
+        APPEND_FMT(ctx, "%o", num);
+}
+
 int fmt_addr(struct parser_ctx_struct *ctx, unsigned long long addr)
 {
         APPEND_FMT(ctx, "0x%llx", addr);

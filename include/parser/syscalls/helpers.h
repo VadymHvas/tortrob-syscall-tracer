@@ -26,6 +26,7 @@
 
 #define FMT_STRING(ctx, str) TRY_FMT(fmt_string, ctx, str)
 #define FMT_INT(ctx, num)    TRY_FMT(fmt_int, ctx, num)
+#define FMT_OCT(ctx, num)    TRY_FMT(fmt_oct, ctx, num)
 #define FMT_ADDR(ctx, addr)  TRY_FMT(fmt_addr, ctx, addr)
 #define FMT_FD(ctx, fd)      TRY_FMT(fmt_fd, ctx, fd)
 #define FMT_SEPARATOR(ctx)   TRY_FMT(fmt_string, ctx, ", ")
@@ -54,6 +55,7 @@ int fmt_syscall(char *buf, size_t bufsize,
 
 int fmt_string(struct parser_ctx_struct *ctx, char *src);
 int fmt_int(struct parser_ctx_struct *ctx, int num);
+int fmt_oct(struct parser_ctx_struct *ctx, int num);
 int fmt_addr(struct parser_ctx_struct *ctx, unsigned long long addr);
 int fmt_string_from_mem(struct parser_ctx_struct *ctx, unsigned long long addr, size_t size);
 int fmt_fd(struct parser_ctx_struct *ctx, int fd);

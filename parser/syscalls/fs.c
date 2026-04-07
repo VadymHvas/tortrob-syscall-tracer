@@ -176,7 +176,7 @@ DEFINE_SYSCALL_PARSER(mkdir)
 {
         FMT_STRING_MEM(ctx, args[0], NAME_MAX);
         FMT_SEPARATOR(ctx);
-        FMT_INT(ctx, args[1]);
+        FMT_OCT(ctx, args[1]);
 
         return 0;
 }
@@ -189,12 +189,12 @@ DEFINE_SYSCALL_PARSER(rmdir)
         return 0;
 }
 
-/* int creat(const char *pathname, mode_t mode) */
+/* creat(const char *pathname, mode_t mode) */
 DEFINE_SYSCALL_PARSER(creat)
 {
         FMT_STRING_MEM(ctx, args[0], NAME_MAX);
         FMT_SEPARATOR(ctx);
-        FMT_INT(ctx, args[1]);
+        FMT_OCT(ctx, args[1]);
 
         return 0;
 }
@@ -264,7 +264,7 @@ DEFINE_SYSCALL_PARSER(chmod)
 {
         FMT_STRING_MEM(ctx, args[0], NAME_MAX);
         FMT_SEPARATOR(ctx);
-        FMT_INT(ctx, args[1]);
+        FMT_OCT(ctx, args[1]);
 
         return 0;
 }
@@ -274,7 +274,7 @@ DEFINE_SYSCALL_PARSER(fchmod)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
-        FMT_INT(ctx, args[1]);
+        FMT_OCT(ctx, args[1]);
 
         return 0;
 }
