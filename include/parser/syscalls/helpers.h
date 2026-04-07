@@ -20,12 +20,12 @@
  * Helper macro that tries to format an argument using a function
  * fn_call, with arguments ctx, v, n.
  */
-#define TRY_FMT_1(fn_call, ctx, v, n) \
-        if (fn_call(ctx, v, n)) \
+#define TRY_FMT_1(fn_call, ctx, v) \
+        if (fn_call(ctx, v)) \
                 return 1
 
-#define TRY_FMT_2(fn_call, ctx, v, v2, n) \
-        if (fn_call(ctx, v, v2, n)) \
+#define TRY_FMT_2(fn_call, ctx, v, v2) \
+        if (fn_call(ctx, v, v2)) \
                 return 1
 
 /**
@@ -34,13 +34,13 @@
  * Helper macro that tries to insert separator and format an argument using a function
  * fn_call, with arguments ctx, v, n.
  */
-#define TRY_FMT_WITH_SEP_1(fn_call, ctx, v, n) \
-        TRY_FMT_1(fmt_string, ctx, ", ", n); \
-        TRY_FMT_1(fn_call, ctx, v, n)
+#define TRY_FMT_WITH_SEP_1(fn_call, ctx, v) \
+        TRY_FMT_1(fmt_string, ctx, ", "); \
+        TRY_FMT_1(fn_call, ctx, v)
 
-#define TRY_FMT_WITH_SEP_2(fn_call, ctx, v, v2, n) \
-        TRY_FMT_1(fmt_string, ctx, ", ", n); \
-        TRY_FMT_2(fn_call, ctx, v, v2, n)
+#define TRY_FMT_WITH_SEP_2(fn_call, ctx, v, v2) \
+        TRY_FMT_1(fmt_string, ctx, ", "); \
+        TRY_FMT_2(fn_call, ctx, v, v2)
 
 /**
  * struct parser_ctx_struct - Parser context.
@@ -63,8 +63,8 @@ struct parser_ctx_struct {
 int fmt_syscall(char *buf, size_t bufsize, 
         const struct syscall_entry *syscall, pid_t tracee, raw_reg args[]);
 
-int fmt_string(struct parser_ctx_struct *ctx, char *src, int *n);
-int fmt_int(struct parser_ctx_struct *ctx, int num, int *n);
-int fmt_addr(struct parser_ctx_struct *ctx, unsigned long long addr, int *n);
-int fmt_string_from_mem(struct parser_ctx_struct *ctx, unsigned long long addr, size_t size, int *n);
-int fmt_fd(struct parser_ctx_struct *ctx, int fd, int *n);
+int fmt_string(struct parser_ctx_struct *ctx, char *src);
+int fmt_int(struct parser_ctx_struct *ctx, int num);
+int fmt_addr(struct parser_ctx_struct *ctx, unsigned long long addr);
+int fmt_string_from_mem(struct parser_ctx_struct *ctx, unsigned long long addr, size_t size);
+int fmt_fd(struct parser_ctx_struct *ctx, int fd);

@@ -28,29 +28,30 @@ int fmt_syscall(char *buf, size_t bufsize,
         return fmt_syscall_args(&ctx, syscall, args);
 }
 
-int fmt_string(struct parser_ctx_struct *ctx, char *src, int *n)
+int fmt_string(struct parser_ctx_struct *ctx, char *src)
 {
-        *n = snprintf(ctx->buf + *(ctx->offset), ctx->bufsize - *(ctx->offset), "%s", src);
+        int n = snprintf(ctx->buf + *(ctx->offset), ctx->bufsize - *(ctx->offset), "%s", src);
 
-        return safe_append(ctx, n);
+        return safe_append(ctx, &n);
 }
 
-int fmt_int(struct parser_ctx_struct *ctx, int num, int *n)
+int fmt_int(struct parser_ctx_struct *ctx, int num)
 {
-        *n = snprintf(ctx->buf + *(ctx->offset), ctx->bufsize - *(ctx->offset), "%d", num);
+        int n = snprintf(ctx->buf + *(ctx->offset), ctx->bufsize - *(ctx->offset), "%d", num);
 
-        return safe_append(ctx, n);
+        return safe_append(ctx, &n);
 }
 
-int fmt_addr(struct parser_ctx_struct *ctx, unsigned long long addr, int *n)
+int fmt_addr(struct parser_ctx_struct *ctx, unsigned long long addr)
 {
-        *n = snprintf(ctx->buf + *(ctx->offset), ctx->bufsize - *(ctx->offset), "0x%llx",addr);
+        int n = snprintf(ctx->buf + *(ctx->offset), ctx->bufsize - *(ctx->offset), "0x%llx",addr);
 
-        return safe_append(ctx, n);
+        return safe_append(ctx, &n);
 }
 
-int fmt_string_from_mem(struct parser_ctx_struct *ctx, unsigned long long addr, size_t size, int *n)
+int fmt_string_from_mem(struct parser_ctx_struct *ctx, unsigned long long addr, size_t size)
 {
+        int n;
         char buf[size + 1];
         char escaped_buf[2 * size + 1];
 
@@ -61,9 +62,9 @@ int fmt_string_from_mem(struct parser_ctx_struct *ctx, unsigned long long addr, 
 
         escape_seq_parse(buf, escaped_buf, 2 * size + 1);
 
-        TRY_FMT_1(fmt_string, ctx, "\"", n);
-        TRY_FMT_1(fmt_string, ctx, escaped_buf, n);
-        TRY_FMT_1(fmt_string, ctx, "\"", n);
+        TRY_FMT_1(fmt_string, ctx, "\"");
+        TRY_FMT_1(fmt_string, ctx, escaped_buf);
+        TRY_FMT_1(fmt_string, ctx, "\"");
 
         return 0;
 }
@@ -89,12 +90,12 @@ static int fmt_syscall_args(struct parser_ctx_struct *ctx, const struct syscall_
         return 0;
 }
 
-int fmt_fd(struct parser_ctx_struct *ctx, int fd, int *n)
+int fmt_fd(struct parser_ctx_struct *ctx, int fd)
 {
         if (fd > 2)
-                return fmt_int(ctx, fd, n);
+                return fmt_int(ctx, fd);
         else
-                return fmt_string(ctx, STDFD_NAMES[fd], n);
+                return fmt_string(ctx, STDFD_NAMES[fd]);
 }
 
 static inline int safe_append(struct parser_ctx_struct *ctx, int *n)
