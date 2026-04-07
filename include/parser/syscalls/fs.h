@@ -32,9 +32,11 @@
         X(lseek, 8) \
         X(pread64, 17) \
         X(pwrite64, 18) \
-        X(readlink, 89)
+        X(readlink, 89) \
+        X(getcwd, 79) \
+        X(chdir, 80)
 
-#define FS_SYSCALL_COUNT 11
+#define FS_SYSCALL_COUNT 14
 
 /*
  * Generate parser function declarations for each syscall.

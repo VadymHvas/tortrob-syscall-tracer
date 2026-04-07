@@ -152,3 +152,21 @@ DEFINE_SYSCALL_PARSER(readlink)
 
         return 0;
 }
+
+/* getcwd(char *buf, size_t size) */
+DEFINE_SYSCALL_PARSER(getcwd)
+{
+        FMT_ADDR(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[1]);
+
+        return 0;
+}
+
+/* chdir(const char *path) */
+DEFINE_SYSCALL_PARSER(chdir)
+{
+        FMT_STRING_MEM(ctx, args[0], NAME_MAX);
+
+        return 0;
+}
