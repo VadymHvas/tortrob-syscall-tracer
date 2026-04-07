@@ -62,9 +62,9 @@ int fmt_string_from_mem(struct parser_ctx_struct *ctx, unsigned long long addr, 
 
         escape_seq_parse(buf, escaped_buf, 2 * size + 1);
 
-        TRY_FMT_1(fmt_string, ctx, "\"");
-        TRY_FMT_1(fmt_string, ctx, escaped_buf);
-        TRY_FMT_1(fmt_string, ctx, "\"");
+        TRY_FMT(fmt_string, ctx, "\"");
+        TRY_FMT(fmt_string, ctx, escaped_buf);
+        TRY_FMT(fmt_string, ctx, "\"");
 
         return 0;
 }

@@ -15,32 +15,21 @@
         struct parser_ctx_struct var = { buf, bufsize, offset, tracee };
 
 /**
- * TRY_FMT_n(fn_call, ctx, ..., n) - Try to format argument.
+ * TRY_FMT(fn_call, ctx, ...) - Try to format argument.
  * 
  * Helper macro that tries to format an argument using a function
- * fn_call, with arguments ctx, v, n.
+ * fn_call, with arguments ctx, args.
  */
-#define TRY_FMT_1(fn_call, ctx, v) \
-        if (fn_call(ctx, v)) \
+#define TRY_FMT(fn_call, ctx, ...) \
+        if (fn_call(ctx, __VA_ARGS__)) \
                 return 1
 
-#define TRY_FMT_2(fn_call, ctx, v, v2) \
-        if (fn_call(ctx, v, v2)) \
-                return 1
-
-/**
- * TRY_FMT_WITH_SEP_n(fn_call, ctx, ..., n) - Try to insert separator and format argument.
- * 
- * Helper macro that tries to insert separator and format an argument using a function
- * fn_call, with arguments ctx, v, n.
- */
-#define TRY_FMT_WITH_SEP_1(fn_call, ctx, v) \
-        TRY_FMT_1(fmt_string, ctx, ", "); \
-        TRY_FMT_1(fn_call, ctx, v)
-
-#define TRY_FMT_WITH_SEP_2(fn_call, ctx, v, v2) \
-        TRY_FMT_1(fmt_string, ctx, ", "); \
-        TRY_FMT_2(fn_call, ctx, v, v2)
+#define FMT_STRING(ctx, str) TRY_FMT(fmt_string, ctx, str)
+#define FMT_INT(ctx, num)    TRY_FMT(fmt_int, ctx, num)
+#define FMT_ADDR(ctx, addr)  TRY_FMT(fmt_addr, ctx, addr)
+#define FMT_FD(ctx, fd)      TRY_FMT(fmt_fd, ctx, fd)
+#define FMT_SEPARATOR(ctx)   TRY_FMT(fmt_string, ctx, ", ")
+#define FMT_STRING_MEM(ctx, addr, size) TRY_FMT(fmt_string_from_mem, ctx, addr, size)
 
 /**
  * struct parser_ctx_struct - Parser context.

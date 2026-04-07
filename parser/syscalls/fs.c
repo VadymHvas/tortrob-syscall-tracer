@@ -24,9 +24,11 @@ const char *STDFD_NAMES[] = {
 /* read(int fd, void *buf, size_t count) */
 DEFINE_SYSCALL_PARSER(read)
 {
-        TRY_FMT_1(fmt_fd, ctx, args[0]);
-        TRY_FMT_WITH_SEP_1(fmt_addr, ctx, args[1]);
-        TRY_FMT_WITH_SEP_1(fmt_int, ctx, args[2]);
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_ADDR(ctx, args[1]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[2]);
 
         return 0;
 };
@@ -34,9 +36,11 @@ DEFINE_SYSCALL_PARSER(read)
 /* write(int fd, const void *buf, size_t count) */
 DEFINE_SYSCALL_PARSER(write)
 {
-        TRY_FMT_1(fmt_fd, ctx, args[0]);
-        TRY_FMT_WITH_SEP_2(fmt_string_from_mem, ctx, args[1], args[2]);
-        TRY_FMT_WITH_SEP_1(fmt_int, ctx, args[2]);
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_MEM(ctx, args[1], args[2]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[2]);
 
         return 0;
 };
@@ -44,8 +48,9 @@ DEFINE_SYSCALL_PARSER(write)
 /* open(const char *path, int flags) */
 DEFINE_SYSCALL_PARSER(open)
 {
-        TRY_FMT_2(fmt_string_from_mem, ctx, args[0], args[1]);
-        TRY_FMT_WITH_SEP_1(fmt_int, ctx, args[1]);
+        FMT_STRING_MEM(ctx, args[0], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[1]);
 
         return 0;
 }
@@ -53,7 +58,7 @@ DEFINE_SYSCALL_PARSER(open)
 /* close(int fd) */
 DEFINE_SYSCALL_PARSER(close)
 {
-        TRY_FMT_1(fmt_fd, ctx, args[0]);
+        FMT_FD(ctx, args[0]);
 
         return 0;
 }
@@ -61,8 +66,9 @@ DEFINE_SYSCALL_PARSER(close)
 /* rename(const char *oldpath, const char *newpath) */
 DEFINE_SYSCALL_PARSER(rename)
 {
-        TRY_FMT_2(fmt_string_from_mem, ctx, args[0], NAME_MAX);
-        TRY_FMT_WITH_SEP_2(fmt_string_from_mem, ctx, args[1], NAME_MAX);
+        FMT_STRING_MEM(ctx, args[0], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_MEM(ctx, args[1], NAME_MAX);
 
         return 0;
 }
@@ -70,7 +76,7 @@ DEFINE_SYSCALL_PARSER(rename)
 /* unlink(const char *path) */
 DEFINE_SYSCALL_PARSER(unlink)
 {
-        TRY_FMT_2(fmt_string_from_mem, ctx, args[0], NAME_MAX);
+        FMT_STRING_MEM(ctx, args[0], NAME_MAX);
 
         return 0;
 }
@@ -78,8 +84,9 @@ DEFINE_SYSCALL_PARSER(unlink)
 /* link(const char *oldpath, const char *newpath) */
 DEFINE_SYSCALL_PARSER(link)
 {
-        TRY_FMT_2(fmt_string_from_mem, ctx, args[0], NAME_MAX);
-        TRY_FMT_WITH_SEP_2(fmt_string_from_mem, ctx, args[1], NAME_MAX);
+        FMT_STRING_MEM(ctx, args[0], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_MEM(ctx, args[1], NAME_MAX);
 
         return 0;
 }
@@ -87,8 +94,9 @@ DEFINE_SYSCALL_PARSER(link)
 /* symlink(const char *target, const char *linkpath) */
 DEFINE_SYSCALL_PARSER(symlink)
 {
-        TRY_FMT_2(fmt_string_from_mem, ctx, args[0], NAME_MAX);
-        TRY_FMT_WITH_SEP_2(fmt_string_from_mem, ctx, args[1], NAME_MAX);
+        FMT_STRING_MEM(ctx, args[0], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_MEM(ctx, args[1], NAME_MAX);
 
         return 0;
 }
@@ -96,9 +104,11 @@ DEFINE_SYSCALL_PARSER(symlink)
 /* lseek(int fd, off_t offset, int whence) */
 DEFINE_SYSCALL_PARSER(lseek)
 {
-        TRY_FMT_1(fmt_fd, ctx, args[0]);
-        TRY_FMT_WITH_SEP_1(fmt_int, ctx, args[1]);
-        TRY_FMT_WITH_SEP_1(fmt_int, ctx, args[2]);
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[1]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[2]);
 
         return 0;
 }
@@ -106,10 +116,13 @@ DEFINE_SYSCALL_PARSER(lseek)
 /* pread64(int fd, void *buf, size_t count, off_t offset) */
 DEFINE_SYSCALL_PARSER(pread64)
 {
-        TRY_FMT_1(fmt_fd, ctx, args[0]);
-        TRY_FMT_WITH_SEP_1(fmt_addr, ctx, args[1]);
-        TRY_FMT_WITH_SEP_1(fmt_int, ctx, args[2]);
-        TRY_FMT_WITH_SEP_1(fmt_int, ctx, args[3]);
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_ADDR(ctx, args[1]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[2]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[3]);
 
         return 0;
 }
@@ -117,10 +130,13 @@ DEFINE_SYSCALL_PARSER(pread64)
 /* pwrite64(int fd, const void *buf, size_t count, off_t offset) */
 DEFINE_SYSCALL_PARSER(pwrite64)
 {
-        TRY_FMT_1(fmt_fd, ctx, args[0]);
-        TRY_FMT_WITH_SEP_2(fmt_string_from_mem, ctx, args[1], args[2]);
-        TRY_FMT_WITH_SEP_1(fmt_int, ctx, args[2]);
-        TRY_FMT_WITH_SEP_1(fmt_int, ctx, args[3]);
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_ADDR(ctx, args[1]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[2]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[3]);
 
         return 0;
 }
