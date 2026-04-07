@@ -39,9 +39,12 @@
         X(rmdir, 84) \
         X(creat, 85) \
         X(truncate, 76) \
-        X(ftruncate, 77)
+        X(ftruncate, 77) \
+        X(stat, 4) \
+        X(fstat, 5) \
+        X(lstat, 6)
 
-#define FS_SYSCALL_COUNT 19
+#define FS_SYSCALL_COUNT 22
 
 /*
  * Generate parser function declarations for each syscall.

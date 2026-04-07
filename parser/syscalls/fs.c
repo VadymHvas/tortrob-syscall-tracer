@@ -218,3 +218,33 @@ DEFINE_SYSCALL_PARSER(ftruncate)
 
         return 0;
 }
+
+/* stat(const char *pathname, struct stat *statbuf) */
+DEFINE_SYSCALL_PARSER(stat)
+{
+        FMT_STRING_MEM(ctx, args[0], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_ADDR(ctx, args[1]); // TODO: Implement structures parser and formatter.
+
+        return 0;
+}
+
+/* fstat(int fd, struct stat *statbuf) */
+DEFINE_SYSCALL_PARSER(fstat)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_ADDR(ctx, args[1]);
+
+        return 0;
+}
+
+/* stat(const char *pathname, struct stat *statbuf) */
+DEFINE_SYSCALL_PARSER(lstat)
+{
+        FMT_STRING_MEM(ctx, args[0], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_ADDR(ctx, args[1]);
+
+        return 0;
+}
