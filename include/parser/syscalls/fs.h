@@ -42,9 +42,13 @@
         X(ftruncate, 77) \
         X(stat, 4) \
         X(fstat, 5) \
-        X(lstat, 6)
+        X(lstat, 6) \
+        X(access, 21) \
+        X(chmod, 90) \
+        X(fchmod, 91) \
+        X(chown, 92)
 
-#define FS_SYSCALL_COUNT 22
+#define FS_SYSCALL_COUNT 26
 
 /*
  * Generate parser function declarations for each syscall.

@@ -248,3 +248,45 @@ DEFINE_SYSCALL_PARSER(lstat)
 
         return 0;
 }
+
+/* access(const char *pathname, int mode) */
+DEFINE_SYSCALL_PARSER(access)
+{
+        FMT_STRING_MEM(ctx, args[0], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[1]);
+
+        return 0;
+}
+
+/* chmod(const char *path, mode_t mode) */
+DEFINE_SYSCALL_PARSER(chmod)
+{
+        FMT_STRING_MEM(ctx, args[0], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[1]);
+
+        return 0;
+}
+
+/* fchmod(int fd, mode_t mode) */
+DEFINE_SYSCALL_PARSER(fchmod)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[1]);
+
+        return 0;
+}
+
+/* chown(const char *path, uid_t owner, gid_t group) */
+DEFINE_SYSCALL_PARSER(chown)
+{
+        FMT_STRING_MEM(ctx, args[0], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[1]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[2]);
+
+        return 0;
+}
