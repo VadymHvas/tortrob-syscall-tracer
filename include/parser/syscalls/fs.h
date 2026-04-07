@@ -34,9 +34,14 @@
         X(pwrite64, 18) \
         X(readlink, 89) \
         X(getcwd, 79) \
-        X(chdir, 80)
+        X(chdir, 80) \
+        X(mkdir, 83) \ 
+        X(rmdir, 84) \
+        X(creat, 85) \
+        X(truncate, 76) \
+        X(ftruncate, 77)
 
-#define FS_SYSCALL_COUNT 14
+#define FS_SYSCALL_COUNT 19
 
 /*
  * Generate parser function declarations for each syscall.

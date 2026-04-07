@@ -170,3 +170,51 @@ DEFINE_SYSCALL_PARSER(chdir)
 
         return 0;
 }
+
+/* mkdir(const char *pathname, mode_t mode) */
+DEFINE_SYSCALL_PARSER(mkdir)
+{
+        FMT_STRING_MEM(ctx, args[0], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[1]);
+
+        return 0;
+}
+
+/* rmdir(const char *pathname) */
+DEFINE_SYSCALL_PARSER(rmdir)
+{
+        FMT_STRING_MEM(ctx, args[0], NAME_MAX);
+
+        return 0;
+}
+
+/* int creat(const char *pathname, mode_t mode) */
+DEFINE_SYSCALL_PARSER(creat)
+{
+        FMT_STRING_MEM(ctx, args[0], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[1]);
+
+        return 0;
+}
+
+/* truncate(const char *path, off_t length */
+DEFINE_SYSCALL_PARSER(truncate)
+{
+        FMT_STRING_MEM(ctx, args[0], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[1]);
+
+        return 0;
+}
+
+/* ftruncate(int fd, off_t length) */
+DEFINE_SYSCALL_PARSER(ftruncate)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[1]);
+
+        return 0;
+}
