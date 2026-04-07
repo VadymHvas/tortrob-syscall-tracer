@@ -31,7 +31,8 @@
         X(symlink, 88) \
         X(lseek, 8) \
         X(pread64, 17) \
-        X(pwrite64, 18)
+        X(pwrite64, 18) \
+        X(readlink, 89)
 
 #define FS_SYSCALL_COUNT 11
 

@@ -132,11 +132,23 @@ DEFINE_SYSCALL_PARSER(pwrite64)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
-        FMT_ADDR(ctx, args[1]);
+        FMT_STRING_MEM(ctx, args[1], args[2]);
         FMT_SEPARATOR(ctx);
         FMT_INT(ctx, args[2]);
         FMT_SEPARATOR(ctx);
         FMT_INT(ctx, args[3]);
+
+        return 0;
+}
+
+/* readlink(const char *path, char *buf, size_t count) */
+DEFINE_SYSCALL_PARSER(readlink)
+{
+        FMT_STRING_MEM(ctx, args[0], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_ADDR(ctx, args[1]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[2]);
 
         return 0;
 }
