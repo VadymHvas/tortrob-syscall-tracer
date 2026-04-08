@@ -29,7 +29,7 @@ int fmt_syscall(char *buf, size_t bufsize,
         const struct syscall_entry *syscall, pid_t tracee, raw_reg args[])
 {
         size_t offset = 0;
-        INIT_PARSER_CTX(ctx, buf, bufsize, &offset, tracee);
+        INIT_PARSER_CTX(ctx, buf, bufsize, &offset, tracee, 0);
 
         if (fmt_syscall_name(&ctx, syscall))
                 return 1;

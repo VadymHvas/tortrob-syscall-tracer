@@ -11,8 +11,8 @@
  * Helper macro that initializes 
  * the struct parser_ctx_struct and fills it with values.
  */
-#define INIT_PARSER_CTX(var, buf, bufsize, offset, tracee) \
-        struct parser_ctx_struct var = { buf, bufsize, offset, tracee };
+#define INIT_PARSER_CTX(var, buf, bufsize, offset, tracee, extra) \
+        struct parser_ctx_struct var = { buf, bufsize, offset, tracee, extra };
 
 /**
  * TRY_FMT(fn_call, ctx, ...) - Try to format argument.
@@ -40,6 +40,7 @@
  * @bufsize: Max size of buffer.
  * @offset:  Pointer to offset variable.
  * @tracee:  Tracee process PID.
+ * @extra:   Field for special cases, for instance fcntl(), prctl(), ioctl() etc.
  * 
  * This structure stores all the necessary
  * information for correct parsing using offsets.
@@ -49,6 +50,7 @@ struct parser_ctx_struct {
         size_t bufsize;
         size_t *offset;
         pid_t tracee;
+        int extra;
 };
 
 int fmt_syscall(char *buf, size_t bufsize, 

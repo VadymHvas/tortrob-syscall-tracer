@@ -65,9 +65,10 @@
         X(fdatasync, 75) \
         X(dup, 32) \
         X(dup2, 33) \
-        X(dup3, 292)
+        X(dup3, 292) \
+        X(fcntl, 72)
 
-#define FS_SYSCALL_COUNT 45
+#define FS_SYSCALL_COUNT 46
 
 /*
  * Generate parser function declarations for each syscall.

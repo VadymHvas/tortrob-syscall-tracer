@@ -7,11 +7,13 @@
                 return 0; \
         }
 
-/* Masks use the same iteration pattern and zero check as flags,
+/* Masks and special cases use the same iteration pattern and zero check as flags,
  * macro is alias for readability.
  */
-#define FOR_EACH_MASKS(masks_arr) FOR_EACH_FLAGS(masks_arr)
-#define FMT_MASK_ZERO_IF_NONE(ctx, mask) FMT_FLAGS_ZERO_IF_NONE(ctx, mask)
+#define FOR_EACH_MASKS(masks_arr)  FOR_EACH_FLAGS(masks_arr)
+#define FOR_EACH_SPECIAL(spec_arr) FOR_EACH_FLAGS(spec_arr)
+#define FMT_SPECIAL_ZERO_IF_NONE(ctx, spec) FMT_FLAGS_ZERO_IF_NONE(ctx, spec)
+#define FMT_MASK_ZERO_IF_NONE(ctx, mask)    FMT_FLAGS_ZERO_IF_NONE(ctx, mask)
 
 #define FMT_FLAG_SEPARATOR(ctx, first) \
         if (!(first)) \

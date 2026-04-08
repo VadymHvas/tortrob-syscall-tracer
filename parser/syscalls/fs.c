@@ -13,6 +13,7 @@
 #include "parser/syscalls/fs.h"
 #include "parser/syscalls/args/fs/flags.h"
 #include "parser/syscalls/args/fs/mask.h"
+#include "parser/syscalls/args/fs/special.h"
 
 const struct parser_struct fs_syscalls[] = {
 #define X(name, nr) { nr, SYSCALL_PARSER_NAME(name) },
@@ -534,6 +535,21 @@ DEFINE_SYSCALL_PARSER(dup3)
         FMT_FD(ctx, args[1]);
         FMT_SEPARATOR(ctx);
         FMT_DUP3_FLAGS(ctx, args[2]);
+
+        return 0;
+}
+
+/* fcntl(int fd, int op, ...) */
+DEFINE_SYSCALL_PARSER(fcntl)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_FCNTL_CMD(ctx, args[1]);
+
+        if (ctx->extra != FCNTL_IGNORE_ARG3) {
+                FMT_SEPARATOR(ctx);
+                FMT_FCNTL_ARG3(ctx, args[2]);
+        }
 
         return 0;
 }
