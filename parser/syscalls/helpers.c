@@ -13,6 +13,29 @@
 #include "parser/syscalls/fs.h"
 #include "core/trace.h"
 
+static const struct flag_info open_flags[] = {
+        { O_CREAT,     "O_CREAT" },
+        { O_EXCL,      "O_EXECL" },
+        { O_TRUNC,     "O_TRUNC" },
+        { O_APPEND,    "O_APPEND" },
+        { O_NONBLOCK,  "O_NONBLOCK" },
+        { O_DSYNC,     "O_DSYNC" },
+        { O_SYNC,      "O_SYNC" },
+        { O_RSYNC,     "O_RSYNC" },
+        { O_CLOEXEC,   "O_CLOEXEC" },
+        { O_DIRECTORY, "O_DIRECTORY" },
+        { O_NOFOLLOW,  "O_NOFOLLOW" },
+        { O_TMPFILE,   "O_TMPFILE" }
+};
+
+static const struct flag_info at_flags[] = {
+        { AT_SYMLINK_FOLLOW,   "AT_SYMLINK_FOLLOW" },
+        { AT_SYMLINK_NOFOLLOW, "AT_SYMLINK_NOFOLLOW" },
+        { AT_REMOVEDIR,        "AT_REMOVEDIR" },
+        { AT_NO_AUTOMOUNT,     "AT_NO_AUTOMOUNT" },
+        { AT_EMPTY_PATH,       "AT_EMPTY_PATH" },
+};
+
 /* Format syscall string function decomposition. */
 static int fmt_syscall_name(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall);
 static int fmt_syscall_args(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall, raw_reg args[]);
@@ -90,23 +113,59 @@ int fmt_fd(struct parser_ctx_struct *ctx, int fd)
 
 int fmt_open_flags(struct parser_ctx_struct *ctx, int flags)
 {
-        int access_mode = flags & O_ACCMODE;
+        switch (flags & O_ACCMODE)
+        {
+        case O_RDONLY: FMT_STRING(ctx, "O_RDONLY"); break;
+        case O_WRONLY: FMT_STRING(ctx, "O_WRONLY"); break;
+        case O_RDWR: FMT_STRING(ctx, "O_RDWR"); break;
+        }
 
-        if (access_mode == O_RDONLY)
-                FMT_STRING(ctx, "O_RDONLY");
-        if (access_mode == O_WRONLY)
-                FMT_STRING(ctx, "O_WRONLY");
-        if (access_mode == O_RDWR)
-                FMT_STRING(ctx, "O_RDWR");
+        for (int i = 0; i < sizeof(open_flags) / sizeof(open_flags[0]); i++) {
+                if (flags & open_flags[i].flag) {
+                        FMT_STRING(ctx, "|");
+                        FMT_STRING(ctx, open_flags[i].name);
+                }
+        }
 
-        if (flags & O_CREAT)
-                FMT_STRING(ctx, "|O_CREAT");
-        if (flags & O_TRUNC)
-                FMT_STRING(ctx, "|O_TRUNC");
-        if (flags & O_APPEND)
-                FMT_STRING(ctx, "|O_APPEND");
-        if (flags & O_NONBLOCK)
-                FMT_STRING(ctx, "|O_NONBLOCK");
+        return 0;
+}
+
+int fmt_at_flags(struct parser_ctx_struct *ctx, int flags)
+{
+        if (flags == 0) {
+                FMT_INT(ctx, 0);
+                return 0;
+        }
+
+        int first = 1;
+
+        for (int i = 0; i < sizeof(at_flags) / sizeof(at_flags[0]); i++) {
+                if (flags & at_flags[i].flag) {
+                        if (!first)
+                                FMT_STRING(ctx, "|");
+
+                        FMT_STRING(ctx, at_flags[i].name);
+                        first = 0;
+                }
+        }
+
+        if (flags & AT_STATX_SYNC_TYPE) {
+                const char *sync_type_name = NULL;
+
+                switch (flags & AT_STATX_SYNC_TYPE) {
+                        case AT_STATX_SYNC_AS_STAT: sync_type_name = "AT_STATX_SYNC_AS_STAT"; break;
+                        case AT_STATX_FORCE_SYNC:  sync_type_name = "AT_STATX_FORCE_SYNC"; break;
+                        case AT_STATX_DONT_SYNC:   sync_type_name = "AT_STATX_DONT_SYNC"; break;
+                }
+
+                if (sync_type_name) {
+                        if (!first)
+                                FMT_STRING(ctx, "|");
+                        
+                        FMT_STRING(ctx, sync_type_name);
+                }
+
+        }
 
         return 0;
 }

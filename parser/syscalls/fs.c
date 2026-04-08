@@ -2,6 +2,8 @@
  * parser/syscalls/fs.c - Implementation of filesystem syscall parsers.
  */
 
+#define _GNU_SOURCE
+
 #include <stdio.h>
 #include <fcntl.h>
 
@@ -45,6 +47,12 @@ DEFINE_SYSCALL_PARSER(write)
 
         return 0;
 };
+
+/**
+ * TODO: 
+ * for parsers open(), openat(),
+ * also format the mode argument if flags & O_CREAT.
+ */
 
 /* open(const char *path, int flags) */
 DEFINE_SYSCALL_PARSER(open)
@@ -94,6 +102,18 @@ DEFINE_SYSCALL_PARSER(unlink)
         return 0;
 }
 
+/* unlinkat(int dirfd, const char *pathname, int flags) */
+DEFINE_SYSCALL_PARSER(unlinkat)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_MEM(ctx, args[1], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_AT_FLAGS(ctx, args[2]);
+
+        return 0;
+}
+
 /* link(const char *oldpath, const char *newpath) */
 DEFINE_SYSCALL_PARSER(link)
 {
@@ -104,12 +124,40 @@ DEFINE_SYSCALL_PARSER(link)
         return 0;
 }
 
+/* linkat(int olddirfd, const char *oldpath, int newdirfd, const char *newpath, int flags) */
+DEFINE_SYSCALL_PARSER(linkat)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_MEM(ctx, args[1], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_FD(ctx, args[2]);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_MEM(ctx, args[3], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_AT_FLAGS(ctx, args[4]);
+
+        return 0;
+}
+
 /* symlink(const char *target, const char *linkpath) */
 DEFINE_SYSCALL_PARSER(symlink)
 {
         FMT_STRING_MEM(ctx, args[0], NAME_MAX);
         FMT_SEPARATOR(ctx);
         FMT_STRING_MEM(ctx, args[1], NAME_MAX);
+
+        return 0;
+}
+
+/* symlinkat(const char *target, int newdirfd, const char *linkpath) */
+DEFINE_SYSCALL_PARSER(symlinkat)
+{
+        FMT_STRING_MEM(ctx, args[0], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_FD(ctx, args[1]);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_MEM(ctx, args[2], NAME_MAX);
 
         return 0;
 }
@@ -190,6 +238,18 @@ DEFINE_SYSCALL_PARSER(mkdir)
         FMT_STRING_MEM(ctx, args[0], NAME_MAX);
         FMT_SEPARATOR(ctx);
         FMT_OCT(ctx, args[1]);
+
+        return 0;
+}
+
+/* mkdirat(int dirfd, const char *pathname, mode_t mode) */
+DEFINE_SYSCALL_PARSER(mkdirat)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_MEM(ctx, args[1], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_OCT(ctx, args[2]);
 
         return 0;
 }
