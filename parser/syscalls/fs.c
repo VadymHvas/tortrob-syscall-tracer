@@ -50,18 +50,17 @@ DEFINE_SYSCALL_PARSER(write)
         return 0;
 };
 
-/**
- * TODO: 
- * for parsers open(), openat(),
- * also format the mode argument if flags & O_CREAT.
- */
-
-/* open(const char *path, int flags) */
+/* open(const char *path, int flags, mode_t mode) */
 DEFINE_SYSCALL_PARSER(open)
 {
         FMT_STRING_MEM(ctx, args[0], NAME_MAX);
         FMT_SEPARATOR(ctx);
         FMT_OPEN_FLAGS(ctx, args[1]);
+
+        if (args[1] & O_CREAT) {
+                FMT_SEPARATOR(ctx);
+                FMT_OCT(ctx, args[2]);
+        }
 
         return 0;
 }
@@ -74,6 +73,11 @@ DEFINE_SYSCALL_PARSER(openat)
         FMT_STRING_MEM(ctx, args[1], NAME_MAX);
         FMT_SEPARATOR(ctx);
         FMT_OPEN_FLAGS(ctx, args[2]);
+
+        if (args[2] & O_CREAT) {
+                FMT_SEPARATOR(ctx);
+                FMT_OCT(ctx, args[3]);
+        }
 
         return 0;
 }
