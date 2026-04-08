@@ -27,6 +27,8 @@
         X(openat, 257) \
         X(close, 3) \
         X(rename, 82) \
+        X(renameat, 264) \
+        X(renameat2, 316) \
         X(unlink, 87) \
         X(unlinkat, 263) \
         X(link, 86) \
@@ -37,6 +39,7 @@
         X(pread64, 17) \
         X(pwrite64, 18) \
         X(readlink, 89) \
+        X(readlinkat, 267) \
         X(getcwd, 79) \
         X(chdir, 80) \
         X(mkdir, 83) \
@@ -53,7 +56,7 @@
         X(fchmod, 91) \
         X(chown, 92)
 
-#define FS_SYSCALL_COUNT 31
+#define FS_SYSCALL_COUNT 33
 
 /*
  * Generate parser function declarations for each syscall.

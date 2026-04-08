@@ -94,6 +94,36 @@ DEFINE_SYSCALL_PARSER(rename)
         return 0;
 }
 
+/* renameat(int olddirfd, const char *oldpath, int newdirfd, const char *newpath) */
+DEFINE_SYSCALL_PARSER(renameat)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_MEM(ctx, args[1], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_FD(ctx, args[2]);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_MEM(ctx, args[3], NAME_MAX);
+
+        return 0;
+}
+
+/* renameat2(int olddirfd, const char *oldpath, int newdirfd, const char *newpath, unsigned int flags) */
+DEFINE_SYSCALL_PARSER(renameat2)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_MEM(ctx, args[1], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_FD(ctx, args[2]);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_MEM(ctx, args[3], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_RENAMEAT2_FLAGS(ctx, args[4]);
+
+        return 0;
+}
+
 /* unlink(const char *path) */
 DEFINE_SYSCALL_PARSER(unlink)
 {
@@ -210,6 +240,20 @@ DEFINE_SYSCALL_PARSER(readlink)
         FMT_ADDR(ctx, args[1]);
         FMT_SEPARATOR(ctx);
         FMT_INT(ctx, args[2]);
+
+        return 0;
+}
+
+/* readlinkat(int dirfd, const char *pathname, char *buf, size_t bufsiz) */
+DEFINE_SYSCALL_PARSER(readlinkat)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_MEM(ctx, args[1], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_ADDR(ctx, args[2]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[3]);
 
         return 0;
 }

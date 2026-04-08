@@ -36,6 +36,12 @@ static const struct flag_info at_flags[] = {
         { AT_EMPTY_PATH,       "AT_EMPTY_PATH" },
 };
 
+static const struct flag_info renameat2_flags[] = {
+        { RENAME_NOREPLACE, "RENAME_NOREPLACE" },
+        { RENAME_EXCHANGE,  "RENAME_EXCHANGE" },
+        { RENAME_WHITEOUT,  "RENAME_WHITEOUT" }
+};
+
 /* Format syscall string function decomposition. */
 static int fmt_syscall_name(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall);
 static int fmt_syscall_args(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall, raw_reg args[]);
@@ -165,6 +171,28 @@ int fmt_at_flags(struct parser_ctx_struct *ctx, int flags)
                         FMT_STRING(ctx, sync_type_name);
                 }
 
+        }
+
+        return 0;
+}
+
+int fmt_renameat2_flags(struct parser_ctx_struct *ctx, int flags)
+{
+        if (flags == 0) {
+                FMT_INT(ctx, 0);
+                return 0;
+        }
+
+        int first = 1;
+
+        for  (int i = 0; i < sizeof(renameat2_flags) / sizeof(renameat2_flags[0]); i++) {
+                if (flags & renameat2_flags[i].flag) {
+                        if (!first)
+                                FMT_STRING(ctx, "|");
+
+                        FMT_STRING(ctx, renameat2_flags[i].name);
+                        first = 0;
+                }
         }
 
         return 0;
