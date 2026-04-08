@@ -50,13 +50,11 @@ int syscall_parse(struct parser_ctx_struct *ctx, const struct syscall_entry *sys
 static int default_syscall_parser(struct parser_ctx_struct *ctx, int nr_args, raw_reg args[])
 {
         for (int i = 0; i < nr_args; i++) {
-                if (*(ctx->offset) >= ctx->bufsize)
-                        break;
-
-                const char *sep = (i == 0) ? "" : ", "; 
-
-                *(ctx->offset) += snprintf(ctx->buf + *(ctx->offset), ctx->bufsize - *(ctx->offset), "%s%llu", sep, args[i]);
+                if (i != 0)
+                        FMT_SEPARATOR(ctx);
+                FMT_LLU(ctx, args[i]);
         }
+
 
         return 0;
 }
