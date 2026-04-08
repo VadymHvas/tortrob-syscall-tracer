@@ -16,6 +16,7 @@
 /* Format syscall string function decomposition. */
 static int fmt_syscall_name(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall);
 static int fmt_syscall_args(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall, raw_reg args[]);
+static int fmt_null(struct parser_ctx_struct *ctx);
 static inline int safe_append(struct parser_ctx_struct *ctx, int *n);
 static void escape_seq_parse(const char *src, char *dest, size_t dst_size);
 
@@ -59,6 +60,9 @@ int fmt_addr(struct parser_ctx_struct *ctx, unsigned long long addr)
 
 int fmt_string_from_mem(struct parser_ctx_struct *ctx, unsigned long long addr, size_t size)
 {
+        if (!addr)
+                return fmt_null(ctx);
+
         int n;
         char buf[size + 1];
         char escaped_buf[2 * size + 1];
@@ -107,6 +111,11 @@ static int fmt_syscall_args(struct parser_ctx_struct *ctx, const struct syscall_
                 snprintf(ctx->buf + *(ctx->offset), ctx->bufsize - *(ctx->offset), ")");
 
         return 0;
+}
+
+static int fmt_null(struct parser_ctx_struct *ctx)
+{
+        APPEND_FMT(ctx, "%s", "NULL");
 }
 
 static inline int safe_append(struct parser_ctx_struct *ctx, int *n)
