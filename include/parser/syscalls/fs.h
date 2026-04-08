@@ -56,7 +56,7 @@
         X(fchmod, 91) \
         X(chown, 92)
 
-#define FS_SYSCALL_COUNT 33
+#define FS_SYSCALL_COUNT 34
 
 /*
  * Generate parser function declarations for each syscall.
