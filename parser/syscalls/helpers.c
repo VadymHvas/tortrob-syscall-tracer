@@ -1,3 +1,5 @@
+#define _GNU_SOURCE
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -75,33 +77,15 @@ int fmt_string_from_mem(struct parser_ctx_struct *ctx, unsigned long long addr, 
         return 0;
 }
 
-static int fmt_syscall_name(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall)
-{
-        *(ctx->offset) += snprintf(ctx->buf + *(ctx->offset), ctx->bufsize - *(ctx->offset), "%s(", syscall->name);
-
-        if (*(ctx->offset) >= ctx->bufsize)
-                return 1;
-        
-        return 0;
-}
-
-static int fmt_syscall_args(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall, raw_reg args[])
-{
-        if (syscall->args)
-                syscall_parse(ctx, syscall, args);
-
-        if (*(ctx->offset) < ctx->bufsize)
-                snprintf(ctx->buf + *(ctx->offset), ctx->bufsize - *(ctx->offset), ")");
-
-        return 0;
-}
-
 int fmt_fd(struct parser_ctx_struct *ctx, int fd)
 {
-        if (fd > 2)
-                return fmt_int(ctx, fd);
-        else
+        if (fd == AT_FDCWD)
+                return fmt_string(ctx, "AT_FDCWD");
+
+        if (fd >= 0 && fd <= 2)
                 return fmt_string(ctx, STDFD_NAMES[fd]);
+        
+        return fmt_int(ctx, fd);
 }
 
 int fmt_open_flags(struct parser_ctx_struct *ctx, int flags)
@@ -123,6 +107,27 @@ int fmt_open_flags(struct parser_ctx_struct *ctx, int flags)
                 FMT_STRING(ctx, "|O_APPEND");
         if (flags & O_NONBLOCK)
                 FMT_STRING(ctx, "|O_NONBLOCK");
+
+        return 0;
+}
+
+static int fmt_syscall_name(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall)
+{
+        *(ctx->offset) += snprintf(ctx->buf + *(ctx->offset), ctx->bufsize - *(ctx->offset), "%s(", syscall->name);
+
+        if (*(ctx->offset) >= ctx->bufsize)
+                return 1;
+        
+        return 0;
+}
+
+static int fmt_syscall_args(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall, raw_reg args[])
+{
+        if (syscall->args)
+                syscall_parse(ctx, syscall, args);
+
+        if (*(ctx->offset) < ctx->bufsize)
+                snprintf(ctx->buf + *(ctx->offset), ctx->bufsize - *(ctx->offset), ")");
 
         return 0;
 }

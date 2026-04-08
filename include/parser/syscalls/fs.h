@@ -24,6 +24,7 @@
         X(read, 0) \
         X(write, 1) \
         X(open, 2) \
+        X(openat, 257) \
         X(close, 3) \
         X(rename, 82) \
         X(unlink, 87) \
@@ -48,7 +49,7 @@
         X(fchmod, 91) \
         X(chown, 92)
 
-#define FS_SYSCALL_COUNT 26
+#define FS_SYSCALL_COUNT 27
 
 /*
  * Generate parser function declarations for each syscall.
@@ -61,8 +62,6 @@ FS_SYSCALL_LIST
 #undef X
 
 #define NAME_MAX 255
-
-#define OPEN_FLAGS_COUNT 9
 
 /*
  * fs_syscalls
@@ -79,4 +78,3 @@ FS_SYSCALL_LIST
 extern const struct parser_struct fs_syscalls[FS_SYSCALL_COUNT];
 
 extern const char *STDFD_NAMES[3];
-extern const struct flag_desc open_flags[OPEN_FLAGS_COUNT];

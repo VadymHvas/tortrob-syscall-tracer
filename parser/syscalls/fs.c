@@ -56,6 +56,18 @@ DEFINE_SYSCALL_PARSER(open)
         return 0;
 }
 
+/* openat(int dirfd, const char *pathname, int flags, mode_t mode) */
+DEFINE_SYSCALL_PARSER(openat)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_MEM(ctx, args[1], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_OPEN_FLAGS(ctx, args[2]);
+
+        return 0;
+}
+
 /* close(int fd) */
 DEFINE_SYSCALL_PARSER(close)
 {
