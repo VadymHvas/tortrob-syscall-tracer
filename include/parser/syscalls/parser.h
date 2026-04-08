@@ -4,7 +4,7 @@
 
 #include "parser/syscalls/syscall-table.h"
 #include "parser/syscalls/ABI/abi.h"
-#include "parser/syscalls/helpers.h"
+#include "parser/syscalls/args/helpers.h"
 
 /*
  * DEFINE_SYSCALL_PARSER(name)

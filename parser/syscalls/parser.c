@@ -13,7 +13,7 @@
 #include "parser/syscalls/parser.h"
 #include "parser/syscalls/fs.h"
 #include "parser/syscalls/ABI/abi.h"
-#include "parser/syscalls/helpers.h"
+#include "parser/syscalls/args/helpers.h"
 
 #define INIT_PARSER_GROUP(g) { g, sizeof(g) / sizeof(g[0]) },
 

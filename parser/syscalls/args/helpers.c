@@ -8,7 +8,7 @@
 
 #include "parser/syscalls/syscall-table.h"
 #include "parser/syscalls/ABI/abi.h"
-#include "parser/syscalls/helpers.h"
+#include "parser/syscalls/args/helpers.h"
 #include "parser/syscalls/parser.h"
 #include "parser/syscalls/fs.h"
 #include "core/trace.h"

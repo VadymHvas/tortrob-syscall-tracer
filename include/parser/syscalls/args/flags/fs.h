@@ -1,6 +1,6 @@
 #pragma once
 
-#include "parser/syscalls/helpers.h"
+#include "parser/syscalls/args/helpers.h"
 
 #define FMT_OPEN_FLAGS(ctx, flags)      TRY_FMT(fmt_open_flags, ctx, flags)
 #define FMT_AT_FLAGS(ctx, flags)        TRY_FMT(fmt_at_flags, ctx, flags)

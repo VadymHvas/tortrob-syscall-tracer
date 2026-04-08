@@ -12,7 +12,7 @@
 #include "parser/syscalls/syscall-table.h"
 #include "parser/syscalls/ABI/abi.h"
 #include "parser/syscalls/parser.h"
-#include "parser/syscalls/helpers.h"
+#include "parser/syscalls/args/helpers.h"
 
 static const struct syscall_entry *get_syscall_by_nr(long nr);
 

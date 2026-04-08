@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include <sys/stat.h>
 
-#include "parser/syscalls/helpers.h"
-#include "parser/syscalls/flags.h"
+#include "parser/syscalls/args/helpers.h"
+#include "parser/syscalls/args/flags/fs.h"
 
 #define FOR_EACH_FLAGS(flags_arr) for (int i = 0; i < sizeof(flags_arr) / sizeof(flags_arr[0]); i++)
 

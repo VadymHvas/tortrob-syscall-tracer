@@ -4,7 +4,7 @@ LDFLAGS =
 
 SRCS = main.c parser/opt.c core/trace.c core/process.c core/dispatch.c \
 	parser/syscall.c parser/syscalls/ABI/abi.c parser/syscalls/parser.c \
-	parser/syscalls/fs.c parser/syscalls/helpers.c parser/syscalls/flags.c
+	parser/syscalls/fs.c parser/syscalls/args/helpers.c parser/syscalls/args/flags/fs.c
 
 OBJS = $(SRCS:.c=.o)
 
