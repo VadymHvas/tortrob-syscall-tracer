@@ -10,44 +10,44 @@
 #include "parser/syscalls/args/fs/mask.h"
 
 static const struct flag_info open_flags[] = {
-        { O_CREAT,     "O_CREAT" },
-        { O_EXCL,      "O_EXECL" },
-        { O_TRUNC,     "O_TRUNC" },
-        { O_APPEND,    "O_APPEND" },
-        { O_NONBLOCK,  "O_NONBLOCK" },
-        { O_DSYNC,     "O_DSYNC" },
-        { O_SYNC,      "O_SYNC" },
-        { O_RSYNC,     "O_RSYNC" },
-        { O_CLOEXEC,   "O_CLOEXEC" },
-        { O_DIRECTORY, "O_DIRECTORY" },
-        { O_NOFOLLOW,  "O_NOFOLLOW" },
-        { O_TMPFILE,   "O_TMPFILE" }
+        INIT_FLAG_INFO(O_CREAT),
+        INIT_FLAG_INFO(O_EXCL),
+        INIT_FLAG_INFO(O_TRUNC),
+        INIT_FLAG_INFO(O_APPEND), 
+        INIT_FLAG_INFO(O_NONBLOCK), 
+        INIT_FLAG_INFO(O_DSYNC),
+        INIT_FLAG_INFO(O_SYNC), 
+        INIT_FLAG_INFO(O_RSYNC), 
+        INIT_FLAG_INFO(O_CLOEXEC), 
+        INIT_FLAG_INFO(O_DIRECTORY), 
+        INIT_FLAG_INFO(O_NOFOLLOW),
+        INIT_FLAG_INFO(O_TMPFILE)
 };
 
 static const struct flag_info open_modes[] = {
-        { O_RDONLY, "O_RDONLY" },
-        { O_WRONLY, "O_WRONLY" },
-        { O_RDWR,   "O_RDWR" }
+        INIT_FLAG_INFO(O_RDONLY),
+        INIT_FLAG_INFO(O_WRONLY),
+        INIT_FLAG_INFO(O_RDWR)
 };
 
 static const struct flag_info at_flags[] = {
-        { AT_SYMLINK_FOLLOW,   "AT_SYMLINK_FOLLOW" },
-        { AT_SYMLINK_NOFOLLOW, "AT_SYMLINK_NOFOLLOW" },
-        { AT_REMOVEDIR,        "AT_REMOVEDIR" },
-        { AT_NO_AUTOMOUNT,     "AT_NO_AUTOMOUNT" },
-        { AT_EMPTY_PATH,       "AT_EMPTY_PATH" },
+        INIT_FLAG_INFO(AT_SYMLINK_FOLLOW),
+        INIT_FLAG_INFO(AT_SYMLINK_NOFOLLOW),
+        INIT_FLAG_INFO(AT_REMOVEDIR),
+        INIT_FLAG_INFO(AT_NO_AUTOMOUNT),
+        INIT_FLAG_INFO(AT_EMPTY_PATH)
 };
 
 static const struct flag_info statx_sync_modes[] = {
-        { AT_STATX_SYNC_AS_STAT, "AT_STATX_SYNC_AS_STAT" },
-        { AT_STATX_FORCE_SYNC, "AT_STATX_FORCE_SYNC" },
-        { AT_STATX_DONT_SYNC, "AT_STATX_DONT_SYNC" },
+        INIT_FLAG_INFO(AT_STATX_SYNC_AS_STAT),
+        INIT_FLAG_INFO(AT_STATX_FORCE_SYNC),
+        INIT_FLAG_INFO(AT_STATX_DONT_SYNC)
 };
 
 static const struct flag_info renameat2_flags[] = {
-        { RENAME_NOREPLACE, "RENAME_NOREPLACE" },
-        { RENAME_EXCHANGE,  "RENAME_EXCHANGE" },
-        { RENAME_WHITEOUT,  "RENAME_WHITEOUT" }
+        INIT_FLAG_INFO(RENAME_NOREPLACE),
+        INIT_FLAG_INFO(RENAME_EXCHANGE),
+        INIT_FLAG_INFO(RENAME_WHITEOUT)
 };
 
 int fmt_open_flags(struct parser_ctx_struct *ctx, int flags)
@@ -71,10 +71,7 @@ int fmt_open_flags(struct parser_ctx_struct *ctx, int flags)
 
 int fmt_at_flags(struct parser_ctx_struct *ctx, int flags)
 {
-        if (!flags) {
-                FMT_INT(ctx, 0);
-                return 0;
-        }
+        FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
 
         int first = 1;
 
@@ -83,9 +80,7 @@ int fmt_at_flags(struct parser_ctx_struct *ctx, int flags)
 
                 FOR_EACH_FLAGS(statx_sync_modes) {
                         if (sync == statx_sync_modes[i].flag) {
-                                if (!first)
-                                        FMT_STRING(ctx, "|");
-                                        
+                                FMT_FLAG_SEPARATOR(ctx, first);        
                                 FMT_STRING(ctx, statx_sync_modes[i].name);
                                 first = 0;
                                 break;
@@ -97,9 +92,7 @@ int fmt_at_flags(struct parser_ctx_struct *ctx, int flags)
 
         FOR_EACH_FLAGS(at_flags) {
                 if (flags & at_flags[i].flag) {
-                        if (!first)
-                                FMT_STRING(ctx, "|");
-
+                        FMT_FLAG_SEPARATOR(ctx, first);        
                         FMT_STRING(ctx, at_flags[i].name);
                         first = 0;
                 }
@@ -110,18 +103,13 @@ int fmt_at_flags(struct parser_ctx_struct *ctx, int flags)
 
 int fmt_renameat2_flags(struct parser_ctx_struct *ctx, int flags)
 {
-        if (!flags) {
-                FMT_INT(ctx, 0);
-                return 0;
-        }
+        FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
 
         int first = 1;
 
         FOR_EACH_FLAGS(renameat2_flags) {
                 if (flags & renameat2_flags[i].flag) {
-                        if (!first)
-                                FMT_STRING(ctx, "|");
-
+                        FMT_FLAG_SEPARATOR(ctx, first); 
                         FMT_STRING(ctx, renameat2_flags[i].name);
                         first = 0;
                 }

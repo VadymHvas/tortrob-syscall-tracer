@@ -8,27 +8,24 @@
 #include "parser/syscalls/args/fs/mask.h"
 
 static const struct flag_info statx_masks[] = {
-        { STATX_TYPE,   "STATX_TYPE" },
-        { STATX_MODE,   "STATX_MODE" },
-        { STATX_NLINK,  "STATX_NLINK" },
-        { STATX_UID,    "STATX_UID" },
-        { STATX_GID,    "STATX_GID" },
-        { STATX_ATIME,  "STATX_ATIME" },
-        { STATX_MTIME,  "STATX_MTIME" },
-        { STATX_CTIME,  "STATX_CTIME" },
-        { STATX_INO,    "STATX_INO" },
-        { STATX_SIZE,   "STATX_SIZE" },
-        { STATX_BLOCKS, "STATX_BLOCKS" },
-        { STATX_BTIME,  "STATX_BTIME" },
-        { STATX_ALL,    "STATX_ALL" }
+        INIT_FLAG_INFO(STATX_TYPE),
+        INIT_FLAG_INFO(STATX_MODE),
+        INIT_FLAG_INFO(STATX_NLINK),
+        INIT_FLAG_INFO(STATX_UID),
+        INIT_FLAG_INFO(STATX_GID),
+        INIT_FLAG_INFO(STATX_ATIME),
+        INIT_FLAG_INFO(STATX_MTIME),
+        INIT_FLAG_INFO(STATX_CTIME),
+        INIT_FLAG_INFO(STATX_INO),
+        INIT_FLAG_INFO(STATX_SIZE),
+        INIT_FLAG_INFO(STATX_BLOCKS),
+        INIT_FLAG_INFO(STATX_BTIME),
+        INIT_FLAG_INFO(STATX_ALL)
 };
 
 int fmt_statx_mask(struct parser_ctx_struct *ctx, unsigned int mask)
 {
-        if (!mask) {
-                FMT_INT(ctx, 0);
-                return 0;
-        }
+        FMT_MASK_ZERO_IF_NONE(ctx, mask);
 
         int first = 1;
 
@@ -41,9 +38,7 @@ int fmt_statx_mask(struct parser_ctx_struct *ctx, unsigned int mask)
 
         FOR_EACH_MASKS(statx_masks) {
                 if (mask & statx_masks[i].flag) {
-                        if (!first)
-                                FMT_STRING(ctx, "|");
-                                
+                        FMT_FLAG_SEPARATOR(ctx, first);
                         FMT_STRING(ctx, statx_masks[i].name);
 
                         mask &= ~statx_masks[i].flag;
