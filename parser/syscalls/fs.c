@@ -491,3 +491,19 @@ DEFINE_SYSCALL_PARSER(mknodat)
 
         return 0;
 }
+
+/* fsync(int fd) */
+DEFINE_SYSCALL_PARSER(fsync)
+{
+        FMT_FD(ctx, args[0]);
+
+        return 0;
+}
+
+/* fdatasync(int fd) */
+DEFINE_SYSCALL_PARSER(fdatasync)
+{
+        FMT_FD(ctx, args[0]);
+
+        return 0;
+}
