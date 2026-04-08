@@ -9,7 +9,12 @@
 
 struct parser_ctx_struct;
 
-int fmt_open_flags(struct parser_ctx_struct *ctx, int flags);
-int fmt_at_flags(struct parser_ctx_struct *ctx, int flags);
-int fmt_renameat2_flags(struct parser_ctx_struct *ctx, int flags);
-int fmt_dup3_flags(struct parser_ctx_struct *ctx, int flags);
+#define FS_FLAGS_FMTS \
+        X(open); \
+        X(at); \
+        X(renameat2); \
+        X(dup3);
+
+#define X(name) DEFINE_FLAGS_FMT(name)
+FS_FLAGS_FMTS
+#undef X

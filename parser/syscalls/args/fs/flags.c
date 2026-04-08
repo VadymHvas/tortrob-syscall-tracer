@@ -50,7 +50,7 @@ static const struct flag_info renameat2_flags[] = {
         INIT_FLAG_INFO(RENAME_WHITEOUT)
 };
 
-int fmt_open_flags(struct parser_ctx_struct *ctx, int flags)
+DEFINE_FLAGS_FMT(open)
 {
         FOR_EACH_FLAGS(open_modes) {
                 if ((flags & O_ACCMODE) == open_modes[i].flag) {
@@ -69,7 +69,7 @@ int fmt_open_flags(struct parser_ctx_struct *ctx, int flags)
         return 0;
 }
 
-int fmt_at_flags(struct parser_ctx_struct *ctx, int flags)
+DEFINE_FLAGS_FMT(at)
 {
         FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
 
@@ -101,7 +101,7 @@ int fmt_at_flags(struct parser_ctx_struct *ctx, int flags)
         return 0;
 }
 
-int fmt_renameat2_flags(struct parser_ctx_struct *ctx, int flags)
+DEFINE_FLAGS_FMT(renameat2)
 {
         FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
 
@@ -118,7 +118,7 @@ int fmt_renameat2_flags(struct parser_ctx_struct *ctx, int flags)
         return 0;
 }
 
-int fmt_dup3_flags(struct parser_ctx_struct *ctx, int flags)
+DEFINE_FLAGS_FMT(dup3)
 {
         FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
 

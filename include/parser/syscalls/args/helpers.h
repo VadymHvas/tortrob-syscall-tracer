@@ -15,6 +15,15 @@
         struct parser_ctx_struct var = { buf, bufsize, offset, tracee, extra };
 
 /**
+ * DEFINE_FMT(name, ...) - Define formatter function.
+ * 
+ * Helper that defines formatter function with 
+ * specified params in __VA_ARGS__.
+ */
+#define DEFINE_FMT(name, ...) \
+        int fmt_##name(struct parser_ctx_struct *ctx, ##__VA_ARGS__)
+
+/**
  * TRY_FMT(fn_call, ctx, ...) - Try to format argument.
  * 
  * Helper macro that tries to format an argument using a function
@@ -57,10 +66,15 @@ struct parser_ctx_struct {
 int fmt_syscall(char *buf, size_t bufsize, 
         const struct syscall_entry *syscall, pid_t tracee, raw_reg args[]);
 
-int fmt_string(struct parser_ctx_struct *ctx, char *src);
-int fmt_int(struct parser_ctx_struct *ctx, int num);
-int fmt_llu(struct parser_ctx_struct *ctx, unsigned long long num);
-int fmt_oct(struct parser_ctx_struct *ctx, int num);
-int fmt_addr(struct parser_ctx_struct *ctx, unsigned long long addr);
-int fmt_string_from_mem(struct parser_ctx_struct *ctx, unsigned long long addr, size_t size);
-int fmt_fd(struct parser_ctx_struct *ctx, int fd);
+#define FMTS \
+        X(string, char *src); \
+        X(int, int num); \
+        X(llu, unsigned long long num); \
+        X(oct, int num); \
+        X(addr, unsigned long long addr); \
+        X(string_from_mem, unsigned long long addr, size_t size); \
+        X(fd, int fd);
+
+#define X(name, ...) DEFINE_FMT(name, __VA_ARGS__)
+FMTS
+#undef X

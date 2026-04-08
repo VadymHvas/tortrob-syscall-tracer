@@ -30,7 +30,7 @@ static const struct flag_info access_masks[] = {
         INIT_FLAG_INFO(X_OK)
 };
 
-int fmt_statx_mask(struct parser_ctx_struct *ctx, unsigned int mask)
+DEFINE_MASK_FMT(statx)
 {
         FMT_MASK_ZERO_IF_NONE(ctx, mask);
 
@@ -56,7 +56,7 @@ int fmt_statx_mask(struct parser_ctx_struct *ctx, unsigned int mask)
         return 0;
 }
 
-int fmt_access_mask(struct parser_ctx_struct *ctx, int mask)
+DEFINE_MASK_FMT(access)
 {
         if (!mask) {
                 FMT_STRING(ctx, "F_OK");

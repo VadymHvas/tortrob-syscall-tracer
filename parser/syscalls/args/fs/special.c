@@ -29,7 +29,7 @@ static const struct flag_info fcntl_cmds[] = {
  * For F_GET* commands (except F_GETLK) we don't format 3rd argument, 
  * therefore ctx->extra is equals to FCNTL_IGNORE_ARG3.
  */ 
-int fmt_fcntl_cmd(struct parser_ctx_struct *ctx, int cmd)
+DEFINE_SPECIAL_FMT(fcntl_cmd, int cmd)
 {
         if (cmd == F_SETFL)
                 ctx->extra = FCNTL_FLAGS;
@@ -58,7 +58,7 @@ int fmt_fcntl_cmd(struct parser_ctx_struct *ctx, int cmd)
         return 0;
 }
 
-int fmt_fcntl_arg3(struct parser_ctx_struct *ctx, int arg3)
+DEFINE_SPECIAL_FMT(fcntl_arg3, int arg3)
 {
         switch (ctx->extra)
         {

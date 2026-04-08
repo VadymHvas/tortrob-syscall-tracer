@@ -13,5 +13,10 @@ enum fcntl_fmt_type {
         FCNTL_INVALID
 };
 
-int fmt_fcntl_cmd(struct parser_ctx_struct *ctx, int cmd);
-int fmt_fcntl_arg3(struct parser_ctx_struct *ctx, int arg3);
+#define FS_SPECIAL_FMTS \
+        X(fcntl_cmd, int cmd); \
+        X(fcntl_arg3, int arg3);
+
+#define X(name, ...) DEFINE_SPECIAL_FMT(name, ##__VA_ARGS__)
+FS_SPECIAL_FMTS
+#undef X
