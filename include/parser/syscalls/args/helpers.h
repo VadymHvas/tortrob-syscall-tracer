@@ -4,7 +4,6 @@
 
 #include "parser/syscalls/syscall-table.h"
 #include "parser/syscalls/ABI/abi.h"
-#include "parser/syscalls/args/flags/fs.h"
 
 /**
  * INIT_PARSER_CTX(var, buf, bufsize, offset) - Initialization of parser context.

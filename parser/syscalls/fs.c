@@ -10,8 +10,9 @@
 #include "parser/syscalls/syscall-table.h"
 #include "parser/syscalls/parser.h"
 #include "parser/syscalls/args/helpers.h"
-#include "parser/syscalls/args/flags/fs.h"
 #include "parser/syscalls/fs.h"
+#include "parser/syscalls/args/fs/flags.h"
+#include "parser/syscalls/args/fs/mask.h"
 
 const struct parser_struct fs_syscalls[] = {
 #define X(name, nr) { nr, SYSCALL_PARSER_NAME(name) },
