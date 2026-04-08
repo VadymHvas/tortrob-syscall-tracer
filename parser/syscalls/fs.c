@@ -20,9 +20,9 @@ FS_SYSCALL_LIST
 };
 
 const char *STDFD_NAMES[] = {
-        [0] = "STDIN",
-        [1] = "STDOUT",
-        [2] = "STDERR",
+        [0] = "stdin",
+        [1] = "stdout",
+        [2] = "stderr",
 };
 
 /* read(int fd, void *buf, size_t count) */
