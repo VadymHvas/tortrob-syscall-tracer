@@ -407,3 +407,19 @@ DEFINE_SYSCALL_PARSER(chown)
 
         return 0;
 }
+
+/* statx(int dirfd, const char *pathname, int flags, unsigned int mask, struct statx *statxbuf) */
+DEFINE_SYSCALL_PARSER(statx)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_MEM(ctx, args[1], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_AT_FLAGS(ctx, args[2]);
+        FMT_SEPARATOR(ctx);
+        FMT_STATX_MASK(ctx, args[3]);
+        FMT_SEPARATOR(ctx);
+        FMT_ADDR(ctx, args[4]);
+
+        return 0;
+}
