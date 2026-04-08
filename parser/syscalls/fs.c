@@ -414,6 +414,22 @@ DEFINE_SYSCALL_PARSER(chown)
         return 0;
 }
 
+/* fchownat(int fd, const char *path, uid_t owner, gid_t group, int flag) */
+DEFINE_SYSCALL_PARSER(fchownat)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_MEM(ctx, args[1], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[2]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[3]);
+        FMT_SEPARATOR(ctx);
+        FMT_AT_FLAGS(ctx, args[4]);
+
+        return 0;
+}
+
 /* statx(int dirfd, const char *pathname, int flags, unsigned int mask, struct statx *statxbuf) */
 DEFINE_SYSCALL_PARSER(statx)
 {
@@ -426,6 +442,26 @@ DEFINE_SYSCALL_PARSER(statx)
         FMT_STATX_MASK(ctx, args[3]);
         FMT_SEPARATOR(ctx);
         FMT_ADDR(ctx, args[4]);
+
+        return 0;
+}
+
+/* statfs(const char *path, struct statfs *buf) */
+DEFINE_SYSCALL_PARSER(statfs)
+{
+        FMT_STRING_MEM(ctx, args[0], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_ADDR(ctx, args[1]);
+
+        return 0;
+}
+
+/* fstatfs(int fd, struct statfs *buf) */
+DEFINE_SYSCALL_PARSER(fstatfs)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_ADDR(ctx, args[1]);
 
         return 0;
 }

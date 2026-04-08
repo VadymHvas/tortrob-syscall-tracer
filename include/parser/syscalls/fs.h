@@ -55,9 +55,12 @@
         X(chmod, 90) \
         X(fchmod, 91) \
         X(chown, 92) \
-        X(statx, 332)
+        X(fchownat, 260) \
+        X(statx, 332) \
+        X(statfs, 137) \
+        X(fstatfs, 138)
 
-#define FS_SYSCALL_COUNT 35
+#define FS_SYSCALL_COUNT 38
 
 /*
  * Generate parser function declarations for each syscall.
