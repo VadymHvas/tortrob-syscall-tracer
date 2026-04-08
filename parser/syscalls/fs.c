@@ -507,3 +507,33 @@ DEFINE_SYSCALL_PARSER(fdatasync)
 
         return 0;
 }
+
+/* dup(int oldfd) */
+DEFINE_SYSCALL_PARSER(dup)
+{
+        FMT_FD(ctx, args[0]);
+
+        return 0;
+}
+
+/* dup2(int oldfd, int newfd) */
+DEFINE_SYSCALL_PARSER(dup2)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_FD(ctx, args[1]);
+
+        return 0;
+}
+
+/* dup3(int oldfd, int newfd, int flags) */
+DEFINE_SYSCALL_PARSER(dup3)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_FD(ctx, args[1]);
+        FMT_SEPARATOR(ctx);
+        FMT_DUP3_FLAGS(ctx, args[2]);
+
+        return 0;
+}

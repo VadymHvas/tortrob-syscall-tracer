@@ -117,3 +117,15 @@ int fmt_renameat2_flags(struct parser_ctx_struct *ctx, int flags)
 
         return 0;
 }
+
+int fmt_dup3_flags(struct parser_ctx_struct *ctx, int flags)
+{
+        FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
+
+        if (flags == O_CLOEXEC)
+                FMT_STRING(ctx, "O_CLOEXEC");
+        else
+                FMT_INT(ctx, flags);
+
+        return 0;
+}

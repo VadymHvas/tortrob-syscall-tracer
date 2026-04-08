@@ -62,9 +62,12 @@
         X(mknod, 133) \
         X(mknodat, 259) \
         X(fsync, 74) \
-        X(fdatasync, 75)
+        X(fdatasync, 75) \
+        X(dup, 32) \
+        X(dup2, 33) \
+        X(dup3, 292)
 
-#define FS_SYSCALL_COUNT 42
+#define FS_SYSCALL_COUNT 45
 
 /*
  * Generate parser function declarations for each syscall.
