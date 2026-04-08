@@ -377,7 +377,7 @@ DEFINE_SYSCALL_PARSER(access)
 {
         FMT_STRING_MEM(ctx, args[0], NAME_MAX);
         FMT_SEPARATOR(ctx);
-        FMT_INT(ctx, args[1]);
+        FMT_ACCESS_MASK(ctx, args[1]);
 
         return 0;
 }

@@ -1,5 +1,6 @@
 #define _GNU_SOURCE
 
+#include <unistd.h>
 #include <sys/stat.h>
 
 #include "parser/syscalls/args/helpers.h"
@@ -23,6 +24,12 @@ static const struct flag_info statx_masks[] = {
         INIT_FLAG_INFO(STATX_ALL)
 };
 
+static const struct flag_info access_masks[] = {
+        INIT_FLAG_INFO(R_OK),
+        INIT_FLAG_INFO(W_OK),
+        INIT_FLAG_INFO(X_OK)
+};
+
 int fmt_statx_mask(struct parser_ctx_struct *ctx, unsigned int mask)
 {
         FMT_MASK_ZERO_IF_NONE(ctx, mask);
@@ -40,6 +47,28 @@ int fmt_statx_mask(struct parser_ctx_struct *ctx, unsigned int mask)
                 if (mask & statx_masks[i].flag) {
                         FMT_FLAG_SEPARATOR(ctx, first);
                         FMT_STRING(ctx, statx_masks[i].name);
+
+                        mask &= ~statx_masks[i].flag;
+                        first = 0;
+                }
+        }
+
+        return 0;
+}
+
+int fmt_access_mask(struct parser_ctx_struct *ctx, int mask)
+{
+        if (!mask) {
+                FMT_STRING(ctx, "F_OK");
+                return 0;
+        }
+
+        int first = 1;
+
+        FOR_EACH_MASKS(access_masks) {
+                if (mask & access_masks[i].flag) {
+                        FMT_FLAG_SEPARATOR(ctx, first);
+                        FMT_STRING(ctx, access_masks[i].name);
 
                         mask &= ~statx_masks[i].flag;
                         first = 0;
