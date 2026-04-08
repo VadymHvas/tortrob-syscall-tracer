@@ -465,3 +465,29 @@ DEFINE_SYSCALL_PARSER(fstatfs)
 
         return 0;
 }
+
+/* mknod(const char *path, mode_t mode, dev_t dev) */
+DEFINE_SYSCALL_PARSER(mknod)
+{
+        FMT_STRING_MEM(ctx, args[0], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_OCT(ctx, args[1]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[2]);
+
+        return 0;
+} 
+
+/* mknodat(int dirfd, const char *path, mode_t mode, dev_t dev) */
+DEFINE_SYSCALL_PARSER(mknodat)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_MEM(ctx, args[1], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_OCT(ctx, args[2]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[3]);
+
+        return 0;
+}
