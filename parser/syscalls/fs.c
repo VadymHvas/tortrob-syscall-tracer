@@ -362,7 +362,7 @@ DEFINE_SYSCALL_PARSER(fstat)
         return 0;
 }
 
-/* stat(const char *pathname, struct stat *statbuf) */
+/* lstat(const char *pathname, struct stat *statbuf) */
 DEFINE_SYSCALL_PARSER(lstat)
 {
         FMT_STRING_MEM(ctx, args[0], NAME_MAX);
