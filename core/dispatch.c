@@ -9,7 +9,7 @@
 #include "core/dispatch.h"
 #include "parser/syscall.h"
 
-#define SYSCALL_BUF_SIZE 256
+#define SYSCALL_BUF_SIZE 128
 
 #define SWAP_SYSCALL_STATE(s) (s = s ? SYSCALL_ENTRY : SYSCALL_EXIT)
 

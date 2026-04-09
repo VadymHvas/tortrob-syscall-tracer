@@ -121,11 +121,19 @@ DEFINE_FMT(struct_common, fmt_struct_func_t fmt_struct_func, unsigned long long 
         if (read_tracee_mem(ctx->tracee, addr, struct_buf, size))
                 return 1;
 
-        FMT_STRING(ctx, "{");
-        TRY_FMT(fmt_struct_func, ctx, struct_buf);
-        FMT_STRING(ctx, "}");
+        if (fmt_string(ctx, "{"))
+                goto err;
+        if (fmt_struct_func(ctx, struct_buf))
+                goto err;
+        if (fmt_string(ctx, "}"))
+                goto err;
 
+        free(struct_buf);
         return 0;
+
+err:
+        free(struct_buf);
+        return 1;
 }
 
 DEFINE_FMT(fd, int fd)
