@@ -37,6 +37,7 @@
 #define FMT_INT(ctx, num)    TRY_FMT(fmt_int, ctx, num)
 #define FMT_LLU(ctx, num)    TRY_FMT(fmt_llu, ctx, num)
 #define FMT_OCT(ctx, num)    TRY_FMT(fmt_oct, ctx, num)
+#define FMT_OFF(ctx, num)    TRY_FMT(fmt_off, ctx, num)
 #define FMT_ADDR(ctx, addr)  TRY_FMT(fmt_addr, ctx, addr)
 #define FMT_FD(ctx, fd)      TRY_FMT(fmt_fd, ctx, fd)
 #define FMT_SEPARATOR(ctx)   TRY_FMT(fmt_string, ctx, ", ")
@@ -66,10 +67,11 @@ struct parser_ctx_struct {
 int fmt_syscall(char *buf, size_t bufsize, 
         const struct syscall_entry *syscall, pid_t tracee, raw_reg args[]);
 
-DEFINE_FMT(string, char *src); \
-DEFINE_FMT(int, int num); \
-DEFINE_FMT(llu, unsigned long long num); \
-DEFINE_FMT(oct, int num); \
-DEFINE_FMT(addr, unsigned long long addr); \
-DEFINE_FMT(string_from_mem, unsigned long long addr, size_t size); \
+DEFINE_FMT(string, char *src);
+DEFINE_FMT(int, int num);
+DEFINE_FMT(llu, unsigned long long num);
+DEFINE_FMT(oct, int num);
+DEFINE_FMT(off, off_t num);
+DEFINE_FMT(addr, unsigned long long addr);
+DEFINE_FMT(string_from_mem, unsigned long long addr, size_t size);
 DEFINE_FMT(fd, int fd);

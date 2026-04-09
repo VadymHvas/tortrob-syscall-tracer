@@ -204,7 +204,7 @@ DEFINE_SYSCALL_PARSER(lseek)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
-        FMT_INT(ctx, args[1]);
+        FMT_OFF(ctx, args[1]);
         FMT_SEPARATOR(ctx);
         FMT_INT(ctx, args[2]);
 
@@ -220,7 +220,7 @@ DEFINE_SYSCALL_PARSER(pread64)
         FMT_SEPARATOR(ctx);
         FMT_INT(ctx, args[2]);
         FMT_SEPARATOR(ctx);
-        FMT_INT(ctx, args[3]);
+        FMT_OFF(ctx, args[3]);
 
         return 0;
 }
@@ -234,7 +234,7 @@ DEFINE_SYSCALL_PARSER(pwrite64)
         FMT_SEPARATOR(ctx);
         FMT_INT(ctx, args[2]);
         FMT_SEPARATOR(ctx);
-        FMT_INT(ctx, args[3]);
+        FMT_OFF(ctx, args[3]);
 
         return 0;
 }
@@ -328,7 +328,7 @@ DEFINE_SYSCALL_PARSER(truncate)
 {
         FMT_STRING_MEM(ctx, args[0], NAME_MAX);
         FMT_SEPARATOR(ctx);
-        FMT_INT(ctx, args[1]);
+        FMT_OFF(ctx, args[1]);
 
         return 0;
 }
@@ -338,7 +338,7 @@ DEFINE_SYSCALL_PARSER(ftruncate)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
-        FMT_INT(ctx, args[1]);
+        FMT_OFF(ctx, args[1]);
 
         return 0;
 }
@@ -587,7 +587,7 @@ DEFINE_SYSCALL_PARSER(preadv)
         FMT_SEPARATOR(ctx);
         FMT_INT(ctx, args[2]);
         FMT_SEPARATOR(ctx);
-        FMT_INT(ctx, args[3]);
+        FMT_OFF(ctx, args[3]);
 
         return 0;
 }
@@ -601,7 +601,7 @@ DEFINE_SYSCALL_PARSER(pwritev)
         FMT_SEPARATOR(ctx);
         FMT_INT(ctx, args[2]);
         FMT_SEPARATOR(ctx);
-        FMT_INT(ctx, args[3]);
+        FMT_OFF(ctx, args[3]);
 
         return 0;
 }
@@ -621,7 +621,7 @@ DEFINE_SYSCALL_PARSER(preadv2)
         FMT_SEPARATOR(ctx);
         FMT_INT(ctx, args[2]);
         FMT_SEPARATOR(ctx);
-        FMT_INT(ctx, args[3]);
+        FMT_OFF(ctx, args[3]);
         FMT_SEPARATOR(ctx);
         FMT_RWF_FLAGS(ctx, args[5]);
 
@@ -637,7 +637,7 @@ DEFINE_SYSCALL_PARSER(pwritev2)
         FMT_SEPARATOR(ctx);
         FMT_INT(ctx, args[2]);
         FMT_SEPARATOR(ctx);
-        FMT_INT(ctx, args[3]);
+        FMT_OFF(ctx, args[3]);
         FMT_SEPARATOR(ctx);
         FMT_RWF_FLAGS(ctx, args[5]);
 
@@ -667,9 +667,9 @@ DEFINE_SYSCALL_PARSER(fallocate)
         FMT_SEPARATOR(ctx);
         FMT_FALLOCATE_MASK(ctx, args[1]);
         FMT_SEPARATOR(ctx);
-        FMT_INT(ctx, args[2]);
+        FMT_OFF(ctx, args[2]);
         FMT_SEPARATOR(ctx);
-        FMT_INT(ctx, args[3]);
+        FMT_OFF(ctx, args[3]);
 
         return 0;
 }
