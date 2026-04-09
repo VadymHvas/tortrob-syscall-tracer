@@ -22,12 +22,22 @@
 static void entry_syscall(struct parser_ctx_struct *ctx, struct user_regs_struct *regs)
 {
         get_syscall_with_args(ctx, regs);
-        printf("%s", ctx->buf);
+        
+        if (!ctx->delayed) 
+                printf("%s", ctx->buf);
+        
+        ctx->in_syscall = SYSCALL_EXIT;
 }
 
 static void exit_syscall(struct parser_ctx_struct *ctx, struct user_regs_struct *regs)
 {
-        printf("(ret=%llu)\n", regs->rax);
+        if (ctx->delayed) {
+                get_syscall_with_args(ctx, regs);
+                printf("%s = %llu\n", ctx->buf, regs->rax);
+        } else {
+                printf(" = %llu\n", regs->rax);
+        }
+
         CLEANUP_PARSER_CTX(ctx);
 }
 
@@ -35,7 +45,6 @@ void entry_or_exit_syscall(struct parser_ctx_struct *ctx, struct user_regs_struc
 {
         if (!ctx->in_syscall) {
                 entry_syscall(ctx, regs);
-                ctx->in_syscall = SYSCALL_EXIT;
         } else {
                 exit_syscall(ctx, regs);
         }

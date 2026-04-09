@@ -40,24 +40,32 @@
 #define FMT_STRING_MEM(ctx, addr, size) TRY_FMT(fmt_string_from_mem, ctx, addr, size)
 
 #define INIT_PARSER_CTX(var, buf, bufsize, tracee) \
-        struct parser_ctx_struct ctx = { SYSCALL_ENTRY, buf, .buf_base = buf, SYSCALL_BUF_SIZE, 0, tracee, 0 }
+        struct parser_ctx_struct ctx = \ 
+                { SYSCALL_ENTRY, buf, .buf_base = buf, SYSCALL_BUF_SIZE, 0, tracee, 0, DELAY_NONE }
 
 #define CLEANUP_PARSER_CTX(ctx) \
         ctx->in_syscall = SYSCALL_ENTRY; \
         ctx->buf        = ctx->buf_base; \
         ctx->offset     = 0; \
-        ctx->extra      = 0;
+        ctx->extra      = 0; \
+        ctx->delayed    = DELAY_NONE
+
+typedef enum {
+        DELAY      = 1,
+        DELAY_NONE = 0
+} delay_state_t;
 
 /**
  * struct parser_ctx_struct - Parser context.
  * 
  * @in_syscall: Parser syscall state.
  * @buf:        Buffer addr.
- * @buf_base:    Buffer base addr (for cleanup buffer).
+ * @buf_base:   Buffer base addr (for cleanup buffer).
  * @bufsize:    Max size of buffer.
  * @offset:     Pointer to offset variable.
  * @tracee:     Tracee process PID.
  * @extra:      Field for special cases, for instance fcntl(), prctl(), ioctl() etc.
+ * @delayed:    Delayed for handle in exit syscall.
  * 
  * This structure stores all the necessary
  * information for correct parsing using offsets.
@@ -70,6 +78,7 @@ struct parser_ctx_struct {
         size_t offset;
         pid_t tracee;
         int extra;
+        delay_state_t delayed;
 };
 
 typedef (*fmt_struct_func_t) (struct parser_ctx_struct *ctx, void *st);

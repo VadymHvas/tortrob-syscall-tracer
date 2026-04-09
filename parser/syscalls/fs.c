@@ -32,11 +32,21 @@ const char *STDFD_NAMES[] = {
 /* read(int fd, void *buf, size_t count) */
 DEFINE_SYSCALL_PARSER(read)
 {
-        FMT_FD(ctx, args[0]);
-        FMT_SEPARATOR(ctx);
-        FMT_ADDR(ctx, args[1]);
-        FMT_SEPARATOR(ctx);
-        FMT_INT(ctx, args[2]);
+        if (!ctx->delayed) {
+                FMT_FD(ctx, args[0]);
+                FMT_SEPARATOR(ctx);
+
+                ctx->delayed = DELAY;
+                return 0;
+        }
+
+        if (ctx->delayed) {
+                FMT_STRING_MEM(ctx, args[1], args[2]);
+                FMT_SEPARATOR(ctx);
+                FMT_INT(ctx, args[2]);
+
+                ctx->delayed = DELAY_NONE;
+        }
 
         return 0;
 };
