@@ -1,6 +1,7 @@
 #define _GNU_SOURCE
 
 #include <unistd.h>
+#include <fcntl.h>
 #include <sys/stat.h>
 
 #include "parser/syscalls/args/helpers.h"
@@ -28,6 +29,15 @@ DEFINE_FLAGS_ARRAY(access_masks) = {
         INIT_FLAG_INFO(R_OK),
         INIT_FLAG_INFO(W_OK),
         INIT_FLAG_INFO(X_OK)
+};
+
+DEFINE_FLAGS_ARRAY(fallocate_masks) = {
+        INIT_FLAG_INFO(FALLOC_FL_KEEP_SIZE),
+        INIT_FLAG_INFO(FALLOC_FL_UNSHARE_RANGE),
+        INIT_FLAG_INFO(FALLOC_FL_PUNCH_HOLE),
+        INIT_FLAG_INFO(FALLOC_FL_COLLAPSE_RANGE),
+        INIT_FLAG_INFO(FALLOC_FL_ZERO_RANGE),
+        INIT_FLAG_INFO(FALLOC_FL_INSERT_RANGE),
 };
 
 /*
@@ -74,7 +84,26 @@ DEFINE_MASK_FMT(access)
                         FMT_FLAG_SEPARATOR(ctx, first);
                         FMT_STRING(ctx, access_masks[i].name);
 
-                        mask &= ~statx_masks[i].flag;
+                        mask &= ~access_masks[i].flag;
+                        first = 0;
+                }
+        }
+
+        return 0;
+}
+
+DEFINE_MASK_FMT(fallocate)
+{
+        FMT_FLAGS_ZERO_IF_NONE(ctx, mask);
+
+        int first = 1;
+
+        FOR_EACH_MASKS(fallocate_masks) {
+                if (mask & fallocate_masks[i].flag) {
+                        FMT_FLAG_SEPARATOR(ctx, first);
+                        FMT_STRING(ctx, fallocate_masks[i].name);
+
+                        mask &= ~fallocate_masks[i].flag;
                         first = 0;
                 }
         }

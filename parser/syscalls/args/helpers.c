@@ -68,8 +68,8 @@ DEFINE_FMT(string_from_mem, unsigned long long addr, size_t size)
                 return fmt_null(ctx);
 
         int n;
-        char buf[size + 1];
-        char escaped_buf[2 * size + 1];
+        char *buf = malloc(size + 1);
+        char *escaped_buf = malloc(2 * size + 1);
 
         if (read_tracee_mem(ctx->tracee, (void *)addr, buf, size) == -1)
                 return 1;
@@ -78,11 +78,23 @@ DEFINE_FMT(string_from_mem, unsigned long long addr, size_t size)
 
         escape_seq_parse(buf, escaped_buf, 2 * size + 1);
 
-        FMT_STRING(ctx, "\"");
-        FMT_STRING(ctx, escaped_buf);
-        FMT_STRING(ctx, "\"");
+        if (fmt_string(ctx, "\""))
+                goto err;
+        if (fmt_string(ctx, escaped_buf))
+                goto err;
+        if (fmt_string(ctx, "\""))
+                goto err;
+
+        free(buf);
+        free(escaped_buf);
 
         return 0;
+
+err:
+        free(buf);
+        free(escaped_buf);
+
+        return 1;
 }
 
 DEFINE_FMT(fd, int fd)

@@ -651,3 +651,25 @@ DEFINE_SYSCALL_PARSER(umask)
 
         return 0;
 }
+
+/* syncfs(int fd) */
+DEFINE_SYSCALL_PARSER(syncfs)
+{
+        FMT_FD(ctx, args[0]);
+
+        return 0;
+}
+
+/* fallocate(int fd, int mode, off_t offset, off_t size) */
+DEFINE_SYSCALL_PARSER(fallocate)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_FALLOCATE_MASK(ctx, args[1]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[2]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[3]);
+
+        return 0;
+}
