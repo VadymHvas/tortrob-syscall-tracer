@@ -72,9 +72,10 @@
         X(preadv, 295) \
         X(pwritev, 296) \
         X(preadv2, 327) \
-        X(pwritev2, 328)
+        X(pwritev2, 328) \
+        X(umask, 95)
 
-#define FS_SYSCALL_COUNT 52
+#define FS_SYSCALL_COUNT 53
 
 /*
  * Generate parser function declarations for each syscall.

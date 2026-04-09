@@ -643,3 +643,11 @@ DEFINE_SYSCALL_PARSER(pwritev2)
 
         return 0;
 }
+
+/* umask(mode_t mode) */
+DEFINE_SYSCALL_PARSER(umask)
+{
+        FMT_OCT(ctx, args[0]);
+
+        return 0;
+}
