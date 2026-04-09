@@ -66,9 +66,11 @@
         X(dup, 32) \
         X(dup2, 33) \
         X(dup3, 292) \
-        X(fcntl, 72)
+        X(fcntl, 72) \
+        X(readv, 19) \
+        X(writev, 20)
 
-#define FS_SYSCALL_COUNT 46
+#define FS_SYSCALL_COUNT 48
 
 /*
  * Generate parser function declarations for each syscall.
