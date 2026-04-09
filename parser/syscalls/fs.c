@@ -605,3 +605,41 @@ DEFINE_SYSCALL_PARSER(pwritev)
 
         return 0;
 }
+
+/* 
+ * preadv2(int fd, const struct iovec *iov, int iovcnt, off_t offset, int flags)
+ * 
+ * NOTE: preadv2() and pwritev2() signatures in the Linux kernel and in glibc
+ *       differ in one parameter pos_h which is passed in the r8 (args[4),
+ *       but the parser of these calls ignores it
+ */
+DEFINE_SYSCALL_PARSER(preadv2)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_ADDR(ctx, args[1]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[2]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[3]);
+        FMT_SEPARATOR(ctx);
+        FMT_RWF_FLAGS(ctx, args[5]);
+
+        return 0;
+}
+
+/* pwrite2(int fd, const struct iovec *iov, int iovcnt, off_t offset, int flags) */
+DEFINE_SYSCALL_PARSER(pwritev2)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_ADDR(ctx, args[1]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[2]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[3]);
+        FMT_SEPARATOR(ctx);
+        FMT_RWF_FLAGS(ctx, args[5]);
+
+        return 0;
+}

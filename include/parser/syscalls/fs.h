@@ -70,9 +70,11 @@
         X(readv, 19) \
         X(writev, 20) \
         X(preadv, 295) \
-        X(pwritev, 296)
+        X(pwritev, 296) \
+        X(preadv2, 327) \
+        X(pwritev2, 328)
 
-#define FS_SYSCALL_COUNT 50
+#define FS_SYSCALL_COUNT 52
 
 /*
  * Generate parser function declarations for each syscall.

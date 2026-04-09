@@ -3,6 +3,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <sys/stat.h>
+#include <sys/uio.h>
 
 #include "parser/syscalls/args/helpers.h"
 #include "parser/syscalls/args/flag_info.h"
@@ -49,6 +50,18 @@ DEFINE_FLAGS_ARRAY(renameat2_flags) = {
         INIT_FLAG_INFO(RENAME_EXCHANGE),
         INIT_FLAG_INFO(RENAME_WHITEOUT)
 };
+
+DEFINE_FLAGS_ARRAY(rwf_flags) = {
+        INIT_FLAG_INFO(RWF_DSYNC),
+        INIT_FLAG_INFO(RWF_HIPRI),
+        INIT_FLAG_INFO(RWF_SYNC),
+        INIT_FLAG_INFO(RWF_NOWAIT),
+        INIT_FLAG_INFO(RWF_APPEND)
+};
+
+/*
+ * TODO: add unrecognized bits formatting
+ */
 
 DEFINE_FLAGS_FMT(open)
 {
@@ -126,6 +139,23 @@ DEFINE_FLAGS_FMT(dup3)
                 FMT_STRING(ctx, "O_CLOEXEC");
         else
                 FMT_INT(ctx, flags);
+
+        return 0;
+}
+
+DEFINE_FLAGS_FMT(rwf)
+{
+        FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
+
+        int first = 1;
+
+        FOR_EACH_FLAGS(rwf_flags) {
+                if (flags & rwf_flags[i].flag) {
+                        FMT_FLAG_SEPARATOR(ctx, first);
+                        FMT_STRING(ctx, rwf_flags[i].name);
+                        first = 0;
+                }
+        }
 
         return 0;
 }

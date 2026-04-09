@@ -30,6 +30,10 @@ DEFINE_FLAGS_ARRAY(access_masks) = {
         INIT_FLAG_INFO(X_OK)
 };
 
+/*
+ * TODO: add unrecognized bits formatting
+ */
+
 DEFINE_MASK_FMT(statx)
 {
         FMT_MASK_ZERO_IF_NONE(ctx, mask);
