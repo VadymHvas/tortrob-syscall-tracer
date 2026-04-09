@@ -7,7 +7,7 @@
 #include "parser/syscalls/args/fs/special.h"
 #include "parser/syscalls/args/fs/flags.h"
 
-static const struct flag_info fcntl_cmds[] = {
+DEFINE_FLAGS_ARRAY(fcntl_cmds) = {
         INIT_FLAG_INFO(F_SETFD),
         INIT_FLAG_INFO(F_SETFL),
         INIT_FLAG_INFO(F_SETLK),

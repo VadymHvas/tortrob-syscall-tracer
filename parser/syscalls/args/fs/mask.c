@@ -8,7 +8,7 @@
 #include "parser/syscalls/args/fs/flags.h"
 #include "parser/syscalls/args/fs/mask.h"
 
-static const struct flag_info statx_masks[] = {
+DEFINE_FLAGS_ARRAY(statx_masks) = {
         INIT_FLAG_INFO(STATX_TYPE),
         INIT_FLAG_INFO(STATX_MODE),
         INIT_FLAG_INFO(STATX_NLINK),
@@ -24,7 +24,7 @@ static const struct flag_info statx_masks[] = {
         INIT_FLAG_INFO(STATX_ALL)
 };
 
-static const struct flag_info access_masks[] = {
+DEFINE_FLAGS_ARRAY(access_masks) = {
         INIT_FLAG_INFO(R_OK),
         INIT_FLAG_INFO(W_OK),
         INIT_FLAG_INFO(X_OK)

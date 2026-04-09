@@ -1,5 +1,8 @@
 #pragma once
 
+#include "parser/syscalls/args/helpers.h"
+#include "parser/syscalls/args/flag_info.h"
+
 #define FCNTL_IGNORE_ARG3 -1
 
 #define FMT_FCNTL_CMD(ctx, cmd)   TRY_FMT(fmt_fcntl_cmd, ctx, cmd)
@@ -13,10 +16,5 @@ enum fcntl_fmt_type {
         FCNTL_INVALID
 };
 
-#define FS_SPECIAL_FMTS \
-        X(fcntl_cmd, int cmd); \
-        X(fcntl_arg3, int arg3);
-
-#define X(name, ...) DEFINE_SPECIAL_FMT(name, ##__VA_ARGS__)
-FS_SPECIAL_FMTS
-#undef X
+DEFINE_SPECIAL_FMT(fcntl_cmd, int cmd);
+DEFINE_SPECIAL_FMT(fcntl_arg3, int arg3);

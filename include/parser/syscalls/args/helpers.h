@@ -66,15 +66,10 @@ struct parser_ctx_struct {
 int fmt_syscall(char *buf, size_t bufsize, 
         const struct syscall_entry *syscall, pid_t tracee, raw_reg args[]);
 
-#define FMTS \
-        X(string, char *src); \
-        X(int, int num); \
-        X(llu, unsigned long long num); \
-        X(oct, int num); \
-        X(addr, unsigned long long addr); \
-        X(string_from_mem, unsigned long long addr, size_t size); \
-        X(fd, int fd);
-
-#define X(name, ...) DEFINE_FMT(name, __VA_ARGS__)
-FMTS
-#undef X
+DEFINE_FMT(string, char *src); \
+DEFINE_FMT(int, int num); \
+DEFINE_FMT(llu, unsigned long long num); \
+DEFINE_FMT(oct, int num); \
+DEFINE_FMT(addr, unsigned long long addr); \
+DEFINE_FMT(string_from_mem, unsigned long long addr, size_t size); \
+DEFINE_FMT(fd, int fd);

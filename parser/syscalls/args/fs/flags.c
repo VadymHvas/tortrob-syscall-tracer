@@ -9,7 +9,7 @@
 #include "parser/syscalls/args/fs/flags.h"
 #include "parser/syscalls/args/fs/mask.h"
 
-static const struct flag_info open_flags[] = {
+DEFINE_FLAGS_ARRAY(open_flags) = {
         INIT_FLAG_INFO(O_CREAT),
         INIT_FLAG_INFO(O_EXCL),
         INIT_FLAG_INFO(O_TRUNC),
@@ -24,13 +24,13 @@ static const struct flag_info open_flags[] = {
         INIT_FLAG_INFO(O_TMPFILE)
 };
 
-static const struct flag_info open_modes[] = {
+DEFINE_FLAGS_ARRAY(open_modes) = {
         INIT_FLAG_INFO(O_RDONLY),
         INIT_FLAG_INFO(O_WRONLY),
         INIT_FLAG_INFO(O_RDWR)
 };
 
-static const struct flag_info at_flags[] = {
+DEFINE_FLAGS_ARRAY(at_flags) = {
         INIT_FLAG_INFO(AT_SYMLINK_FOLLOW),
         INIT_FLAG_INFO(AT_SYMLINK_NOFOLLOW),
         INIT_FLAG_INFO(AT_REMOVEDIR),
@@ -38,13 +38,13 @@ static const struct flag_info at_flags[] = {
         INIT_FLAG_INFO(AT_EMPTY_PATH)
 };
 
-static const struct flag_info statx_sync_modes[] = {
+DEFINE_FLAGS_ARRAY(statx_sync_modes) = {
         INIT_FLAG_INFO(AT_STATX_SYNC_AS_STAT),
         INIT_FLAG_INFO(AT_STATX_FORCE_SYNC),
         INIT_FLAG_INFO(AT_STATX_DONT_SYNC)
 };
 
-static const struct flag_info renameat2_flags[] = {
+DEFINE_FLAGS_ARRAY(renameat2_flags) = {
         INIT_FLAG_INFO(RENAME_NOREPLACE),
         INIT_FLAG_INFO(RENAME_EXCHANGE),
         INIT_FLAG_INFO(RENAME_WHITEOUT)

@@ -25,6 +25,7 @@
 #define DEFINE_MASK_FMT(mask_name)         DEFINE_FMT(mask_name##_mask, unsigned int mask)
 #define DEFINE_SPECIAL_FMT(spec_name, ...) DEFINE_FMT(spec_name, __VA_ARGS__)
 
+#define DEFINE_FLAGS_ARRAY(name) static const struct flag_info name[]
 #define INIT_FLAG_INFO(flag) { flag, #flag }
 
 struct flag_info {
