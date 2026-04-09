@@ -5,15 +5,7 @@
 #include "parser/syscalls/syscall-table.h"
 #include "parser/syscalls/ABI/abi.h"
 #include "parser/syscalls/args/struct_info.h"
-
-/**
- * INIT_PARSER_CTX(var, buf, bufsize, offset) - Initialization of parser context.
- * 
- * Helper macro that initializes 
- * the struct parser_ctx_struct and fills it with values.
- */
-#define INIT_PARSER_CTX(var, buf, bufsize, offset, tracee, extra) \
-        struct parser_ctx_struct var = { buf, bufsize, offset, tracee, extra };
+#include "core/dispatch.h"
 
 /**
  * DEFINE_FMT(name, ...) - Define formatter function.
@@ -47,20 +39,33 @@
 
 #define FMT_STRING_MEM(ctx, addr, size) TRY_FMT(fmt_string_from_mem, ctx, addr, size)
 
+#define INIT_PARSER_CTX(var, buf, bufsize, tracee) \
+        struct parser_ctx_struct ctx = { SYSCALL_ENTRY, buf, .buf_base = buf, SYSCALL_BUF_SIZE, 0, tracee, 0 }
+
+#define CLEANUP_PARSER_CTX(ctx) \
+        ctx->in_syscall = SYSCALL_ENTRY; \
+        ctx->buf        = ctx->buf_base; \
+        ctx->offset     = 0; \
+        ctx->extra      = 0;
+
 /**
  * struct parser_ctx_struct - Parser context.
  * 
- * @buf:     Buffer addr.
- * @bufsize: Max size of buffer.
- * @offset:  Pointer to offset variable.
- * @tracee:  Tracee process PID.
- * @extra:   Field for special cases, for instance fcntl(), prctl(), ioctl() etc.
+ * @in_syscall: Parser syscall state.
+ * @buf:        Buffer addr.
+ * @buf_base:    Buffer base addr (for cleanup buffer).
+ * @bufsize:    Max size of buffer.
+ * @offset:     Pointer to offset variable.
+ * @tracee:     Tracee process PID.
+ * @extra:      Field for special cases, for instance fcntl(), prctl(), ioctl() etc.
  * 
  * This structure stores all the necessary
  * information for correct parsing using offsets.
  */
 struct parser_ctx_struct {
+        int in_syscall;
         char *buf;
+        const char *buf_base;
         size_t bufsize;
         size_t offset;
         pid_t tracee;
@@ -69,8 +74,7 @@ struct parser_ctx_struct {
 
 typedef (*fmt_struct_func_t) (struct parser_ctx_struct *ctx, void *st);
 
-int fmt_syscall(char *buf, size_t bufsize, 
-        const struct syscall_entry *syscall, pid_t tracee, raw_reg args[]);
+DEFINE_FMT(syscall, const struct syscall_entry *syscall, raw_reg args[]);
 
 DEFINE_FMT(string, char *src);
 DEFINE_FMT(int, int num);

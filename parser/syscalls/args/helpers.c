@@ -14,28 +14,26 @@
 #include "parser/syscalls/args/struct_info.h"
 #include "core/trace.h"
 
-/* Format syscall string function decomposition. */
-static int fmt_syscall_name(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall);
-static int fmt_syscall_args(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall, raw_reg args[]);
-static inline int safe_append(struct parser_ctx_struct *ctx, int *n);
-static void escape_seq_parse(const char *src, char *dest, size_t dst_size);
-static DEFINE_FMT(null);
-
 #define APPEND_FMT(ctx, fmt, ...) \
         int n = snprintf(ctx->buf + ctx->offset, \
                          ctx->bufsize - ctx->offset, \
                          fmt, __VA_ARGS__); \
         return safe_append(ctx, &n)
 
-int fmt_syscall(char *buf, size_t bufsize, 
-        const struct syscall_entry *syscall, pid_t tracee, raw_reg args[])
-{
-        INIT_PARSER_CTX(ctx, buf, bufsize, 0, tracee, 0);
+/* Format syscall string function decomposition. */
+static DEFINE_FMT(syscall_name, const struct syscall_entry *syscall);
+static DEFINE_FMT(syscall_args, const struct syscall_entry *syscall, raw_reg args[]);
 
-        if (fmt_syscall_name(&ctx, syscall))
+static inline int safe_append(struct parser_ctx_struct *ctx, int *n);
+static void escape_seq_parse(const char *src, char *dest, size_t dst_size);
+static DEFINE_FMT(null);
+
+DEFINE_FMT(syscall, const struct syscall_entry *syscall, raw_reg args[])
+{
+        if (fmt_syscall_name(ctx, syscall))
                 return 1;
 
-        return fmt_syscall_args(&ctx, syscall, args);
+        return fmt_syscall_args(ctx, syscall, args);
 }
 
 DEFINE_FMT(string, char *src)
@@ -147,12 +145,12 @@ DEFINE_FMT(fd, int fd)
         return fmt_int(ctx, fd);
 }
 
-static int fmt_syscall_name(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall)
+static DEFINE_FMT(syscall_name, const struct syscall_entry *syscall)
 {
         APPEND_FMT(ctx, "%s(", syscall->name);
 }
 
-static int fmt_syscall_args(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall, raw_reg args[])
+static DEFINE_FMT(syscall_args, const struct syscall_entry *syscall, raw_reg args[])
 {
         if (syscall->args)
                 syscall_parse(ctx, syscall, args);

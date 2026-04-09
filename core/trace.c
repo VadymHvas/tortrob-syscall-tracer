@@ -21,6 +21,9 @@
 #include "core/dispatch.h"
 #include "parser/syscall.h"
 #include "parser/opt.h"
+#include "parser/syscalls/args/helpers.h"
+
+#define SYSCALL_BUF_SIZE 256
 
 static int wait_and_set_tracesysgood(pid_t tracee);
 static int trace_syscall_and_wait(pid_t tracee, int *status);
@@ -41,6 +44,8 @@ int init_trace(char **argv, struct trace_opts *opts, pid_t *tracee)
 void trace_loop(pid_t tracee)
 {
         int status;
+        char output_buf[SYSCALL_BUF_SIZE];
+        INIT_PARSER_CTX(ctx, output_buf, SYSCALL_BUF_SIZE, tracee);
 
         while (1) {
                 if (trace_syscall_and_wait(tracee, &status))
@@ -50,7 +55,7 @@ void trace_loop(pid_t tracee)
                 if (WIFSTOPPED(status) && (WSTOPSIG(status) & 0x80)) {
                         struct user_regs_struct regs;
                         ptrace(PTRACE_GETREGS, tracee, NULL, &regs);
-                        entry_or_exit_syscall(&regs, tracee);
+                        entry_or_exit_syscall(&ctx, &regs);
                 }
         }
 }

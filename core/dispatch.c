@@ -8,17 +8,7 @@
 
 #include "core/dispatch.h"
 #include "parser/syscall.h"
-
-#define SYSCALL_BUF_SIZE 128
-
-#define SWAP_SYSCALL_STATE(s) (s = s ? SYSCALL_ENTRY : SYSCALL_EXIT)
-
-typedef enum {
-        SYSCALL_ENTRY = 0,      /* Before entering the syscall. */
-        SYSCALL_EXIT  = 1       /* Before exiting the syscall. */
-} syscall_state_t;
-
-static syscall_state_t in_syscall = SYSCALL_ENTRY;
+#include "parser/syscalls/args/helpers.h"
 
 /* Too basic logic.
  *
@@ -29,25 +19,24 @@ static syscall_state_t in_syscall = SYSCALL_ENTRY;
  * syscall with arguments 
  * 
  */
-static void entry_syscall(struct user_regs_struct *regs, pid_t tracee)
+static void entry_syscall(struct parser_ctx_struct *ctx, struct user_regs_struct *regs)
 {
-        char buf[SYSCALL_BUF_SIZE];
-        get_syscall_with_args(regs, buf, SYSCALL_BUF_SIZE, tracee);
-        printf("%s", buf);
+        get_syscall_with_args(ctx, regs);
+        printf("%s", ctx->buf);
 }
 
-static void exit_syscall(struct user_regs_struct *regs, pid_t tracee)
+static void exit_syscall(struct parser_ctx_struct *ctx, struct user_regs_struct *regs)
 {
         printf("(ret=%llu)\n", regs->rax);
+        CLEANUP_PARSER_CTX(ctx);
 }
 
-void entry_or_exit_syscall(struct user_regs_struct *regs, pid_t tracee)
+void entry_or_exit_syscall(struct parser_ctx_struct *ctx, struct user_regs_struct *regs)
 {
-        if (!in_syscall) {
-                entry_syscall(regs, tracee);
+        if (!ctx->in_syscall) {
+                entry_syscall(ctx, regs);
+                ctx->in_syscall = SYSCALL_EXIT;
         } else {
-                exit_syscall(regs, tracee);
+                exit_syscall(ctx, regs);
         }
-
-        SWAP_SYSCALL_STATE(in_syscall);
 }

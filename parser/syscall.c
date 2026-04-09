@@ -16,7 +16,7 @@
 
 static const struct syscall_entry *get_syscall_by_nr(long nr);
 
-int get_syscall_with_args(struct user_regs_struct *regs, char *buf, size_t bufsize, pid_t tracee)
+int get_syscall_with_args(struct parser_ctx_struct *ctx, struct user_regs_struct *regs)
 {
         const struct syscall_entry *syscall = get_syscall_by_nr(regs->orig_rax);
         raw_reg args[6];
@@ -25,7 +25,7 @@ int get_syscall_with_args(struct user_regs_struct *regs, char *buf, size_t bufsi
                 return -1;
         
         abi_get_syscall_args(regs, args);
-        fmt_syscall(buf, bufsize, syscall, tracee, args);
+        fmt_syscall(ctx, syscall, args);
 
         return 0;
 }
