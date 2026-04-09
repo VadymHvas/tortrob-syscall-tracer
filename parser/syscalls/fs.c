@@ -577,3 +577,31 @@ DEFINE_SYSCALL_PARSER(writev)
 
         return 0;
 }
+
+/* preadv(int fd, const struct iovec *iov, int iovcnt, off_t offset) */
+DEFINE_SYSCALL_PARSER(preadv)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_ADDR(ctx, args[1]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[2]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[3]);
+
+        return 0;
+}
+
+/* pwritev(int fd, const struct iovec *iov, int iovcnt, off_t offset) */
+DEFINE_SYSCALL_PARSER(pwritev)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_ADDR(ctx, args[1]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[2]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[3]);
+
+        return 0;
+}
