@@ -62,6 +62,11 @@ DEFINE_FMT(off, off_t num)
         APPEND_FMT(ctx, "%lld", num);
 }
 
+DEFINE_FMT(hex, int num)
+{
+        APPEND_FMT(ctx, "0x%x", num);
+}
+
 DEFINE_FMT(addr, unsigned long long addr)
 {
         APPEND_FMT(ctx, "0x%llx", addr);

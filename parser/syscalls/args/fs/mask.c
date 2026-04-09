@@ -40,10 +40,6 @@ DEFINE_FLAGS_ARRAY(fallocate_masks) = {
         INIT_FLAG_INFO(FALLOC_FL_INSERT_RANGE),
 };
 
-/*
- * TODO: add unrecognized bits formatting
- */
-
 DEFINE_MASK_FMT(statx)
 {
         FMT_MASK_ZERO_IF_NONE(ctx, mask);
@@ -65,6 +61,11 @@ DEFINE_MASK_FMT(statx)
                         mask &= ~statx_masks[i].flag;
                         first = 0;
                 }
+        }
+
+        if (mask) {
+                FMT_FLAG_SEPARATOR(ctx, first);
+                FMT_HEX(ctx, mask);
         }
 
         return 0;
@@ -89,6 +90,11 @@ DEFINE_MASK_FMT(access)
                 }
         }
 
+        if (mask) {
+                FMT_FLAG_SEPARATOR(ctx, first);
+                FMT_HEX(ctx, mask);
+        }
+
         return 0;
 }
 
@@ -106,6 +112,11 @@ DEFINE_MASK_FMT(fallocate)
                         mask &= ~fallocate_masks[i].flag;
                         first = 0;
                 }
+        }
+
+        if (mask) {
+                FMT_FLAG_SEPARATOR(ctx, first);
+                FMT_HEX(ctx, mask);
         }
 
         return 0;

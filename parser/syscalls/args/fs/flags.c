@@ -59,24 +59,35 @@ DEFINE_FLAGS_ARRAY(rwf_flags) = {
         INIT_FLAG_INFO(RWF_APPEND)
 };
 
-/*
- * TODO: add unrecognized bits formatting
- */
-
 DEFINE_FLAGS_FMT(open)
 {
+        FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
+
+        int first = 1;
+        int access_mode = flags & O_ACCMODE;
+
         FOR_EACH_FLAGS(open_modes) {
-                if ((flags & O_ACCMODE) == open_modes[i].flag) {
+                if (access_mode == open_modes[i].flag) {
                         FMT_STRING(ctx, open_modes[i].name);
                         break;
                 }
         }
 
+        flags &= ~O_ACCMODE;
+
         FOR_EACH_FLAGS(open_flags) {
                 if (flags & open_flags[i].flag) {
-                        FMT_STRING(ctx, "|");
+                        FMT_FLAG_SEPARATOR(ctx, first);
                         FMT_STRING(ctx, open_flags[i].name);
+
+                        first = 0;
+                        flags &= ~open_flags[i].flag;
                 }
+        }
+
+        if (flags) {
+                FMT_FLAG_SEPARATOR(ctx, first);
+                FMT_HEX(ctx, flags);
         }
 
         return 0;
@@ -95,6 +106,7 @@ DEFINE_FLAGS_FMT(at)
                         if (sync == statx_sync_modes[i].flag) {
                                 FMT_FLAG_SEPARATOR(ctx, first);        
                                 FMT_STRING(ctx, statx_sync_modes[i].name);
+                                
                                 first = 0;
                                 break;
                         }
@@ -107,8 +119,15 @@ DEFINE_FLAGS_FMT(at)
                 if (flags & at_flags[i].flag) {
                         FMT_FLAG_SEPARATOR(ctx, first);        
                         FMT_STRING(ctx, at_flags[i].name);
+                        
                         first = 0;
+                        flags &= ~at_flags[i].flag;
                 }
+        }
+
+        if (flags) {
+                FMT_FLAG_SEPARATOR(ctx, first);
+                FMT_HEX(ctx, flags);
         }
         
         return 0;
@@ -124,8 +143,15 @@ DEFINE_FLAGS_FMT(renameat2)
                 if (flags & renameat2_flags[i].flag) {
                         FMT_FLAG_SEPARATOR(ctx, first); 
                         FMT_STRING(ctx, renameat2_flags[i].name);
+
                         first = 0;
+                        flags &= ~renameat2_flags[i].flag;
                 }
+        }
+
+        if (flags) {
+                FMT_FLAG_SEPARATOR(ctx, first);
+                FMT_HEX(ctx, flags);
         }
 
         return 0;
@@ -153,8 +179,15 @@ DEFINE_FLAGS_FMT(rwf)
                 if (flags & rwf_flags[i].flag) {
                         FMT_FLAG_SEPARATOR(ctx, first);
                         FMT_STRING(ctx, rwf_flags[i].name);
+
                         first = 0;
+                        flags &= ~rwf_flags[i].flag;
                 }
+        }
+
+        if (flags) {
+                FMT_FLAG_SEPARATOR(ctx, first);
+                FMT_HEX(ctx, flags);
         }
 
         return 0;
