@@ -67,7 +67,7 @@ DEFINE_SPECIAL_FMT(fcntl_arg3, int arg3)
                 break;
 
         case FCNTL_FD_FLAGS:
-                FMT_FD(ctx, arg3);
+                FMT_STRING(ctx, "FD_CLOEXEC");
                 break;
 
         case FCNTL_FLOCK:
