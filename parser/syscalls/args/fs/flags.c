@@ -69,10 +69,12 @@ DEFINE_FLAGS_FMT(open)
         FOR_EACH_FLAGS(open_modes) {
                 if (access_mode == open_modes[i].flag) {
                         FMT_STRING(ctx, open_modes[i].name);
+
                         break;
                 }
         }
 
+        first = 0;
         flags &= ~O_ACCMODE;
 
         FOR_EACH_FLAGS(open_flags) {

@@ -4,6 +4,7 @@
 
 #include "parser/syscalls/syscall-table.h"
 #include "parser/syscalls/ABI/abi.h"
+#include "parser/syscalls/args/struct_info.h"
 
 /**
  * INIT_PARSER_CTX(var, buf, bufsize, offset) - Initialization of parser context.
@@ -66,6 +67,8 @@ struct parser_ctx_struct {
         int extra;
 };
 
+typedef (*fmt_struct_func_t) (struct parser_ctx_struct *ctx, void *st);
+
 int fmt_syscall(char *buf, size_t bufsize, 
         const struct syscall_entry *syscall, pid_t tracee, raw_reg args[]);
 
@@ -77,4 +80,5 @@ DEFINE_FMT(off, off_t num);
 DEFINE_FMT(hex, int num);
 DEFINE_FMT(addr, unsigned long long addr);
 DEFINE_FMT(string_from_mem, unsigned long long addr, size_t size);
+DEFINE_FMT(struct_common, fmt_struct_func_t fmt_struct_func, unsigned long long addr, size_t size);
 DEFINE_FMT(fd, int fd);

@@ -11,6 +11,7 @@
 #include "parser/syscalls/args/helpers.h"
 #include "parser/syscalls/parser.h"
 #include "parser/syscalls/fs.h"
+#include "parser/syscalls/args/struct_info.h"
 #include "core/trace.h"
 
 /* Format syscall string function decomposition. */
@@ -105,6 +106,26 @@ err:
         free(escaped_buf);
 
         return 1;
+}
+
+DEFINE_FMT(struct_common, fmt_struct_func_t fmt_struct_func, unsigned long long addr, size_t size)
+{
+        if (!addr)
+                return fmt_null(ctx);
+        
+        void *struct_buf = malloc(size);
+
+        if (!struct_buf)
+                return fmt_string(ctx, "<failed>");
+
+        if (read_tracee_mem(ctx->tracee, addr, struct_buf, size))
+                return 1;
+
+        FMT_STRING(ctx, "{");
+        TRY_FMT(fmt_struct_func, ctx, struct_buf);
+        FMT_STRING(ctx, "}");
+
+        return 0;
 }
 
 DEFINE_FMT(fd, int fd)

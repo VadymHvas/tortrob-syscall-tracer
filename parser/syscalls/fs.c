@@ -11,9 +11,11 @@
 #include "parser/syscalls/parser.h"
 #include "parser/syscalls/args/helpers.h"
 #include "parser/syscalls/fs.h"
+
 #include "parser/syscalls/args/fs/flags.h"
 #include "parser/syscalls/args/fs/mask.h"
 #include "parser/syscalls/args/fs/special.h"
+#include "parser/syscalls/args/fs/struct.h"
 
 const struct parser_struct fs_syscalls[] = {
 #define X(name, nr) { nr, SYSCALL_PARSER_NAME(name) },
@@ -348,7 +350,7 @@ DEFINE_SYSCALL_PARSER(stat)
 {
         FMT_STRING_MEM(ctx, args[0], NAME_MAX);
         FMT_SEPARATOR(ctx);
-        FMT_ADDR(ctx, args[1]); // TODO: Implement structures parser and formatter.
+        FMT_ADDR(ctx, args[1]);
 
         return 0;
 }

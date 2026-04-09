@@ -63,7 +63,7 @@ void cleanup_trace(struct trace_opts *opts, pid_t tracee)
         free(opts);
 }
 
-int read_tracee_mem(pid_t tracee, const void *addr, char *buf, size_t size)
+int read_tracee_mem(pid_t tracee, const void *addr, void *buf, size_t size)
 {
         size_t i = 0;
         size_t word_size = sizeof(long);
@@ -79,7 +79,7 @@ int read_tracee_mem(pid_t tracee, const void *addr, char *buf, size_t size)
                 if (i + copy_size > size)
                         copy_size = size - i;
 
-                memcpy(buf + i, &data, copy_size);
+                memcpy((char *)buf + i, &data, copy_size);
                 i += copy_size;
         }
 
