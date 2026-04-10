@@ -75,9 +75,10 @@
         X(pwritev2, 328) \
         X(umask, 95) \
         X(syncfs, 306) \
-        X(fallocate, 285)
+        X(fallocate, 285) \
+        X(flock, 73)
 
-#define FS_SYSCALL_COUNT 55
+#define FS_SYSCALL_COUNT 56
 
 /*
  * Generate parser function declarations for each syscall.

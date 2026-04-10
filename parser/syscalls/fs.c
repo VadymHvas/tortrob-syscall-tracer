@@ -739,3 +739,13 @@ DEFINE_SYSCALL_PARSER(fallocate)
 
         return 0;
 }
+
+/* flock(int fd, int op) */
+DEFINE_SYSCALL_PARSER(flock)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_FLOCK_OP(ctx, args[1]);
+
+        return 0;
+}

@@ -1,6 +1,7 @@
 #define _GNU_SOURCE
 
 #include <fcntl.h>
+#include <sys/file.h>
 
 #include "parser/syscalls/args/helpers.h"
 #include "parser/syscalls/args/flag_info.h"
@@ -23,6 +24,13 @@ DEFINE_FLAGS_ARRAY(fcntl_cmds) = {
         INIT_FLAG_INFO(F_GETSIG),
         INIT_FLAG_INFO(F_GETPIPE_SZ),
         INIT_FLAG_INFO(F_GETLK)
+};
+
+DEFINE_FLAGS_ARRAY(flock_ops) = {
+        INIT_FLAG_INFO(LOCK_SH),
+        INIT_FLAG_INFO(LOCK_EX),
+        INIT_FLAG_INFO(LOCK_UN),
+        INIT_FLAG_INFO(LOCK_NB),
 };
 
 /* 
@@ -81,4 +89,14 @@ DEFINE_FMT(fcntl_arg3, int arg3)
 
         ctx->extra = 0;
         return 0;
+}
+
+DEFINE_FMT(flock_op, int op)
+{
+        FOR_EACH_FLAGS(flock_ops) {
+                if (op == flock_ops[i].flag) {
+                        FMT_STRING(ctx, flock_ops[i].name);
+                        return 0;
+                }
+        }
 }
