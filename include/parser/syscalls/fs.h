@@ -77,9 +77,10 @@
         X(syncfs, 306) \
         X(fallocate, 285) \
         X(flock, 73) \
-        X(fadvise64, 221)
+        X(fadvise64, 221) \
+        X(newfstatat, 262)
 
-#define FS_SYSCALL_COUNT 57
+#define FS_SYSCALL_COUNT 58
 
 /*
  * Generate parser function declarations for each syscall.

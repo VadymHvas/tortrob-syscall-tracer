@@ -763,3 +763,25 @@ DEFINE_SYSCALL_PARSER(fadvise64)
 
         return 0;
 }
+
+/* newfstatat(int dirfd, const char *pathname, struct stat *statbuf, int flags) */
+DEFINE_SYSCALL_PARSER(newfstatat)
+{
+        if (!ctx->delayed) {
+                FMT_FD(ctx, args[0]);
+                FMT_SEPARATOR(ctx);
+                FMT_STRING_MEM(ctx, args[1], NAME_MAX);
+                FMT_SEPARATOR(ctx);
+
+                ctx->delayed = DELAY;
+                return 0;
+        }
+        
+        FMT_STAT64_STRUCT(ctx, args[2]);
+        FMT_SEPARATOR(ctx);
+        FMT_AT_FLAGS(ctx, args[3]);
+
+        ctx->delayed = DELAY_NONE;
+
+        return 0;
+}

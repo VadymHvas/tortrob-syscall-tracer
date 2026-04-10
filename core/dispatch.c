@@ -20,6 +20,7 @@ static void entry_syscall(struct parser_ctx_struct *ctx, struct user_regs_struct
         ctx->in_syscall = SYSCALL_EXIT;
 }
 
+// TODO: Make error handling inside deferred system call parsers.
 static void exit_syscall(struct parser_ctx_struct *ctx, struct user_regs_struct *regs)
 {
         if (ctx->delayed) {
