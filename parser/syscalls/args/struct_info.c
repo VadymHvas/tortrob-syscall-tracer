@@ -26,9 +26,9 @@ unsigned long long read_field(void *ptr, field_type type)
     return 0;
 }
 
-int repr_field(struct parser_ctx_struct *ctx, unsigned long long value, field_repr repr)
+int repr_field(struct parser_ctx_struct *ctx, unsigned long long value, struct field_info *field)
 {
-        switch (repr)
+        switch (field->field_repr)
         {
         case REPR_DEC:
                 FMT_INT(ctx, value);
@@ -42,6 +42,9 @@ int repr_field(struct parser_ctx_struct *ctx, unsigned long long value, field_re
         case REPR_ADDR:
                 FMT_ADDR(ctx, value);
                 break;
+        case REPR_FLAGS:
+                TRY_FMT(field->field_flags_func, ctx, value);
+                break;
         case REPR_FD:
                 FMT_FD(ctx, value);
                 break;
@@ -53,6 +56,28 @@ int repr_field(struct parser_ctx_struct *ctx, unsigned long long value, field_re
                 break;
         default:
                 break;
+        }
+
+        return 0;
+}
+
+DEFINE_FMT(struct_generic, void *st, struct field_info *fields, size_t fields_count)
+{
+        int first = 1;
+
+        for (int i = 0; i < fields_count; i++) {
+                if (!first)
+                        FMT_SEPARATOR(ctx);
+
+                void *field_ptr = (char *)st + fields[i].offset;
+
+                unsigned long long value = read_field(field_ptr, fields[i].field_type);
+
+                FMT_STRING(ctx, fields[i].name);
+                FMT_STRING(ctx, "=");
+                TRY_FMT(repr_field, ctx, value, &fields[i]);
+
+                first = 0;
         }
 
         return 0;

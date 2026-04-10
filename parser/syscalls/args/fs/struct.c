@@ -4,6 +4,7 @@
 
 #include "parser/syscalls/args/struct_info.h"
 #include "parser/syscalls/args/fs/struct.h"
+#include "parser/syscalls/args/fs/mask.h"
 
 DEFINE_FIELDS_ARRAY(stat64_fields) = {
         INIT_FIELD_INFO_INO(struct stat64, st_ino),
@@ -12,29 +13,30 @@ DEFINE_FIELDS_ARRAY(stat64_fields) = {
         INIT_FIELD_INFO_UINT(struct stat64, st_uid),
         INIT_FIELD_INFO_UINT(struct stat64, st_gid),
         INIT_FIELD_INFO_DEV(struct stat64, st_rdev),
-        INIT_FIELD_INFO_OFF(struct stat64, st_size),
+        INIT_FIELD_INFO_ULONG(struct stat64, st_size),
         INIT_FIELD_INFO_LONG(struct stat64, st_blksize),
         INIT_FIELD_INFO_LONG(struct stat64, st_blocks),
 };
 
+DEFINE_FIELDS_ARRAY(statx_fields) = {
+        INIT_FIELD_INFO_MASK(struct statx, stx_mask, fmt_statx_mask),
+        INIT_FIELD_INFO_INT(struct statx, stx_blksize),
+
+        INIT_FIELD_INFO_INT(struct statx, stx_nlink),
+        INIT_FIELD_INFO_UINT(struct statx, stx_uid),
+        INIT_FIELD_INFO_UINT(struct statx, stx_gid),
+        INIT_FIELD_INFO_MODE(struct statx, stx_mode),
+
+        INIT_FIELD_INFO_INO(struct statx, stx_ino),
+        INIT_FIELD_INFO_ULONG(struct statx, stx_size)
+};
+
 DEFINE_STRUCT_FMT(stat64, struct stat64 *statbuf)
 {
-        int first = 1;
+        return fmt_struct_generic(ctx, statbuf, stat64_fields, FIELDS_ARR_SIZE(stat64_fields));
+}
 
-        FOR_EACH_FIELDS(stat64_fields) {
-                if (!first)
-                        FMT_SEPARATOR(ctx);
-
-                void *field = (char *)statbuf + stat64_fields[i].offset;
-
-                unsigned long long value = read_field(field, stat64_fields[i].field_type);
-
-                FMT_STRING(ctx, stat64_fields[i].name);
-                FMT_STRING(ctx, "=");
-                TRY_FMT(repr_field, ctx, value, stat64_fields[i].field_repr);
-
-                first = 0;
-        }
-
-        return 0;
+DEFINE_STRUCT_FMT(statx, struct statx *statxbuf)
+{
+        return fmt_struct_generic(ctx, statxbuf, statx_fields, FIELDS_ARR_SIZE(statx_fields));
 }
