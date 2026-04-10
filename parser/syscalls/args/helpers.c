@@ -14,8 +14,7 @@
 #include "parser/syscalls/args/struct_info.h"
 #include "core/trace.h"
 
-#define TRACE_MAX_STRLEN 80
-#define ELLIPSIS         "..."
+#define TRACE_MAX_STRLEN 48
 
 #define APPEND_FMT(ctx, fmt, ...) \
         int n = snprintf(ctx->buf + ctx->offset, \
@@ -29,7 +28,6 @@ static DEFINE_FMT(syscall_args, const struct syscall_entry *syscall, raw_reg arg
 
 static inline int safe_append(struct parser_ctx_struct *ctx, int *n);
 static void escape_seq_parse(const char *src, char *dest, size_t dst_size);
-static void trunc_string(char *dest, size_t dst_size, const char *src, size_t max_len);
 static DEFINE_FMT(null);
 
 DEFINE_FMT(syscall, const struct syscall_entry *syscall, raw_reg args[])
@@ -78,32 +76,39 @@ DEFINE_FMT(addr, unsigned long long addr)
 
 DEFINE_FMT(string_from_mem, unsigned long long addr, size_t size)
 {
-        if (!addr)
+        if (!addr) 
                 return fmt_null(ctx);
 
-        size_t read_size = size > TRACE_MAX_STRLEN ? TRACE_MAX_STRLEN : size;
-        char *buf = malloc(read_size + 1);
-        char *escaped_buf = malloc(2 * TRACE_MAX_STRLEN + 1);
+        size_t max_len = (size > TRACE_MAX_STRLEN) ? TRACE_MAX_STRLEN : size; 
 
-        if (!buf || !escaped_buf)
+        char *buf = malloc(max_len + 1);
+        char *escaped_buf = malloc(max_len * 4 + 1);
+
+        if (!buf || !escaped_buf) {
+                if (buf) 
+                        free(buf);
+                if (escaped_buf) 
+                        free(escaped_buf);
+                return 1;
+        }
+
+        if (read_tracee_mem(ctx->tracee, (void *)addr, buf, max_len) <= 0)
                 goto err;
 
-        if (read_tracee_mem(ctx->tracee, (void *)addr, buf, read_size) == -1)
+        escape_seq_parse(buf, escaped_buf, max_len * 4 + 1);
+
+        size_t escaped_buf_len = strnlen(escaped_buf, max_len); // Bytes to format.
+
+        if (fmt_string(ctx, "\"") || fmt_string(ctx, escaped_buf))
                 goto err;
 
-        buf[read_size] = '\0';
-
-        char truncated_buf[TRACE_MAX_STRLEN + 1];
-
-        trunc_string(truncated_buf, TRACE_MAX_STRLEN, buf, TRACE_MAX_STRLEN);
-        escape_seq_parse(truncated_buf, escaped_buf, 2 * TRACE_MAX_STRLEN + 1);
-
-        if (fmt_string(ctx, "\""))
-                goto err;
-        if (fmt_string(ctx, escaped_buf))
-                goto err;
-        if (fmt_string(ctx, "\""))
-                goto err;
+        if (escaped_buf_len == max_len) {
+                if (fmt_string(ctx, "\"...")) 
+                        goto err;
+        } else {
+                if (fmt_string(ctx, "\"")) 
+                        goto err;
+        }
 
         free(buf);
         free(escaped_buf);
@@ -212,26 +217,4 @@ static void escape_seq_parse(const char *src, char *dest, size_t dst_size)
 static DEFINE_FMT(null)
 {
         APPEND_FMT(ctx, "%s", "NULL");
-}
-
-static void trunc_string(char *dest, size_t dst_size, const char *src, size_t max_len)
-{
-        size_t len = strlen(src);
-
-        if (dst_size == 0)
-                return;
-
-        if (len < max_len || dst_size <= strlen(ELLIPSIS)) {
-                snprintf(dest, dst_size, "%s", src);
-                return;
-        }
-
-        size_t copy_size = max_len;
-
-        if (copy_size + strlen(ELLIPSIS) >= dst_size)
-                copy_size = dst_size - strlen(ELLIPSIS) - 1;
-
-        memcpy(dest, src, copy_size);
-        memcpy(dest + copy_size, ELLIPSIS, strlen(ELLIPSIS));
-        dest[copy_size + strlen(ELLIPSIS)] = '\0';
 }

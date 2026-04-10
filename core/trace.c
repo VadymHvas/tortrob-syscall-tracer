@@ -68,7 +68,7 @@ void cleanup_trace(struct trace_opts *opts, pid_t tracee)
         free(opts);
 }
 
-int read_tracee_mem(pid_t tracee, const void *addr, void *buf, size_t size)
+size_t read_tracee_mem(pid_t tracee, const void *addr, void *buf, size_t size)
 {
         size_t i = 0;
         size_t word_size = sizeof(long);
@@ -88,7 +88,7 @@ int read_tracee_mem(pid_t tracee, const void *addr, void *buf, size_t size)
                 i += copy_size;
         }
 
-        return 0;
+        return i;
 }
 
 static int wait_and_set_tracesysgood(pid_t tracee)
