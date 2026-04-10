@@ -44,6 +44,8 @@ DEFINE_SYSCALL_PARSER(read)
         FMT_SEPARATOR(ctx);
         FMT_INT(ctx, args[2]);
 
+        ctx->delayed = DELAY_NONE;
+
         return 0;
 };
 
@@ -364,6 +366,8 @@ DEFINE_SYSCALL_PARSER(stat)
 
         FMT_STAT64_STRUCT(ctx, args[1]);
 
+        ctx->delayed = DELAY_NONE;
+
         return 0;
 }
 
@@ -380,6 +384,8 @@ DEFINE_SYSCALL_PARSER(fstat)
 
         FMT_STAT64_STRUCT(ctx, args[1]);
 
+        ctx->delayed = DELAY_NONE;
+
         return 0;
 }
 
@@ -395,6 +401,8 @@ DEFINE_SYSCALL_PARSER(lstat)
         }
 
         FMT_STAT64_STRUCT(ctx, args[1]);
+
+        ctx->delayed = DELAY_NONE;
 
         return 0;
 }
@@ -475,6 +483,8 @@ DEFINE_SYSCALL_PARSER(statx)
         }
 
         FMT_STATX_STRUCT(ctx, args[4]);
+
+        ctx->delayed = DELAY_NONE;
 
         return 0;
 }
@@ -589,11 +599,19 @@ DEFINE_SYSCALL_PARSER(fcntl)
 /* readv(int fd, const struct iovec *iov, int iovcnt) */
 DEFINE_SYSCALL_PARSER(readv)
 {
-        FMT_FD(ctx, args[0]);
-        FMT_SEPARATOR(ctx);
-        FMT_ADDR(ctx, args[1]);
+        if (!ctx->delayed) {
+                FMT_FD(ctx, args[0]);
+                FMT_SEPARATOR(ctx);
+
+                ctx->delayed = DELAY;
+                return 0;
+        }
+
+        FMT_IOVEC_STRUCT(ctx, args[1]);
         FMT_SEPARATOR(ctx);
         FMT_INT(ctx, args[2]);
+
+        ctx->delayed = DELAY_NONE;
 
         return 0;
 }
@@ -603,7 +621,7 @@ DEFINE_SYSCALL_PARSER(writev)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
-        FMT_ADDR(ctx, args[1]);
+        FMT_IOVEC_STRUCT(ctx, args[1]);
         FMT_SEPARATOR(ctx);
         FMT_INT(ctx, args[2]);
 
@@ -613,13 +631,21 @@ DEFINE_SYSCALL_PARSER(writev)
 /* preadv(int fd, const struct iovec *iov, int iovcnt, off_t offset) */
 DEFINE_SYSCALL_PARSER(preadv)
 {
-        FMT_FD(ctx, args[0]);
-        FMT_SEPARATOR(ctx);
-        FMT_ADDR(ctx, args[1]);
+        if (!ctx->delayed) {
+                FMT_FD(ctx, args[0]);
+                FMT_SEPARATOR(ctx);
+
+                ctx->delayed = DELAY_NONE;
+                return 0;
+        }
+
+        FMT_IOVEC_STRUCT(ctx, args[1]);
         FMT_SEPARATOR(ctx);
         FMT_INT(ctx, args[2]);
         FMT_SEPARATOR(ctx);
         FMT_OFF(ctx, args[3]);
+
+        ctx->delayed = DELAY_NONE;
 
         return 0;
 }
@@ -629,7 +655,7 @@ DEFINE_SYSCALL_PARSER(pwritev)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
-        FMT_ADDR(ctx, args[1]);
+        FMT_IOVEC_STRUCT(ctx, args[1]);
         FMT_SEPARATOR(ctx);
         FMT_INT(ctx, args[2]);
         FMT_SEPARATOR(ctx);
@@ -647,15 +673,23 @@ DEFINE_SYSCALL_PARSER(pwritev)
  */
 DEFINE_SYSCALL_PARSER(preadv2)
 {
-        FMT_FD(ctx, args[0]);
-        FMT_SEPARATOR(ctx);
-        FMT_ADDR(ctx, args[1]);
+        if (!ctx->delayed) {
+                FMT_FD(ctx, args[0]);
+                FMT_SEPARATOR(ctx);
+
+                ctx->delayed = DELAY;
+                return 0;
+        }
+
+        FMT_IOVEC_STRUCT(ctx, args[1]);
         FMT_SEPARATOR(ctx);
         FMT_INT(ctx, args[2]);
         FMT_SEPARATOR(ctx);
         FMT_OFF(ctx, args[3]);
         FMT_SEPARATOR(ctx);
         FMT_RWF_FLAGS(ctx, args[5]);
+
+        ctx->delayed = DELAY_NONE;
 
         return 0;
 }
@@ -665,7 +699,7 @@ DEFINE_SYSCALL_PARSER(pwritev2)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
-        FMT_ADDR(ctx, args[1]);
+        FMT_IOVEC_STRUCT(ctx, args[1]);
         FMT_SEPARATOR(ctx);
         FMT_INT(ctx, args[2]);
         FMT_SEPARATOR(ctx);

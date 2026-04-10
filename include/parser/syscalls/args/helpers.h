@@ -44,12 +44,15 @@
         struct parser_ctx_struct ctx = \
                 { SYSCALL_ENTRY, buf, .buf_base = buf, SYSCALL_BUF_SIZE, 0, tracee, 0, DELAY_NONE }
 
+/*
+ * This macro does not reset the ctx->delayed field because
+ * it is assumed to be reset in the syscall parser.
+ */
 #define CLEANUP_PARSER_CTX(ctx) \
         ctx->in_syscall = SYSCALL_ENTRY; \
         ctx->buf        = ctx->buf_base; \
         ctx->offset     = 0; \
         ctx->extra      = 0; \
-        ctx->delayed    = DELAY_NONE
 
 /*
  * enum delay_state_t represents deferred formatting state for syscall output.
