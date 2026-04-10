@@ -29,7 +29,6 @@ static DEFINE_FMT(syscall_args, const struct syscall_entry *syscall, raw_reg arg
 
 static inline int safe_append(struct parser_ctx_struct *ctx, int *n);
 static void escape_seq_parse(const char *src, char *dest, size_t dst_size);
-static DEFINE_FMT(null);
 
 DEFINE_FMT(syscall, const struct syscall_entry *syscall, raw_reg args[])
 {
@@ -126,34 +125,6 @@ err:
         return 1;
 }
 
-DEFINE_FMT(struct_common, fmt_struct_func_t fmt_struct_func, unsigned long long addr, size_t size)
-{
-        if (!addr)
-                return fmt_null(ctx);
-        
-        void *struct_buf = malloc(size);
-
-        if (!struct_buf)
-                return fmt_string(ctx, "<failed>");
-
-        if (read_tracee_mem(ctx->tracee, addr, struct_buf, size) <= 0)
-                return 1;
-
-        if (fmt_string(ctx, "{"))
-                goto err;
-        if (fmt_struct_func(ctx, struct_buf))
-                goto err;
-        if (fmt_string(ctx, "}"))
-                goto err;
-
-        free(struct_buf);
-        return 0;
-
-err:
-        free(struct_buf);
-        return 1;
-}
-
 DEFINE_FMT(fd, int fd)
 {
         if (fd == AT_FDCWD)
@@ -163,6 +134,11 @@ DEFINE_FMT(fd, int fd)
                 return fmt_string(ctx, STDFD_NAMES[fd]);
         
         return fmt_int(ctx, fd);
+}
+
+DEFINE_FMT(null)
+{
+        APPEND_FMT(ctx, "%s", "NULL");
 }
 
 static DEFINE_FMT(syscall_name, const struct syscall_entry *syscall)
@@ -218,9 +194,4 @@ static void escape_seq_parse(const char *src, char *dest, size_t dst_size)
         }
 
         dest[i] = '\0';
-}
-
-static DEFINE_FMT(null)
-{
-        APPEND_FMT(ctx, "%s", "NULL");
 }

@@ -7,7 +7,7 @@
 #include "parser/syscalls/args/struct_info.h"
 #include "core/dispatch.h"
 
-/**
+/*
  * DEFINE_FMT(name, ...) - Define formatter function.
  * 
  * Helper that defines formatter function with 
@@ -16,14 +16,14 @@
 #define DEFINE_FMT(name, ...) \
         int fmt_##name(struct parser_ctx_struct *ctx, ##__VA_ARGS__)
 
-/**
- * TRY_FMT(fn_call, ctx, ...) - Try to format argument.
+/*
+ * TRY_FMT(fmt_call, ctx, ...) - Try to format argument.
  * 
  * Helper macro that tries to format an argument using a function
- * fn_call, with arguments ctx, args.
+ * fmt_call, with arguments ctx, args.
  */
-#define TRY_FMT(fn_call, ctx, ...) \
-        if (fn_call(ctx, __VA_ARGS__)) \
+#define TRY_FMT(fmt_call, ctx, ...) \
+        if (fmt_call(ctx, __VA_ARGS__)) \
                 return 1
 
 #define FMT_STRING(ctx, str) TRY_FMT(fmt_string, ctx, str)
@@ -41,7 +41,7 @@
 #define FMT_STRING_MEM(ctx, addr, size) TRY_FMT(fmt_string_from_mem, ctx, addr, size)
 
 #define INIT_PARSER_CTX(var, buf, bufsize, tracee) \
-        struct parser_ctx_struct ctx = \ 
+        struct parser_ctx_struct ctx = \
                 { SYSCALL_ENTRY, buf, .buf_base = buf, SYSCALL_BUF_SIZE, 0, tracee, 0, DELAY_NONE }
 
 #define CLEANUP_PARSER_CTX(ctx) \
@@ -51,6 +51,16 @@
         ctx->extra      = 0; \
         ctx->delayed    = DELAY_NONE
 
+/*
+ * enum delay_state_t represents deferred formatting state for syscall output.
+ *
+ * DELAY      - Defer formatting until syscall exit phase (two-phase rendering).
+ * DELAY_NONE - Immediate formatting mode (no deferred output).
+ *
+ * Used for syscalls requiring post-execution data (e.g. stat-family, read, etc.).
+ * DELAY is set in syscall entry parser when exit-phase data is required.
+ * DELAY_NONE is set after completion of deferred formatting.
+ */
 typedef enum {
         DELAY      = 1,
         DELAY_NONE = 0
@@ -82,8 +92,6 @@ struct parser_ctx_struct {
         delay_state_t delayed;
 };
 
-typedef (*fmt_struct_func_t) (struct parser_ctx_struct *ctx, void *st);
-
 DEFINE_FMT(syscall, const struct syscall_entry *syscall, raw_reg args[]);
 
 DEFINE_FMT(string, char *src);
@@ -95,5 +103,5 @@ DEFINE_FMT(hex, int num);
 DEFINE_FMT(addr, unsigned long long addr);
 DEFINE_FMT(dev, dev_t dev);
 DEFINE_FMT(string_from_mem, unsigned long long addr, size_t size);
-DEFINE_FMT(struct_common, fmt_struct_func_t fmt_struct_func, unsigned long long addr, size_t size);
 DEFINE_FMT(fd, int fd);
+DEFINE_FMT(null);

@@ -40,7 +40,7 @@ DEFINE_FLAGS_ARRAY(fallocate_masks) = {
         INIT_FLAG_INFO(FALLOC_FL_INSERT_RANGE),
 };
 
-DEFINE_MASK_FMT(statx)
+DEFINE_MASK_FMT(statx, unsigned int)
 {
         FMT_MASK_ZERO_IF_NONE(ctx, mask);
 
@@ -71,7 +71,7 @@ DEFINE_MASK_FMT(statx)
         return 0;
 }
 
-DEFINE_MASK_FMT(access)
+DEFINE_MASK_FMT(access, int)
 {
         if (!mask) {
                 FMT_STRING(ctx, "F_OK");
@@ -98,7 +98,7 @@ DEFINE_MASK_FMT(access)
         return 0;
 }
 
-DEFINE_MASK_FMT(fallocate)
+DEFINE_MASK_FMT(fallocate, int)
 {
         FMT_FLAGS_ZERO_IF_NONE(ctx, mask);
 

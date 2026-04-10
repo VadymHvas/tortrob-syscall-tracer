@@ -11,8 +11,8 @@
 
 struct parser_ctx_struct;
 
-DEFINE_FLAGS_FMT(open);
-DEFINE_FLAGS_FMT(at);
-DEFINE_FLAGS_FMT(renameat2);
-DEFINE_FLAGS_FMT(dup3);
-DEFINE_FLAGS_FMT(rwf);
+DEFINE_FLAGS_FMT(open, int);
+DEFINE_FLAGS_FMT(at, int);
+DEFINE_FLAGS_FMT(renameat2, unsigned int);
+DEFINE_FLAGS_FMT(dup3, int);
+DEFINE_FLAGS_FMT(rwf, int);

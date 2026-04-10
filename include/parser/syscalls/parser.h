@@ -25,8 +25,10 @@
  * 
  * @ctx:  Parser context.
  * @regs: Array of arguments in raw format (unsigned long long).
+ * 
+ * Return: 0 on success, non-zero on error.
  */
-typedef (*parse_func_t) (struct parser_ctx_struct *ctx, raw_reg regs[]);
+typedef int (*parse_func_t) (struct parser_ctx_struct *ctx, raw_reg regs[]);
 
 /**
  * struct parser_struct - Represents single syscall parsers entry.

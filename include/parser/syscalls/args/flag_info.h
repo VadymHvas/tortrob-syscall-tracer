@@ -7,7 +7,8 @@
                 return 0; \
         }
 
-#define DEFINE_FLAGS_FMT(flags_name) DEFINE_FMT(flags_name##_flags, int flags)
+/* Different syscalls can accept flags of different types, type int will not workю */
+#define DEFINE_FLAGS_FMT(flags_name, flags_type) DEFINE_FMT(flags_name##_flags, flags_type flags)
 
 /* 
  * Masks and special cases use the same iteration pattern and zero check as flags,
@@ -18,17 +19,31 @@
 #define FMT_SPECIAL_ZERO_IF_NONE(ctx, spec) FMT_FLAGS_ZERO_IF_NONE(ctx, spec)
 #define FMT_MASK_ZERO_IF_NONE(ctx, mask)    FMT_FLAGS_ZERO_IF_NONE(ctx, mask)
 
+/*
+ * FMT_FLAG_SEPARATOR() - This is a universal macro, it is separated
+ * from the context of use by masks or flags, 
+ * so the additional macro FMT_MASK_SEPARATOR() is not needed.
+ */
 #define FMT_FLAG_SEPARATOR(ctx, first) \
         if (!(first)) \
                 FMT_STRING(ctx, "|")
 
-#define DEFINE_MASK_FMT(mask_name)         DEFINE_FMT(mask_name##_mask, unsigned int mask)
-#define DEFINE_SPECIAL_FMT(spec_name, ...) DEFINE_FMT(spec_name, __VA_ARGS__)
+/* As for flags, the mask can also be of different types in different syscalls. */
+#define DEFINE_MASK_FMT(mask_name, mask_type)         DEFINE_FMT(mask_name##_mask, mask_type mask)
 
 #define DEFINE_FLAGS_ARRAY(name) static const struct flag_info name[]
 #define INIT_FLAG_INFO(flag) { flag, #flag }
 
+/**
+ * struct flag_info - Flag presentation.
+ * 
+ * @flag: Flag value.
+ * @name: Flag name.
+ * 
+ * This structure stores all the necessary
+ * information for correct flags, masks, etc formatting.
+ */
 struct flag_info {
-        int flag;
+        unsigned long long flag;
         const char *name;
 };

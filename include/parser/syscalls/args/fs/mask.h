@@ -7,6 +7,6 @@
 #define FMT_ACCESS_MASK(ctx, mask)    TRY_FMT(fmt_access_mask, ctx, mask)
 #define FMT_FALLOCATE_MASK(ctx, mask) TRY_FMT(fmt_fallocate_mask, ctx, mask)
 
-DEFINE_MASK_FMT(statx);
-DEFINE_MASK_FMT(access);
-DEFINE_MASK_FMT(fallocate);
+DEFINE_MASK_FMT(statx, unsigned int);
+DEFINE_MASK_FMT(access, int);
+DEFINE_MASK_FMT(fallocate, int);

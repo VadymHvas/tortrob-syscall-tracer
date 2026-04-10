@@ -59,7 +59,7 @@ DEFINE_FLAGS_ARRAY(rwf_flags) = {
         INIT_FLAG_INFO(RWF_APPEND)
 };
 
-DEFINE_FLAGS_FMT(open)
+DEFINE_FLAGS_FMT(open, int)
 {
         FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
 
@@ -95,7 +95,7 @@ DEFINE_FLAGS_FMT(open)
         return 0;
 }
 
-DEFINE_FLAGS_FMT(at)
+DEFINE_FLAGS_FMT(at, int)
 {
         FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
 
@@ -135,7 +135,7 @@ DEFINE_FLAGS_FMT(at)
         return 0;
 }
 
-DEFINE_FLAGS_FMT(renameat2)
+DEFINE_FLAGS_FMT(renameat2, unsigned int)
 {
         FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
 
@@ -159,7 +159,7 @@ DEFINE_FLAGS_FMT(renameat2)
         return 0;
 }
 
-DEFINE_FLAGS_FMT(dup3)
+DEFINE_FLAGS_FMT(dup3, int)
 {
         FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
 
@@ -171,7 +171,7 @@ DEFINE_FLAGS_FMT(dup3)
         return 0;
 }
 
-DEFINE_FLAGS_FMT(rwf)
+DEFINE_FLAGS_FMT(rwf, int)
 {
         FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
 

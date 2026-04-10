@@ -37,13 +37,12 @@ DEFINE_SYSCALL_PARSER(read)
                 FMT_SEPARATOR(ctx);
 
                 ctx->delayed = DELAY;
-        } else {
-                FMT_STRING_MEM(ctx, args[1], args[2]);
-                FMT_SEPARATOR(ctx);
-                FMT_INT(ctx, args[2]);
-
-                ctx->delayed = DELAY_NONE;
+                return 0;
         }
+
+        FMT_STRING_MEM(ctx, args[1], args[2]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[2]);
 
         return 0;
 };
@@ -360,11 +359,10 @@ DEFINE_SYSCALL_PARSER(stat)
                 FMT_SEPARATOR(ctx);
 
                 ctx->delayed = DELAY;
-        } else if (ctx->delayed) {
-                FMT_STAT64_STRUCT(ctx, args[1]);
-
-                ctx->delayed = DELAY_NONE;
+                return 0;
         }
+
+        FMT_STAT64_STRUCT(ctx, args[1]);
 
         return 0;
 }
@@ -377,11 +375,10 @@ DEFINE_SYSCALL_PARSER(fstat)
                 FMT_SEPARATOR(ctx);
 
                 ctx->delayed = DELAY;
-        } else if (ctx->delayed) {
-                FMT_STAT64_STRUCT(ctx, args[1]);
-
-                ctx->delayed = DELAY_NONE;
+                return 0;
         }
+
+        FMT_STAT64_STRUCT(ctx, args[1]);
 
         return 0;
 }
@@ -394,11 +391,10 @@ DEFINE_SYSCALL_PARSER(lstat)
                 FMT_SEPARATOR(ctx);
 
                 ctx->delayed = DELAY;
-        } else if (ctx->delayed) {
-                FMT_STAT64_STRUCT(ctx, args[1]);
-
-                ctx->delayed = DELAY_NONE;
+                return 0;
         }
+
+        FMT_STAT64_STRUCT(ctx, args[1]);
 
         return 0;
 }
@@ -475,11 +471,10 @@ DEFINE_SYSCALL_PARSER(statx)
                 FMT_SEPARATOR(ctx);
 
                 ctx->delayed = DELAY;
-        } else if (ctx->delayed) {
-                FMT_STATX_STRUCT(ctx, args[4]);
-
-                ctx->delayed = DELAY_NONE;
+                return 0;
         }
+
+        FMT_STATX_STRUCT(ctx, args[4]);
 
         return 0;
 }

@@ -1,5 +1,8 @@
+#include <stdlib.h>
+
 #include "parser/syscalls/args/struct_info.h"
 #include "parser/syscalls/args/helpers.h"
+#include "core/trace.h"
 
 unsigned long long read_field(void *ptr, field_type type)
 {
@@ -59,6 +62,32 @@ int repr_field(struct parser_ctx_struct *ctx, unsigned long long value, struct f
         }
 
         return 0;
+}
+
+DEFINE_FMT(struct_common, fmt_struct_func_t fmt_struct_func, unsigned long long addr, size_t size)
+{
+        if (!addr)
+                return fmt_null(ctx);
+        
+        void *struct_buf = malloc(size);
+
+        if (!struct_buf)
+                return fmt_string(ctx, "<failed>");
+
+        if (read_tracee_mem(ctx->tracee, addr, struct_buf, size) <= 0)
+                goto err;
+
+        if (fmt_string(ctx, "{") ||
+            fmt_struct_func(ctx, struct_buf) || 
+            fmt_string(ctx, "}"))
+                goto err;
+
+        free(struct_buf);
+        return 0;
+
+err:
+        free(struct_buf);
+        return 1;
 }
 
 DEFINE_FMT(struct_generic, void *st, struct field_info *fields, size_t fields_count)
