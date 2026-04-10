@@ -11,8 +11,9 @@
 
 struct parser_ctx_struct;
 
-DEFINE_FLAGS_FMT(open, int);
-DEFINE_FLAGS_FMT(at, int);
-DEFINE_FLAGS_FMT(renameat2, unsigned int);
-DEFINE_FLAGS_FMT(dup3, int);
-DEFINE_FLAGS_FMT(rwf, int);
+int fmt_open_flags(struct parser_ctx_struct *ctx, int flags);
+int fmt_at_flags(struct parser_ctx_struct *ctx, int flags);
+int fmt_renameat2_flags(struct parser_ctx_struct *ctx, unsigned int flags);
+int fmt_dup3_flags(struct parser_ctx_struct *ctx, int flags);
+int fmt_rwf_flags(struct parser_ctx_struct *ctx, int flags);
+int fmt_st_mode_flags(struct parser_ctx_struct *ctx, unsigned int flags);

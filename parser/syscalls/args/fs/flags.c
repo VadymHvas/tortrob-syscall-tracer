@@ -59,6 +59,29 @@ DEFINE_FLAGS_ARRAY(rwf_flags) = {
         INIT_FLAG_INFO(RWF_APPEND)
 };
 
+DEFINE_FLAGS_ARRAY(st_file_types) = {
+        INIT_FLAG_INFO(S_IFREG),
+        INIT_FLAG_INFO(S_IFDIR),
+        INIT_FLAG_INFO(S_IFCHR),
+        INIT_FLAG_INFO(S_IFBLK),
+        INIT_FLAG_INFO(S_IFLNK),
+        INIT_FLAG_INFO(S_IFSOCK)
+};
+
+DEFINE_FLAGS_ARRAY(st_file_modes) = {
+        INIT_FLAG_INFO(S_IRUSR),
+        INIT_FLAG_INFO(S_IWUSR),
+        INIT_FLAG_INFO(S_IXUSR),
+
+        INIT_FLAG_INFO(S_IRGRP),
+        INIT_FLAG_INFO(S_IWGRP),
+        INIT_FLAG_INFO(S_IXGRP),
+
+        INIT_FLAG_INFO(S_IROTH),
+        INIT_FLAG_INFO(S_IWOTH),
+        INIT_FLAG_INFO(S_IXOTH)
+};
+
 DEFINE_FLAGS_FMT(open, int)
 {
         FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
@@ -191,6 +214,34 @@ DEFINE_FLAGS_FMT(rwf, int)
                 FMT_FLAG_SEPARATOR(ctx, first);
                 FMT_HEX(ctx, flags);
         }
+
+        return 0;
+}
+
+DEFINE_FLAGS_FMT(st_mode, unsigned int)
+{
+        FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
+
+        int first = 1;
+        mode_t mode = 0;
+
+        FOR_EACH_FLAGS(st_file_types) {
+                if (flags & st_file_types[i].flag) { 
+                        FMT_STRING(ctx, st_file_types[i].name);
+                        FMT_STRING(ctx, "|");
+
+                        first = 0;       
+                        flags &= ~st_file_types[i].flag;
+                        break;
+                }
+        }
+
+        FOR_EACH_FLAGS(st_file_modes) {
+                if (flags & st_file_modes[i].flag)
+                        mode |= st_file_modes[i].flag;
+        }
+
+        FMT_OCT(ctx, mode);
 
         return 0;
 }

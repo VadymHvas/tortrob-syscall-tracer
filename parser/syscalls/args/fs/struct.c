@@ -10,7 +10,7 @@
 DEFINE_FIELDS_ARRAY(stat64_fields) = {
         INIT_FIELD_INFO_INO(struct stat64, st_ino),
         INIT_FIELD_INFO_ULONG(struct stat64, st_nlink),
-        INIT_FIELD_INFO_MODE(struct stat64, st_mode),
+        INIT_FIELD_INFO_STMODE(struct stat64, st_mode),
         INIT_FIELD_INFO_UINT(struct stat64, st_uid),
         INIT_FIELD_INFO_UINT(struct stat64, st_gid),
         INIT_FIELD_INFO_DEV(struct stat64, st_rdev),
@@ -26,7 +26,7 @@ DEFINE_FIELDS_ARRAY(statx_fields) = {
         INIT_FIELD_INFO_INT(struct statx, stx_nlink),
         INIT_FIELD_INFO_UINT(struct statx, stx_uid),
         INIT_FIELD_INFO_UINT(struct statx, stx_gid),
-        INIT_FIELD_INFO_MODE(struct statx, stx_mode),
+        INIT_FIELD_INFO_STMODE(struct statx, stx_mode),
 
         INIT_FIELD_INFO_INO(struct statx, stx_ino),
         INIT_FIELD_INFO_ULONG(struct statx, stx_size)
