@@ -33,6 +33,15 @@ DEFINE_FLAGS_ARRAY(flock_ops) = {
         INIT_FLAG_INFO(LOCK_NB),
 };
 
+DEFINE_FLAGS_ARRAY(fadvise64_advices) = {
+        INIT_FLAG_INFO(POSIX_FADV_NORMAL),
+        INIT_FLAG_INFO(POSIX_FADV_SEQUENTIAL),
+        INIT_FLAG_INFO(POSIX_FADV_RANDOM),
+        INIT_FLAG_INFO(POSIX_FADV_NOREUSE),
+        INIT_FLAG_INFO(POSIX_FADV_WILLNEED),
+        INIT_FLAG_INFO(POSIX_FADV_DONTNEED),
+};
+
 /* 
  * For F_GET* commands (except F_GETLK) we don't format 3rd argument, 
  * therefore ctx->extra is equals to FCNTL_IGNORE_ARG3.
@@ -93,10 +102,30 @@ DEFINE_FMT(fcntl_arg3, int arg3)
 
 DEFINE_FMT(flock_op, int op)
 {
+        FMT_FLAGS_ZERO_IF_NONE(ctx, op);
+
         FOR_EACH_FLAGS(flock_ops) {
                 if (op == flock_ops[i].flag) {
                         FMT_STRING(ctx, flock_ops[i].name);
                         return 0;
                 }
         }
+
+        FMT_INT(ctx, op);
+        return 0;
+}
+
+DEFINE_FMT(fadvise64_advice, int advice)
+{
+        FMT_FLAGS_ZERO_IF_NONE(ctx, advice);
+
+        FOR_EACH_FLAGS(fadvise64_advices) {
+                if (advice == fadvise64_advices[i].flag) {
+                        FMT_STRING(ctx, fadvise64_advices[i].name);
+                        return 0;
+                }
+        }
+
+        FMT_INT(ctx, advice);
+        return 0;
 }

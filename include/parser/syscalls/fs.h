@@ -76,9 +76,10 @@
         X(umask, 95) \
         X(syncfs, 306) \
         X(fallocate, 285) \
-        X(flock, 73)
+        X(flock, 73) \
+        X(fadvise64, 221)
 
-#define FS_SYSCALL_COUNT 56
+#define FS_SYSCALL_COUNT 57
 
 /*
  * Generate parser function declarations for each syscall.

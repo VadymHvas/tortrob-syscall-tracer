@@ -749,3 +749,17 @@ DEFINE_SYSCALL_PARSER(flock)
 
         return 0;
 }
+
+/* fadvise64(int fd, off_t offset, off_t len, int advice) */
+DEFINE_SYSCALL_PARSER(fadvise64)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_OFF(ctx, args[1]);
+        FMT_SEPARATOR(ctx);
+        FMT_OFF(ctx, args[2]);
+        FMT_SEPARATOR(ctx);
+        FMT_FADVISE64_ADVICE(ctx, args[3]);
+
+        return 0;
+}
