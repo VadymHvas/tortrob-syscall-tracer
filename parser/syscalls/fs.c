@@ -38,9 +38,7 @@ DEFINE_SYSCALL_PARSER(read)
 
                 ctx->delayed = DELAY;
                 return 0;
-        }
-
-        if (ctx->delayed) {
+        } else {
                 FMT_STRING_MEM(ctx, args[1], args[2]);
                 FMT_SEPARATOR(ctx);
                 FMT_INT(ctx, args[2]);
@@ -358,9 +356,16 @@ DEFINE_SYSCALL_PARSER(ftruncate)
 /* stat(const char *pathname, struct stat *statbuf) */
 DEFINE_SYSCALL_PARSER(stat)
 {
-        FMT_STRING_MEM(ctx, args[0], NAME_MAX);
-        FMT_SEPARATOR(ctx);
-        FMT_ADDR(ctx, args[1]);
+        if (!ctx->delayed) {
+                FMT_STRING_MEM(ctx, args[0], NAME_MAX);
+                FMT_SEPARATOR(ctx);
+
+                ctx->delayed = DELAY;
+        } else if (ctx->delayed) {
+                FMT_STAT64_STRUCT(ctx, args[1]);
+
+                ctx->delayed = DELAY_NONE;
+        }
 
         return 0;
 }
@@ -368,9 +373,16 @@ DEFINE_SYSCALL_PARSER(stat)
 /* fstat(int fd, struct stat *statbuf) */
 DEFINE_SYSCALL_PARSER(fstat)
 {
-        FMT_FD(ctx, args[0]);
-        FMT_SEPARATOR(ctx);
-        FMT_ADDR(ctx, args[1]);
+        if (!ctx->delayed) {
+                FMT_FD(ctx, args[0]);
+                FMT_SEPARATOR(ctx);
+
+                ctx->delayed = DELAY;
+        } else if (ctx->delayed) {
+                FMT_STAT64_STRUCT(ctx, args[1]);
+
+                ctx->delayed = DELAY_NONE;
+        }
 
         return 0;
 }

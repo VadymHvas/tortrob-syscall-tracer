@@ -34,6 +34,7 @@
 #define FMT_HEX(ctx, num)    TRY_FMT(fmt_hex, ctx, num)
 
 #define FMT_ADDR(ctx, addr)  TRY_FMT(fmt_addr, ctx, addr)
+#define FMT_DEV(ctx, dev)    TRY_FMT(fmt_dev, ctx, dev)
 #define FMT_FD(ctx, fd)      TRY_FMT(fmt_fd, ctx, fd)
 #define FMT_SEPARATOR(ctx)   TRY_FMT(fmt_string, ctx, ", ")
 
@@ -92,6 +93,7 @@ DEFINE_FMT(oct, int num);
 DEFINE_FMT(off, off_t num);
 DEFINE_FMT(hex, int num);
 DEFINE_FMT(addr, unsigned long long addr);
+DEFINE_FMT(dev, dev_t dev);
 DEFINE_FMT(string_from_mem, unsigned long long addr, size_t size);
 DEFINE_FMT(struct_common, fmt_struct_func_t fmt_struct_func, unsigned long long addr, size_t size);
 DEFINE_FMT(fd, int fd);

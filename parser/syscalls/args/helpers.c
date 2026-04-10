@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <fcntl.h>
+#include <sys/sysmacros.h>
 #include <sys/types.h>
 
 #include "parser/syscalls/syscall-table.h"
@@ -74,6 +75,11 @@ DEFINE_FMT(addr, unsigned long long addr)
         APPEND_FMT(ctx, "0x%llx", addr);
 }
 
+DEFINE_FMT(dev, dev_t dev)
+{
+        APPEND_FMT(ctx, "%d:%d", major(dev), minor(dev));
+}
+
 DEFINE_FMT(string_from_mem, unsigned long long addr, size_t size)
 {
         if (!addr) 
@@ -130,7 +136,7 @@ DEFINE_FMT(struct_common, fmt_struct_func_t fmt_struct_func, unsigned long long 
         if (!struct_buf)
                 return fmt_string(ctx, "<failed>");
 
-        if (read_tracee_mem(ctx->tracee, addr, struct_buf, size))
+        if (read_tracee_mem(ctx->tracee, addr, struct_buf, size) <= 0)
                 return 1;
 
         if (fmt_string(ctx, "{"))
