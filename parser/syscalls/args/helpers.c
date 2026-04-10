@@ -100,14 +100,16 @@ DEFINE_FMT(string_from_mem, unsigned long long addr, size_t size)
         if (read_tracee_mem(ctx->tracee, (void *)addr, buf, max_len) <= 0)
                 goto err;
 
-        escape_seq_parse(buf, escaped_buf, max_len * 4 + 1);
+        buf[max_len] = '\0';
 
+        escape_seq_parse(buf, escaped_buf, max_len * 4 + 1);
+        
         size_t escaped_buf_len = strnlen(escaped_buf, max_len); // Bytes to format.
 
         if (fmt_string(ctx, "\"") || fmt_string(ctx, escaped_buf))
                 goto err;
 
-        if (escaped_buf_len == max_len) {
+        if (escaped_buf_len == TRACE_MAX_STRLEN) {
                 if (fmt_string(ctx, "\"...")) 
                         goto err;
         } else {
