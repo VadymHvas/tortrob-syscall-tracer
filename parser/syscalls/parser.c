@@ -26,9 +26,9 @@ static const struct parser_group_struct syscall_parsers[] = {
         INIT_PARSER_GROUP(fs_syscalls)
 };
 
-static int default_syscall_parser(struct parser_ctx_struct *ctx, int nr_args, raw_reg args[]);
+static int default_syscall_parser(struct parser_ctx_struct *ctx, int nr_args, reg_t args[]);
 
-int syscall_parse(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall, raw_reg args[])
+int syscall_parse(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall, reg_t args[])
 {
         /*
         * Perform a linear search across all parser groups to find
@@ -47,7 +47,7 @@ int syscall_parse(struct parser_ctx_struct *ctx, const struct syscall_entry *sys
         return default_syscall_parser(ctx, syscall->args, args);
 }
 
-static int default_syscall_parser(struct parser_ctx_struct *ctx, int nr_args, raw_reg args[])
+static int default_syscall_parser(struct parser_ctx_struct *ctx, int nr_args, reg_t args[])
 {
         for (int i = 0; i < nr_args; i++) {
                 if (i != 0)

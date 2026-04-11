@@ -95,7 +95,7 @@ struct parser_ctx_struct {
         delay_state_t delayed;
 };
 
-DEFINE_FMT(syscall, const struct syscall_entry *syscall, raw_reg args[]);
+DEFINE_FMT(syscall, const struct syscall_entry *syscall, reg_t args[]);
 
 DEFINE_FMT(string, char *src);
 DEFINE_FMT(int, int num);

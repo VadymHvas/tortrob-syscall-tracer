@@ -40,20 +40,20 @@ static const size_t ABI_REGS_OFFSET[] = {
  * 
  *      arg = regs + offset_of_abi_reg[nr_arg]
  */
-static raw_reg abi_get_syscall_arg(struct user_regs_struct *regs, int nr_arg)
+static reg_t abi_get_syscall_arg(struct user_regs_struct *regs, int nr_arg)
 {
         if (nr_arg < 0 || nr_arg > 6)
                 return 0;
 
-        return *(raw_reg *)((char *)regs + ABI_REGS_OFFSET[nr_arg]);
+        return *(reg_t *)((char *)regs + ABI_REGS_OFFSET[nr_arg]);
 }
 
-raw_reg abi_get_retval(struct user_regs_struct *regs)
+long abi_get_retval(struct user_regs_struct *regs)
 {
         return abi_get_syscall_arg(regs, 0);
 }
 
-void abi_get_syscall_args(struct user_regs_struct *regs, raw_reg args[])
+void abi_get_syscall_args(struct user_regs_struct *regs, reg_t args[])
 {
         for (int i = 1; i <= 6; i++)
                 args[i - 1] = abi_get_syscall_arg(regs, i);

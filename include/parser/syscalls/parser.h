@@ -16,7 +16,7 @@
  * the provided buffer and updating the offset.
  */
 #define DEFINE_SYSCALL_PARSER(name)\
-        int syscall_##name##_parser(struct parser_ctx_struct *ctx, raw_reg args[])
+        int syscall_##name##_parser(struct parser_ctx_struct *ctx, reg_t args[])
 
 #define SYSCALL_PARSER_NAME(name) syscall_##name##_parser
 
@@ -28,7 +28,7 @@
  * 
  * Return: 0 on success, non-zero on error.
  */
-typedef int (*parse_func_t) (struct parser_ctx_struct *ctx, raw_reg regs[]);
+typedef int (*parse_func_t) (struct parser_ctx_struct *ctx, reg_t regs[]);
 
 /**
  * struct parser_struct - Represents single syscall parsers entry.
@@ -68,4 +68,4 @@ struct parser_group_struct {
  *      - 0 on success
  *      - non-zero on failure
  */
-int syscall_parse(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall, raw_reg args[]);
+int syscall_parse(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall, reg_t args[]);

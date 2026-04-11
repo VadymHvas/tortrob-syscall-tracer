@@ -19,7 +19,7 @@ static const struct syscall_entry *get_syscall_by_nr(long nr);
 int get_syscall_with_args(struct parser_ctx_struct *ctx, struct user_regs_struct *regs)
 {
         const struct syscall_entry *syscall = get_syscall_by_nr(regs->orig_rax);
-        raw_reg args[6];
+        reg_t args[6];
         
         if (!syscall)
                 return -1;
