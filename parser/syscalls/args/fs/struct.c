@@ -21,7 +21,7 @@ DEFINE_FIELDS_ARRAY(stat64_fields) = {
 };
 
 DEFINE_FIELDS_ARRAY(statx_fields) = {
-        INIT_FIELD_INFO_MASK(struct statx, stx_mask, fmt_statx_mask),
+        INIT_FIELD_INFO_STXMASK(struct statx, stx_mask),
         INIT_FIELD_INFO_INT(struct statx, stx_blksize),
 
         INIT_FIELD_INFO_INT(struct statx, stx_nlink),

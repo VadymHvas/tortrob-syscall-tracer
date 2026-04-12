@@ -57,17 +57,6 @@
 #define INIT_FIELD_INFO_MODE(struct_type, field_name) \
         INIT_FIELD_INFO(TYPE_MODE, REPR_MODE, struct_type, field_name, NULL)
 
-#define INIT_FIELD_INFO_MASK(struct_type, field_name, flags_func) \
-        INIT_FIELD_INFO(TYPE_INT, REPR_FLAGS, struct_type, field_name, flags_func)
-
-#define INIT_FIELD_INFO_STMODE(struct_type, field_name) \
-        INIT_FIELD_INFO(TYPE_INT, REPR_FLAGS, struct_type, field_name, fmt_st_mode_flags)
-
-#define INIT_FIELD_INFO_FSTYPE(struct_type, field_name) \
-        INIT_FIELD_INFO(TYPE_LONG, REPR_FLAGS, struct_type, field_name, fmt_statfs_fs_type)
-
-#define INIT_FIELD_INFO_FFLAGS(struct_type, field_name) \
-        INIT_FIELD_INFO(TYPE_LONG, REPR_FLAGS, struct_type, field_name, fmt_fflags_flags)        
 /**
  * enum field_type describes semantic interpretation of a struct field,
  * including both its underlying type and formatting behavior.

@@ -9,6 +9,18 @@
 #include "parser/syscalls/args/helpers.h"
 #include "parser/syscalls/args/struct_info.h"
 
+#define INIT_FIELD_INFO_STXMASK(struct_type, field_name) \
+        INIT_FIELD_INFO(TYPE_INT, REPR_FLAGS, struct_type, field_name, fmt_statx_mask)
+
+#define INIT_FIELD_INFO_STMODE(struct_type, field_name) \
+        INIT_FIELD_INFO(TYPE_INT, REPR_FLAGS, struct_type, field_name, fmt_st_mode_flags)
+
+#define INIT_FIELD_INFO_FSTYPE(struct_type, field_name) \
+        INIT_FIELD_INFO(TYPE_LONG, REPR_FLAGS, struct_type, field_name, fmt_statfs_fs_type)
+
+#define INIT_FIELD_INFO_FFLAGS(struct_type, field_name) \
+        INIT_FIELD_INFO(TYPE_LONG, REPR_FLAGS, struct_type, field_name, fmt_fflags_flags)
+
 #define FMT_STAT64_STRUCT(ctx, addr) \
         TRY_FMT(fmt_struct_common, ctx, fmt_stat64_struct, addr, sizeof(struct stat64))
 
