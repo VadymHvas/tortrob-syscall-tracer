@@ -41,7 +41,7 @@
         X(symlink,     88,  1, 0) \
         X(symlinkat,   266, 1, 0) \
         X(lseek,       8,   1, 0) \
-        X(pread64,     17,  1, 0) \
+        X(pread64,     17,  1, 1) \
         X(pwrite64,    18,  1, 0) \
         X(readlink,    89,  1, 1) \
         X(readlinkat,  267, 1, 1) \
