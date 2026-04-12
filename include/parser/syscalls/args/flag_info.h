@@ -29,7 +29,7 @@
                 FMT_STRING(ctx, "|")
 
 /* As for flags, the mask can also be of different types in different syscalls. */
-#define DEFINE_MASK_FMT(mask_name, mask_type)         DEFINE_FMT(mask_name##_mask, mask_type mask)
+#define DEFINE_MASK_FMT(mask_name, mask_type) DEFINE_FMT(mask_name##_mask, mask_type mask)
 
 #define DEFINE_FLAGS_ARRAY(name) static const struct flag_info name[]
 #define INIT_FLAG_INFO(flag) { flag, #flag }

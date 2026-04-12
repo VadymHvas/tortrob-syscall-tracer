@@ -3,10 +3,7 @@
 #include "parser/syscalls/args/helpers.h"
 #include "parser/syscalls/args/flag_info.h"
 
-#define FMT_FCNTL_CMD(ctx, cmd)           TRY_FMT(fmt_fcntl_cmd, ctx, cmd)
 #define FMT_FCNTL_ARG3(ctx, arg3)         TRY_FMT(fmt_fcntl_arg3, ctx, arg3)
-#define FMT_FLOCK_OP(ctx, op)             TRY_FMT(fmt_flock_op, ctx, op)
-#define FMT_FADVISE64_ADVICE(ctx, advice) TRY_FMT(fmt_fadvise64_advice, ctx, advice)
 
 /**
  * enum fcntl_fmt_type describes semantic interpretation of 3rd argument fcntl().
@@ -31,8 +28,4 @@ enum fcntl_fmt_type {
         FCNTL_IGNORE_ARG3
 };
 
-DEFINE_FMT(fcntl_cmd, int cmd);
-DEFINE_FMT(fcntl_arg3, int arg3);
-DEFINE_FMT(flock_op, int op);
-DEFINE_FMT(fadvise64_advice, int advice);
-DEFINE_FMT(statfs_fs_type, int fs_type);
+int fmt_fcntl_arg3(struct parser_ctx_struct *ctx, int arg3);

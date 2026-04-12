@@ -16,6 +16,7 @@
 #include "parser/syscalls/args/fs/mask.h"
 #include "parser/syscalls/args/fs/special.h"
 #include "parser/syscalls/args/fs/struct.h"
+#include "parser/syscalls/args/fs/value.h"
 
 const struct parser_struct fs_syscalls[] = {
 #define X(name, nr, has_enter, has_exit) \

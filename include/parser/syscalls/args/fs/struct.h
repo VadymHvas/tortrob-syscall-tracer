@@ -8,6 +8,7 @@
 
 #include "parser/syscalls/args/helpers.h"
 #include "parser/syscalls/args/struct_info.h"
+#include "parser/syscalls/args/fs/value.h"
 
 #define INIT_FIELD_INFO_STXMASK(struct_type, field_name) \
         INIT_FIELD_INFO(TYPE_INT, REPR_FLAGS, struct_type, field_name, fmt_statx_mask)
