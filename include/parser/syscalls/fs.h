@@ -43,9 +43,9 @@
         X(lseek,       8,   1, 0) \
         X(pread64,     17,  1, 0) \
         X(pwrite64,    18,  1, 0) \
-        X(readlink,    89,  1, 0) \
-        X(readlinkat,  267, 1, 0) \
-        X(getcwd,      79,  1, 0) \
+        X(readlink,    89,  1, 1) \
+        X(readlinkat,  267, 1, 1) \
+        X(getcwd,      79,  0, 1) \
         X(chdir,       80,  1, 0) \
         X(mkdir,       83,  1, 0) \
         X(mkdirat,     258, 1, 0) \

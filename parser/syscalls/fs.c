@@ -263,7 +263,13 @@ DEFINE_SYSCALL_ENTER_PARSER(readlink)
 {
         FMT_STRING_MEM(ctx, args[0], NAME_MAX);
         FMT_SEPARATOR(ctx);
-        FMT_ADDR(ctx, args[1]);
+
+        return 0;
+}
+
+DEFINE_SYSCALL_EXIT_PARSER(readlink)
+{
+        FMT_STRING_MEM_IF_OK(ctx, args[1], ctx->retval);
         FMT_SEPARATOR(ctx);
         FMT_INT(ctx, args[2]);
 
@@ -277,7 +283,13 @@ DEFINE_SYSCALL_ENTER_PARSER(readlinkat)
         FMT_SEPARATOR(ctx);
         FMT_STRING_MEM(ctx, args[1], NAME_MAX);
         FMT_SEPARATOR(ctx);
-        FMT_ADDR(ctx, args[2]);
+
+        return 0;
+}
+
+DEFINE_SYSCALL_EXIT_PARSER(readlinkat)
+{
+        FMT_STRING_MEM_IF_OK(ctx, args[2], ctx->retval);
         FMT_SEPARATOR(ctx);
         FMT_INT(ctx, args[3]);
 
@@ -285,9 +297,9 @@ DEFINE_SYSCALL_ENTER_PARSER(readlinkat)
 }
 
 /* getcwd(char *buf, size_t size) */
-DEFINE_SYSCALL_ENTER_PARSER(getcwd)
+DEFINE_SYSCALL_EXIT_PARSER(getcwd)
 {
-        FMT_ADDR(ctx, args[0]);
+        FMT_STRING_MEM_IF_OK(ctx, args[0], ctx->retval);
         FMT_SEPARATOR(ctx);
         FMT_INT(ctx, args[1]);
 
