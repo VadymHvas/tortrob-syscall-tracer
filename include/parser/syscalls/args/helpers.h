@@ -39,6 +39,12 @@
 #define FMT_SEPARATOR(ctx)   TRY_FMT(fmt_string, ctx, ", ")
 
 #define FMT_STRING_MEM(ctx, addr, size) TRY_FMT(fmt_string_from_mem, ctx, addr, size)
+#define FMT_STRING_MEM_IF_OK(ctx, addr, retval) \
+        if (retval < 0) { \
+                FMT_ADDR(ctx, addr); \
+        } else { \
+                FMT_STRING_MEM(ctx, addr, retval); \
+        }
 
 #define INIT_PARSER_CTX(var, buffer, buffer_size, tracee_pid) \
         struct parser_ctx_struct var = \

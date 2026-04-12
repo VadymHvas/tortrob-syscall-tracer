@@ -13,6 +13,13 @@
 /* This macro takes an array as an argument, not a pointer. */
 #define FIELDS_ARR_SIZE(fields_arr) sizeof(fields_arr) / sizeof(fields_arr[0])
 
+#define FMT_STRUCT_IF_OK(fmt_struct_macro, ctx, addr, retval) \
+        if (retval < 0) { \
+                FMT_ADDR(ctx, addr); \
+        } else { \
+                fmt_struct_macro(ctx, addr); \
+        }
+
 #define INIT_FIELD_INFO(type, repr, struct_type, field_name, flags_func) \
         { \
                 .field_type       = type, \

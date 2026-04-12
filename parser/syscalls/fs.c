@@ -45,7 +45,7 @@ DEFINE_SYSCALL_ENTER_PARSER(read)
 
 DEFINE_SYSCALL_EXIT_PARSER(read)
 {
-        FMT_STRING_MEM(ctx, args[1], args[2]);
+        FMT_STRING_MEM_IF_OK(ctx, args[1], ctx->retval);
         FMT_SEPARATOR(ctx);
         FMT_INT(ctx, args[2]);
 
@@ -229,7 +229,13 @@ DEFINE_SYSCALL_ENTER_PARSER(pread64)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
-        FMT_ADDR(ctx, args[1]);
+
+        return 0;
+}
+
+DEFINE_SYSCALL_EXIT_PARSER(pread64)
+{
+        FMT_STRING_MEM_IF_OK(ctx, args[1], ctx->retval);
         FMT_SEPARATOR(ctx);
         FMT_INT(ctx, args[2]);
         FMT_SEPARATOR(ctx);
@@ -367,7 +373,7 @@ DEFINE_SYSCALL_ENTER_PARSER(stat)
 
 DEFINE_SYSCALL_EXIT_PARSER(stat)
 {
-        FMT_STAT64_STRUCT(ctx, args[1]);
+        FMT_STRUCT_IF_OK(FMT_STAT64_STRUCT, ctx, args[1], ctx->retval);
 
         return 0;
 }
@@ -383,7 +389,7 @@ DEFINE_SYSCALL_ENTER_PARSER(fstat)
 
 DEFINE_SYSCALL_EXIT_PARSER(fstat)
 {
-        FMT_STAT64_STRUCT(ctx, args[1]);
+        FMT_STRUCT_IF_OK(FMT_STAT64_STRUCT, ctx, args[1], ctx->retval);
 
         return 0;
 }
@@ -399,7 +405,7 @@ DEFINE_SYSCALL_ENTER_PARSER(lstat)
 
 DEFINE_SYSCALL_EXIT_PARSER(lstat)
 {
-        FMT_STAT64_STRUCT(ctx, args[1]);
+        FMT_STRUCT_IF_OK(FMT_STAT64_STRUCT, ctx, args[1], ctx->retval);
 
         return 0;
 }
@@ -479,7 +485,7 @@ DEFINE_SYSCALL_ENTER_PARSER(statx)
 
 DEFINE_SYSCALL_EXIT_PARSER(statx)
 {
-        FMT_STATX_STRUCT(ctx, args[4]);
+        FMT_STRUCT_IF_OK(FMT_STATX_STRUCT, ctx, args[4], ctx->retval);
 
         return 0;
 }
@@ -603,7 +609,7 @@ DEFINE_SYSCALL_ENTER_PARSER(readv)
 
 DEFINE_SYSCALL_EXIT_PARSER(readv)
 {
-        FMT_IOVEC_STRUCT(ctx, args[1]);
+        FMT_STRUCT_IF_OK(FMT_IOVEC_STRUCT, ctx, args[1], ctx->retval);
         FMT_SEPARATOR(ctx);
         FMT_INT(ctx, args[2]);
 
@@ -633,7 +639,7 @@ DEFINE_SYSCALL_ENTER_PARSER(preadv)
 
 DEFINE_SYSCALL_EXIT_PARSER(preadv)
 {
-        FMT_IOVEC_STRUCT(ctx, args[1]);
+        FMT_STRUCT_IF_OK(FMT_IOVEC_STRUCT, ctx, args[1], ctx->retval);
         FMT_SEPARATOR(ctx);
         FMT_INT(ctx, args[2]);
         FMT_SEPARATOR(ctx);
@@ -673,7 +679,7 @@ DEFINE_SYSCALL_ENTER_PARSER(preadv2)
 
 DEFINE_SYSCALL_EXIT_PARSER(preadv2)
 {
-        FMT_IOVEC_STRUCT(ctx, args[1]);
+        FMT_STRUCT_IF_OK(FMT_IOVEC_STRUCT, ctx, args[1], ctx->retval);
         FMT_SEPARATOR(ctx);
         FMT_INT(ctx, args[2]);
         FMT_SEPARATOR(ctx);
@@ -767,7 +773,7 @@ DEFINE_SYSCALL_ENTER_PARSER(newfstatat)
 
 DEFINE_SYSCALL_EXIT_PARSER(newfstatat)
 {
-        FMT_STAT64_STRUCT(ctx, args[2]);
+        FMT_STRUCT_IF_OK(FMT_STAT64_STRUCT, ctx, args[2], ctx->retval);
         FMT_SEPARATOR(ctx);
         FMT_AT_FLAGS(ctx, args[3]);
 
