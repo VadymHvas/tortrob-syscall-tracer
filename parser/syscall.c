@@ -16,16 +16,36 @@
 
 static const struct syscall_entry *get_syscall_by_nr(long nr);
 
-int get_syscall_with_args(struct parser_ctx_struct *ctx, struct user_regs_struct *regs)
+int begin_syscall_fmt(struct parser_ctx_struct *ctx, struct user_regs_struct *regs)
 {
-        const struct syscall_entry *syscall = get_syscall_by_nr(regs->orig_rax);
         reg_t args[6];
-        
+        const struct syscall_entry *syscall = get_syscall_by_nr(regs->orig_rax);
+
         if (!syscall)
                 return -1;
-        
+
         abi_get_syscall_args(regs, args);
-        fmt_syscall(ctx, syscall, args);
+        fmt_syscall_entry(ctx, syscall, args);
+
+        return 0;
+}
+
+int finalize_syscall_fmt(struct parser_ctx_struct *ctx, struct user_regs_struct *regs)
+{
+        reg_t args[6];
+        const struct syscall_entry *syscall = get_syscall_by_nr(regs->orig_rax);
+
+        if (!syscall)
+                return -1;
+
+        abi_get_syscall_args(regs, args);
+        
+        if (syscall->args)
+                syscall_parse(ctx, syscall, args);
+
+        FMT_STRING(ctx, ")");
+        FMT_STRING(ctx, " = ");
+        FMT_LLU(ctx, ctx->retval);
 
         return 0;
 }

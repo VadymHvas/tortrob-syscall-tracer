@@ -6,39 +6,75 @@
 #include "parser/syscalls/ABI/abi.h"
 #include "parser/syscalls/args/helpers.h"
 
+#define SYSCALL_ENTRY_PARSER_NAME(name) syscall_entry_##name##_parser
+#define SYSCALL_EXIT_PARSER_NAME(name) syscall_exit_##name##_parser
+
 /*
- * DEFINE_SYSCALL_PARSER(name)
+ * DEFINE_SYSCALL_*_PARSER(name)
  *
- * Helper macro to define a syscall argument parser function with
+ * Helper macro to define a syscall entry/exit argument parser function with
  * a consistent signature.
  *
  * Each parser is responsible for formatting syscall arguments into
  * the provided buffer and updating the offset.
  */
-#define DEFINE_SYSCALL_PARSER(name)\
-        int syscall_##name##_parser(struct parser_ctx_struct *ctx, reg_t args[])
+#define DEFINE_SYSCALL_ENTRY_PARSER(name)\
+        int SYSCALL_ENTRY_PARSER_NAME(name)(struct parser_ctx_struct *ctx, reg_t args[])
 
-#define SYSCALL_PARSER_NAME(name) syscall_##name##_parser
+#define DEFINE_SYSCALL_EXIT_PARSER(name)\
+        int SYSCALL_EXIT_PARSER_NAME(name)(struct parser_ctx_struct *ctx, reg_t args[])
+
+/* 
+ * These helpers map X-macro boolean flags (0/1) into
+ * either a syscall parser function pointer or NULL.
+ *
+ * This allows conditional registration of entry/exit
+ * parsers directly from the X-macro syscall table
+ * without introducing runtime branching logic.
+ */
+#define ENTRY_IF_1(name) SYSCALL_ENTRY_PARSER_NAME(name)
+#define ENTRY_IF_0(name) NULL
+
+#define EXIT_IF_1(name)  SYSCALL_EXIT_PARSER_NAME(name)
+#define EXIT_IF_0(name)  NULL
+
+#define DEFINE_PARSER(nr, entry_fn, exit_fn) \
+        { \
+                nr, \
+                .entry_parse = entry_fn, \
+                .exit_parse  = exit_fn, \
+                .needs_entry = (entry_fn != NULL), \
+                .needs_exit  = (exit_fn != NULL) \
+        }
 
 /**
  * parse_func_t - Callback type for syscall arguments formatting.
  * 
  * @ctx:  Parser context.
- * @regs: Array of arguments in raw format (unsigned long long).
+ * @args: Array of arguments in raw format (uint64_t).
  * 
  * Return: 0 on success, non-zero on error.
  */
-typedef int (*parse_func_t) (struct parser_ctx_struct *ctx, reg_t regs[]);
+typedef int (*parse_func_t) (struct parser_ctx_struct *ctx, reg_t args[]);
 
 /**
  * struct parser_struct - Represents single syscall parsers entry.
  * 
- * @nr:         The native syscall number.
- * @parse_func: Function that formats syscall arguments.
+ * @nr:          The native syscall number.
+ * @entry_parse: Function that formats syscall arguments in syscall entry.
+ * @exit_parse:  Function that formats syscall arguments in syscall exit.
+ * 
+ * @needs_entry: non-zero if entry parser should be used.
+ * @needs_exit:  non-zero if exit parser should be used.
  */
 struct parser_struct {
         long nr;
-        parse_func_t parse_func;
+        
+        parse_func_t entry_parse;
+        parse_func_t exit_parse;
+        
+        int needs_entry;
+        int needs_exit;
 };
 
 /**

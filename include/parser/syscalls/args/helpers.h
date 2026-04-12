@@ -40,62 +40,47 @@
 
 #define FMT_STRING_MEM(ctx, addr, size) TRY_FMT(fmt_string_from_mem, ctx, addr, size)
 
-#define INIT_PARSER_CTX(var, buf, bufsize, tracee) \
-        struct parser_ctx_struct ctx = \
-                { SYSCALL_ENTRY, buf, .buf_base = buf, SYSCALL_BUF_SIZE, 0, tracee, 0, DELAY_NONE }
-
-/*
- * This macro does not reset the ctx->delayed field because
- * it is assumed to be reset in the syscall parser.
- */
-#define CLEANUP_PARSER_CTX(ctx) \
-        ctx->in_syscall = SYSCALL_ENTRY; \
-        ctx->buf        = ctx->buf_base; \
-        ctx->offset     = 0; \
-        ctx->extra      = 0; \
-
-/*
- * enum delay_state_t represents deferred formatting state for syscall output.
- *
- * DELAY      - Defer formatting until syscall exit phase (two-phase rendering).
- * DELAY_NONE - Immediate formatting mode (no deferred output).
- *
- * Used for syscalls requiring post-execution data (e.g. stat-family, read, etc.).
- * DELAY is set in syscall entry parser when exit-phase data is required.
- * DELAY_NONE is set after completion of deferred formatting.
- */
-typedef enum {
-        DELAY      = 1,
-        DELAY_NONE = 0
-} delay_state_t;
+#define INIT_PARSER_CTX(var, buffer, buffer_size, tracee_pid) \
+        struct parser_ctx_struct var = \
+                { \
+                        .in_syscall = SYSCALL_ENTRY, \
+                        .buf        = buffer, \
+                        .bufsize    = buffer_size, \
+                        .offset     = 0, \
+                        .tracee     = tracee_pid, \
+                        .extra      = 0, \
+                        .retval     = 0 \
+                }
 
 /**
  * struct parser_ctx_struct - Parser context.
  * 
  * @in_syscall: Parser syscall state.
  * @buf:        Buffer addr.
- * @buf_base:   Buffer base addr (for cleanup buffer).
  * @bufsize:    Max size of buffer.
  * @offset:     Pointer to offset variable.
  * @tracee:     Tracee process PID.
  * @extra:      Field for special cases, for instance fcntl(), prctl(), ioctl() etc.
- * @delayed:    Delayed for handle in exit syscall.
+ * @retval:     Return value (is set when exit syscall).      
  * 
  * This structure stores all the necessary
  * information for correct parsing using offsets.
  */
 struct parser_ctx_struct {
         int in_syscall;
+
         char *buf;
-        const char *buf_base;
         size_t bufsize;
         size_t offset;
+
         pid_t tracee;
+
         int extra;
-        delay_state_t delayed;
+
+        long retval;
 };
 
-DEFINE_FMT(syscall, const struct syscall_entry *syscall, reg_t args[]);
+DEFINE_FMT(syscall_entry, const struct syscall_entry *syscall, reg_t args[]);
 
 DEFINE_FMT(string, char *src);
 DEFINE_FMT(int, int num);

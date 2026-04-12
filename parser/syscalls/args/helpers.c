@@ -23,20 +23,19 @@
                          fmt, __VA_ARGS__); \
         return safe_append(ctx, &n)
 
-/* Format syscall string function decomposition. */
 static DEFINE_FMT(syscall_name, const struct syscall_entry *syscall);
-static DEFINE_FMT(syscall_args, const struct syscall_entry *syscall, reg_t args[]);
 
 static inline int safe_append(struct parser_ctx_struct *ctx, int *n);
 static void escape_seq_parse(const char *src, char *dest, size_t dst_size);
 
-DEFINE_FMT(syscall, const struct syscall_entry *syscall, reg_t args[])
+DEFINE_FMT(syscall_entry, const struct syscall_entry *syscall, reg_t args[])
 {
-        if (!ctx->delayed)
-                if (fmt_syscall_name(ctx, syscall))
-                        return 1;
+        TRY_FMT(fmt_syscall_name, ctx, syscall);
 
-        return fmt_syscall_args(ctx, syscall, args);
+        if (syscall->args)
+                syscall_parse(ctx, syscall, args);
+        
+        return 0;
 }
 
 DEFINE_FMT(string, char *src)
@@ -146,17 +145,6 @@ DEFINE_FMT(null)
 static DEFINE_FMT(syscall_name, const struct syscall_entry *syscall)
 {
         APPEND_FMT(ctx, "%s(", syscall->name);
-}
-
-static DEFINE_FMT(syscall_args, const struct syscall_entry *syscall, reg_t args[])
-{
-        if (syscall->args)
-                syscall_parse(ctx, syscall, args);
-
-        if (ctx->offset < ctx->bufsize && !ctx->delayed)
-                snprintf(ctx->buf + ctx->offset, ctx->bufsize - ctx->offset, ")");
-
-        return 0;
 }
 
 static inline int safe_append(struct parser_ctx_struct *ctx, int *n)

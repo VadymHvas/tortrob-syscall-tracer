@@ -7,30 +7,26 @@
 #include <sys/user.h>
 
 #include "core/dispatch.h"
+#include "parser/syscalls/ABI/abi.h"
 #include "parser/syscall.h"
 #include "parser/syscalls/args/helpers.h"
 
 static void entry_syscall(struct parser_ctx_struct *ctx, struct user_regs_struct *regs)
 {
-        get_syscall_with_args(ctx, regs);
-        
-        if (!ctx->delayed)
-                printf("%s", ctx->buf);
+        begin_syscall_fmt(ctx, regs);
         
         ctx->in_syscall = SYSCALL_EXIT;
 }
 
-// TODO: Make error handling inside deferred system call parsers.
 static void exit_syscall(struct parser_ctx_struct *ctx, struct user_regs_struct *regs)
 {
-        if (ctx->delayed) {
-                get_syscall_with_args(ctx, regs);
-                printf("%s = %llu\n", ctx->buf, regs->rax);
-        } else {
-                printf(" = %llu\n", regs->rax);
-        }
+        ctx->retval = abi_get_retval(regs);
 
-        CLEANUP_PARSER_CTX(ctx);
+        finalize_syscall_fmt(ctx, regs);
+        printf("%s\n", ctx->buf);
+
+        ctx->in_syscall = SYSCALL_ENTRY;
+        ctx->offset = 0;
 }
 
 void entry_or_exit_syscall(struct parser_ctx_struct *ctx, struct user_regs_struct *regs)

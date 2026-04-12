@@ -27,6 +27,7 @@ static const struct parser_group_struct syscall_parsers[] = {
 };
 
 static int default_syscall_parser(struct parser_ctx_struct *ctx, int nr_args, reg_t args[]);
+static int handle_syscall_parser(struct parser_ctx_struct *ctx, struct parser_struct *entry, reg_t args[]);
 
 int syscall_parse(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall, reg_t args[])
 {
@@ -39,7 +40,7 @@ int syscall_parse(struct parser_ctx_struct *ctx, const struct syscall_entry *sys
         for (int i = 0; i < sizeof(syscall_parsers) / sizeof(syscall_parsers[0]); i++) {
                 for (int j = 0; j < syscall_parsers[i].len; j++) {
                         if (syscall->nr == syscall_parsers[i].entry[j].nr) {
-                                return syscall_parsers[i].entry[j].parse_func(ctx, args);
+                                return handle_syscall_parser(ctx, &syscall_parsers[i].entry[j], args);
                         }
                 }
         }
@@ -49,12 +50,28 @@ int syscall_parse(struct parser_ctx_struct *ctx, const struct syscall_entry *sys
 
 static int default_syscall_parser(struct parser_ctx_struct *ctx, int nr_args, reg_t args[])
 {
-        for (int i = 0; i < nr_args; i++) {
-                if (i != 0)
-                        FMT_SEPARATOR(ctx);
-                FMT_LLU(ctx, args[i]);
+        if (!ctx->in_syscall) {
+                for (int i = 0; i < nr_args; i++) {
+                        if (i != 0)
+                                FMT_SEPARATOR(ctx);
+                        FMT_LLU(ctx, args[i]);
+                }
         }
 
+        return 0;
+}
+
+static int handle_syscall_parser(struct parser_ctx_struct *ctx, struct parser_struct *entry, reg_t args[])
+{
+        if (!ctx->in_syscall) {
+                if (entry->needs_entry)
+                        return entry->entry_parse(ctx, args);
+                
+                return 0;
+        }
+
+        if (entry->needs_exit)
+                return entry->exit_parse(ctx, args);
 
         return 0;
 }
