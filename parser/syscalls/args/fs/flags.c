@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <sys/stat.h>
 #include <sys/uio.h>
+#include <sys/statvfs.h>
 
 #include "parser/syscalls/args/helpers.h"
 #include "parser/syscalls/args/flag_info.h"
@@ -80,6 +81,22 @@ DEFINE_FLAGS_ARRAY(st_file_modes) = {
         INIT_FLAG_INFO(S_IROTH),
         INIT_FLAG_INFO(S_IWOTH),
         INIT_FLAG_INFO(S_IXOTH)
+};
+
+DEFINE_FLAGS_ARRAY(fflags_flags) = {
+        INIT_FLAG_INFO(ST_RDONLY),
+        INIT_FLAG_INFO(ST_WRITE),
+        INIT_FLAG_INFO(ST_NOSUID),
+        INIT_FLAG_INFO(ST_NODEV),
+        INIT_FLAG_INFO(ST_NOEXEC),
+        INIT_FLAG_INFO(ST_SYNCHRONOUS),
+        INIT_FLAG_INFO(ST_MANDLOCK),
+        INIT_FLAG_INFO(ST_APPEND),
+        INIT_FLAG_INFO(ST_IMMUTABLE),
+        INIT_FLAG_INFO(ST_NOATIME),
+        INIT_FLAG_INFO(ST_NODIRATIME),
+        INIT_FLAG_INFO(ST_RELATIME),
+        INIT_FLAG_INFO(ST_NOSYMFOLLOW)
 };
 
 DEFINE_FLAGS_FMT(open, int)
@@ -242,6 +259,30 @@ DEFINE_FLAGS_FMT(st_mode, unsigned int)
         }
 
         FMT_OCT(ctx, mode);
+
+        return 0;
+}
+
+DEFINE_FLAGS_FMT(fflags, long)
+{
+        FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
+
+        int first = 1;
+
+        FOR_EACH_FLAGS(fflags_flags) {
+                if (flags & fflags_flags[i].flag) {
+                        FMT_FLAG_SEPARATOR(ctx, first);
+                        FMT_STRING(ctx, fflags_flags[i].name);
+
+                        first = 0;
+                        flags &= ~fflags_flags[i].flag;
+                }
+        }
+
+        if (flags) {
+                FMT_FLAG_SEPARATOR(ctx, first);
+                FMT_HEX(ctx, flags);
+        }
 
         return 0;
 }

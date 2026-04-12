@@ -502,13 +502,18 @@ DEFINE_SYSCALL_EXIT_PARSER(statx)
         return 0;
 }
 
-// TODO: make statfs struct formatter.
 /* statfs(const char *path, struct statfs *buf) */
 DEFINE_SYSCALL_ENTER_PARSER(statfs)
 {
         FMT_STRING_MEM(ctx, args[0], NAME_MAX);
         FMT_SEPARATOR(ctx);
-        FMT_ADDR(ctx, args[1]);
+
+        return 0;
+}
+
+DEFINE_SYSCALL_EXIT_PARSER(statfs)
+{
+        FMT_STRUCT_IF_OK(FMT_STATFS_STRUCT, ctx, args[1], ctx->retval);
 
         return 0;
 }
@@ -518,7 +523,13 @@ DEFINE_SYSCALL_ENTER_PARSER(fstatfs)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
-        FMT_ADDR(ctx, args[1]);
+
+        return 0;
+}
+
+DEFINE_SYSCALL_EXIT_PARSER(fstatfs)
+{
+        FMT_STRUCT_IF_OK(FMT_STATFS_STRUCT, ctx, args[1], ctx->retval);
 
         return 0;
 }

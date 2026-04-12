@@ -17,3 +17,4 @@ int fmt_renameat2_flags(struct parser_ctx_struct *ctx, unsigned int flags);
 int fmt_dup3_flags(struct parser_ctx_struct *ctx, int flags);
 int fmt_rwf_flags(struct parser_ctx_struct *ctx, int flags);
 int fmt_st_mode_flags(struct parser_ctx_struct *ctx, unsigned int flags);
+int fmt_fflags_flags(struct parser_ctx_struct *ctx, long flags);

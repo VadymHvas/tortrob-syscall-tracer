@@ -1,6 +1,7 @@
 #define _GNU_SOURCE
 
 #include <sys/stat.h>
+#include <sys/statfs.h>
 #include <sys/uio.h>
 
 #include "parser/syscalls/args/struct_info.h"
@@ -37,6 +38,19 @@ DEFINE_FIELDS_ARRAY(iovec_fields) = {
         INIT_FIELD_INFO_ULONG(struct iovec, iov_len) 
 };
 
+DEFINE_FIELDS_ARRAY(statfs_fields) = {
+        INIT_FIELD_INFO_FSTYPE(struct statfs, f_type),
+        INIT_FIELD_INFO_LONG(struct statfs, f_bsize),
+        INIT_FIELD_INFO_ULONG(struct statfs, f_blocks),
+        INIT_FIELD_INFO_ULONG(struct statfs, f_bfree),
+        INIT_FIELD_INFO_ULONG(struct statfs, f_bavail),
+
+        INIT_FIELD_INFO_ULONG(struct statfs, f_files),
+        INIT_FIELD_INFO_ULONG(struct statfs, f_ffree),
+
+        INIT_FIELD_INFO_FFLAGS(struct statfs, f_flags)
+};
+
 DEFINE_STRUCT_FMT(stat64, struct stat64 *statbuf)
 {
         return fmt_struct_generic(ctx, statbuf, stat64_fields, FIELDS_ARR_SIZE(stat64_fields));
@@ -50,4 +64,9 @@ DEFINE_STRUCT_FMT(statx, struct statx *statxbuf)
 DEFINE_STRUCT_FMT(iovec, struct iovec *iov)
 {
         return fmt_struct_generic(ctx, iov, iovec_fields, FIELDS_ARR_SIZE(iovec_fields));
+}
+
+DEFINE_STRUCT_FMT(statfs, struct statfs *statfsbuf)
+{
+        return fmt_struct_generic(ctx, statfsbuf, statfs_fields, FIELDS_ARR_SIZE(statfs_fields));
 }

@@ -6,6 +6,7 @@
 
 #include "parser/syscalls/args/helpers.h"
 #include "parser/syscalls/args/fs/flags.h"
+#include "parser/syscalls/args/fs/special.h"
 
 #define DEFINE_STRUCT_FMT(struct_name, struct_type) DEFINE_FMT(struct_name##_struct, struct_type)
 #define DEFINE_FIELDS_ARRAY(name) static const struct field_info name[]
@@ -62,6 +63,11 @@
 #define INIT_FIELD_INFO_STMODE(struct_type, field_name) \
         INIT_FIELD_INFO(TYPE_INT, REPR_FLAGS, struct_type, field_name, fmt_st_mode_flags)
 
+#define INIT_FIELD_INFO_FSTYPE(struct_type, field_name) \
+        INIT_FIELD_INFO(TYPE_LONG, REPR_FLAGS, struct_type, field_name, fmt_statfs_fs_type)
+
+#define INIT_FIELD_INFO_FFLAGS(struct_type, field_name) \
+        INIT_FIELD_INFO(TYPE_LONG, REPR_FLAGS, struct_type, field_name, fmt_fflags_flags)        
 /**
  * enum field_type describes semantic interpretation of a struct field,
  * including both its underlying type and formatting behavior.

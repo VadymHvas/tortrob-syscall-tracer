@@ -35,3 +35,4 @@ DEFINE_FMT(fcntl_cmd, int cmd);
 DEFINE_FMT(fcntl_arg3, int arg3);
 DEFINE_FMT(flock_op, int op);
 DEFINE_FMT(fadvise64_advice, int advice);
+DEFINE_FMT(statfs_fs_type, int fs_type);

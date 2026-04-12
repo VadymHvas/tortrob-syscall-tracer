@@ -62,8 +62,8 @@
         X(chown,       92,  1, 0) \
         X(fchownat,    260, 1, 0) \
         X(statx,       332, 1, 1) \
-        X(statfs,      137, 1, 0) \
-        X(fstatfs,     138, 1, 0) \
+        X(statfs,      137, 1, 1) \
+        X(fstatfs,     138, 1, 1) \
         X(mknod,       133, 1, 0) \
         X(mknodat,     259, 1, 0) \
         X(fsync,       74,  1, 0) \

@@ -42,6 +42,33 @@ DEFINE_FLAGS_ARRAY(fadvise64_advices) = {
         INIT_FLAG_INFO(POSIX_FADV_DONTNEED),
 };
 
+DEFINE_FLAGS_ARRAY(fs_types) = {
+        { 0xef53,     "EXT2/EXT3/EXT4" },
+        { 0x9123683e, "BTRFS" },
+        { 0xf2f52010, "F2FS" },
+        { 0x65735546, "FUSE" },
+        { 0x9660,     "ISO9660" },
+        { 0x3153464a, "JFS" },
+        { 0x6969,     "NFS" },
+        { 0x5346544e, "NTFS" },
+        { 0x794c7630, "OVERLAYFS" },
+        { 0x50495045, "PIPEFS" },
+        { 0x9fa0,     "PROC" },
+        { 0x62656572, "SYSFS" },
+        { 0x01021994, "TMPFS" },
+        { 0x74726163, "TRACEFS" },
+        { 0x6e736673, "NSFS" },
+        { 0x534f434b, "SOCKFS" },
+        { 0x19800202, "MQUEUE" },
+        { 0x15013346, "UDF" },
+        { 0x58465342, "XFS" },
+        { 0x01021997, "9P" },
+        { 0x858458f6, "RAMFS" },
+        { 0x9fa1,     "OPENPROM" },
+        { 0xde5e81e4, "EFIVARFS" },
+        { 0xcafe4a11, "BPF_FS" },
+};
+
 /* 
  * For F_GET* commands (except F_GETLK) we don't format 3rd argument, 
  * therefore ctx->extra is equals to FCNTL_IGNORE_ARG3.
@@ -127,5 +154,21 @@ DEFINE_FMT(fadvise64_advice, int advice)
         }
 
         FMT_INT(ctx, advice);
+        return 0;
+}
+
+DEFINE_FMT(statfs_fs_type, int fs_type)
+{
+        FMT_FLAGS_ZERO_IF_NONE(ctx, fs_type);
+
+        FOR_EACH_FLAGS(fs_types) {
+                if (fs_type == fs_types[i].flag) {
+                        FMT_STRING(ctx, fs_types[i].name);
+                        return 0;
+                }
+        }
+
+        FMT_HEX(ctx, fs_type);
+
         return 0;
 }
