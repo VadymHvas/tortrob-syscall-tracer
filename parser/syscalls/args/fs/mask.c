@@ -40,7 +40,7 @@ DEFINE_FLAGS_ARRAY(fallocate_masks) = {
         INIT_FLAG_INFO(FALLOC_FL_INSERT_RANGE),
 };
 
-DEFINE_MASK_FMT(statx, unsigned int)
+int fmt_statx_mask(struct parser_ctx_struct *ctx, unsigned int mask)
 {
         FMT_MASK_ZERO_IF_NONE(ctx, mask);
 
@@ -71,7 +71,7 @@ DEFINE_MASK_FMT(statx, unsigned int)
         return 0;
 }
 
-DEFINE_MASK_FMT(access, int)
+int fmt_access_mask(struct parser_ctx_struct *ctx, int mask)
 {
         if (!mask) {
                 FMT_STRING(ctx, "F_OK");
@@ -98,7 +98,7 @@ DEFINE_MASK_FMT(access, int)
         return 0;
 }
 
-DEFINE_MASK_FMT(fallocate, int)
+int fmt_fallocate_mask(struct parser_ctx_struct *ctx, int mask)
 {
         FMT_FLAGS_ZERO_IF_NONE(ctx, mask);
 

@@ -4,11 +4,9 @@
 #include <sys/file.h>
 
 #include "parser/syscalls/args/helpers.h"
-#include "parser/syscalls/args/flag_info.h"
 #include "parser/syscalls/args/fs/special.h"
-#include "parser/syscalls/args/fs/flags.h"
 
-DEFINE_FMT(fcntl_arg3, int arg3)
+int fmt_fcntl_arg3(struct parser_ctx_struct *ctx, int arg3)
 {
         switch (ctx->extra)
         {

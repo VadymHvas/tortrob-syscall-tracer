@@ -7,6 +7,6 @@
 #define FMT_ACCESS_MASK(ctx, mask)    TRY_FMT(fmt_access_mask, ctx, mask)
 #define FMT_FALLOCATE_MASK(ctx, mask) TRY_FMT(fmt_fallocate_mask, ctx, mask)
 
-DEFINE_MASK_FMT(statx, unsigned int);
-DEFINE_MASK_FMT(access, int);
-DEFINE_MASK_FMT(fallocate, int);
+int fmt_statx_mask(struct parser_ctx_struct *ctx, unsigned int mask);
+int fmt_access_mask(struct parser_ctx_struct *ctx, int mask);
+int fmt_fallocate_mask(struct parser_ctx_struct *ctx, int mask);

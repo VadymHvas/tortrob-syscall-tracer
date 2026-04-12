@@ -209,7 +209,8 @@ unsigned long long read_field(void *field, field_type type);
  *
  * Return: 0 on success, non-zero on error.
  */
-int repr_field(struct parser_ctx_struct *ctx, unsigned long long value, struct field_info *field);
+int repr_field(struct parser_ctx_struct *ctx,
+               unsigned long long value, struct field_info *field);
 
 /**
  * fmt_struct_common - Generic formatter for structures from tracee memory.

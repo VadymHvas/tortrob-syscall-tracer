@@ -34,7 +34,7 @@
 #define FMT_STATFS_STRUCT(ctx, addr) \
         TRY_FMT(fmt_struct_common, ctx, fmt_statfs_struct, addr, sizeof(struct statfs))
 
-DEFINE_STRUCT_FMT(stat64, struct stat64 *statbuf);
-DEFINE_STRUCT_FMT(statx, struct statx *statxbuf);
-DEFINE_STRUCT_FMT(iovec, struct iovec *iov);
-DEFINE_STRUCT_FMT(statfs, struct statfs *statfsbuf);
+int fmt_stat64_struct(struct parser_ctx_struct *ctx, struct stat64 *statbuf);
+int fmt_statx_struct(struct parser_ctx_struct *ctx, struct statx *statxbuf);
+int fmt_iovec_struct(struct parser_ctx_struct *ctx, struct iovec *iov);
+int fmt_statfs_struct(struct parser_ctx_struct *ctx, struct statfs *statfsbuf);

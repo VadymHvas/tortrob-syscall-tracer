@@ -64,7 +64,8 @@ int repr_field(struct parser_ctx_struct *ctx, unsigned long long value, struct f
         return 0;
 }
 
-DEFINE_FMT(struct_common, fmt_struct_func_t fmt_struct_func, unsigned long long addr, size_t size)
+int fmt_struct_common(struct parser_ctx_struct *ctx,
+                fmt_struct_func_t fmt_struct_func, unsigned long long addr, size_t size)
 {
         if (!addr)
                 return fmt_null(ctx);
@@ -90,7 +91,8 @@ err:
         return 1;
 }
 
-DEFINE_FMT(struct_generic, void *st, struct field_info *fields, size_t fields_count)
+int fmt_struct_generic(struct parser_ctx_struct *ctx,
+        void *st, struct field_info *fields, size_t fields_count)
 {
         int first = 1;
 

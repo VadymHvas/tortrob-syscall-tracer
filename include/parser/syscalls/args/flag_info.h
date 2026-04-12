@@ -7,9 +7,6 @@
                 return 0; \
         }
 
-/* Different syscalls can accept flags of different types, type int will not workю */
-#define DEFINE_FLAGS_FMT(flags_name, flags_type) DEFINE_FMT(flags_name##_flags, flags_type flags)
-
 /* 
  * Masks and special cases use the same iteration pattern and zero check as flags,
  * macro is alias for readability.
@@ -27,9 +24,6 @@
 #define FMT_FLAG_SEPARATOR(ctx, first) \
         if (!(first)) \
                 FMT_STRING(ctx, "|")
-
-/* As for flags, the mask can also be of different types in different syscalls. */
-#define DEFINE_MASK_FMT(mask_name, mask_type) DEFINE_FMT(mask_name##_mask, mask_type mask)
 
 #define DEFINE_FLAGS_ARRAY(name) static const struct flag_info name[]
 #define INIT_FLAG_INFO(flag) { flag, #flag }

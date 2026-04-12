@@ -99,7 +99,7 @@ DEFINE_FLAGS_ARRAY(fflags_flags) = {
         INIT_FLAG_INFO(ST_NOSYMFOLLOW)
 };
 
-DEFINE_FLAGS_FMT(open, int)
+int fmt_open_flags(struct parser_ctx_struct *ctx, int flags)
 {
         FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
 
@@ -135,7 +135,7 @@ DEFINE_FLAGS_FMT(open, int)
         return 0;
 }
 
-DEFINE_FLAGS_FMT(at, int)
+int fmt_at_flags(struct parser_ctx_struct *ctx, int flags)
 {
         FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
 
@@ -175,7 +175,7 @@ DEFINE_FLAGS_FMT(at, int)
         return 0;
 }
 
-DEFINE_FLAGS_FMT(renameat2, unsigned int)
+int fmt_renameat2_flags(struct parser_ctx_struct *ctx, unsigned int flags)
 {
         FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
 
@@ -199,7 +199,7 @@ DEFINE_FLAGS_FMT(renameat2, unsigned int)
         return 0;
 }
 
-DEFINE_FLAGS_FMT(dup3, int)
+int fmt_dup3_flags(struct parser_ctx_struct *ctx, int flags)
 {
         FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
 
@@ -211,7 +211,7 @@ DEFINE_FLAGS_FMT(dup3, int)
         return 0;
 }
 
-DEFINE_FLAGS_FMT(rwf, int)
+int fmt_rwf_flags(struct parser_ctx_struct *ctx, int flags)
 {
         FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
 
@@ -235,7 +235,7 @@ DEFINE_FLAGS_FMT(rwf, int)
         return 0;
 }
 
-DEFINE_FLAGS_FMT(st_mode, unsigned int)
+int fmt_st_mode_flags(struct parser_ctx_struct *ctx, unsigned int flags)
 {
         FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
 
@@ -263,7 +263,7 @@ DEFINE_FLAGS_FMT(st_mode, unsigned int)
         return 0;
 }
 
-DEFINE_FLAGS_FMT(fflags, long)
+int fmt_fflags_flags(struct parser_ctx_struct *ctx, long flags)
 {
         FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
 

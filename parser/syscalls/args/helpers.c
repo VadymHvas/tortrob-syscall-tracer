@@ -28,7 +28,7 @@ static DEFINE_FMT(syscall_name, const struct syscall_entry *syscall);
 static inline int safe_append(struct parser_ctx_struct *ctx, int *n);
 static void escape_seq_parse(const char *src, char *dest, size_t dst_size);
 
-DEFINE_FMT(syscall_enter, const struct syscall_entry *syscall, reg_t args[])
+int fmt_syscall_enter(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall, reg_t args[])
 {
         TRY_FMT(fmt_syscall_name, ctx, syscall);
 
@@ -38,47 +38,47 @@ DEFINE_FMT(syscall_enter, const struct syscall_entry *syscall, reg_t args[])
         return 0;
 }
 
-DEFINE_FMT(string, char *src)
+int fmt_string(struct parser_ctx_struct *ctx, char *src)
 {
         APPEND_FMT(ctx, "%s", src);
 }
 
-DEFINE_FMT(int, int num)
+int fmt_int(struct parser_ctx_struct *ctx, int num)
 {
         APPEND_FMT(ctx, "%d", num);
 }
 
-DEFINE_FMT(llu, unsigned long long num)
+int fmt_llu(struct parser_ctx_struct *ctx, unsigned long long num)
 {
         APPEND_FMT(ctx, "%llu", num);
 }
 
-DEFINE_FMT(oct, int num)
+int fmt_oct(struct parser_ctx_struct *ctx,  int num)
 {
         APPEND_FMT(ctx, "%o", num);
 }
 
-DEFINE_FMT(off, off_t num)
+int fmt_off(struct parser_ctx_struct *ctx, off_t num)
 {
         APPEND_FMT(ctx, "%lld", num);
 }
 
-DEFINE_FMT(hex, int num)
+int fmt_hex(struct parser_ctx_struct *ctx, int num)
 {
         APPEND_FMT(ctx, "0x%x", num);
 }
 
-DEFINE_FMT(addr, unsigned long long addr)
+int fmt_addr(struct parser_ctx_struct *ctx, unsigned long long addr)
 {
         APPEND_FMT(ctx, "0x%llx", addr);
 }
 
-DEFINE_FMT(dev, dev_t dev)
+int fmt_dev(struct parser_ctx_struct *ctx, dev_t dev)
 {
         APPEND_FMT(ctx, "%d:%d", major(dev), minor(dev));
 }
 
-DEFINE_FMT(string_from_mem, unsigned long long addr, size_t size)
+int fmt_string_from_mem(struct parser_ctx_struct *ctx, unsigned long long addr, size_t size)
 {
         if (!addr) 
                 return fmt_null(ctx);
@@ -126,7 +126,7 @@ err:
         return 1;
 }
 
-DEFINE_FMT(fd, int fd)
+int fmt_fd(struct parser_ctx_struct *ctx, int fd)
 {
         if (fd == AT_FDCWD)
                 return fmt_string(ctx, "AT_FDCWD");
@@ -137,12 +137,12 @@ DEFINE_FMT(fd, int fd)
         return fmt_int(ctx, fd);
 }
 
-DEFINE_FMT(null)
+int fmt_null(struct parser_ctx_struct *ctx)
 {
         APPEND_FMT(ctx, "%s", "NULL");
 }
 
-static DEFINE_FMT(syscall_name, const struct syscall_entry *syscall)
+static int fmt_syscall_name(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall)
 {
         APPEND_FMT(ctx, "%s(", syscall->name);
 }

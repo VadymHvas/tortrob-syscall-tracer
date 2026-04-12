@@ -8,8 +8,6 @@
 #include "parser/syscalls/args/fs/special.h"
 #include "parser/syscalls/args/fs/flags.h"
 
-#define INIT_VALUE(value) { value, #value }
-
 DEFINE_VALUES_ARRAY(fcntl_cmds) = {
         INIT_VALUE(F_SETFD),
         INIT_VALUE(F_SETFL),
@@ -75,7 +73,7 @@ DEFINE_VALUES_ARRAY(fs_types) = {
  * For F_GET* commands (except F_GETLK) we don't format 3rd argument, 
  * therefore ctx->extra is equals to FCNTL_IGNORE_ARG3.
  */ 
-DEFINE_FMT(fcntl_cmd, int cmd)
+int fmt_fcntl_cmd(struct parser_ctx_struct *ctx, int cmd)
 {
         if (cmd == F_SETFL)
                 ctx->extra = FCNTL_FLAGS;
@@ -104,7 +102,7 @@ DEFINE_FMT(fcntl_cmd, int cmd)
         return 0;
 }
 
-DEFINE_FMT(flock_op, int op)
+int fmt_flock_op(struct parser_ctx_struct *ctx, int op)
 {
         FMT_FLAGS_ZERO_IF_NONE(ctx, op);
 
@@ -119,7 +117,7 @@ DEFINE_FMT(flock_op, int op)
         return 0;
 }
 
-DEFINE_FMT(fadvise64_advice, int advice)
+int fmt_fadvise64_advice(struct parser_ctx_struct *ctx, int advice)
 {
         FMT_FLAGS_ZERO_IF_NONE(ctx, advice);
 
@@ -134,7 +132,7 @@ DEFINE_FMT(fadvise64_advice, int advice)
         return 0;
 }
 
-DEFINE_FMT(statfs_fs_type, int fs_type)
+int fmt_statfs_fs_type(struct parser_ctx_struct *ctx, int fs_type)
 {
         FMT_FLAGS_ZERO_IF_NONE(ctx, fs_type);
 

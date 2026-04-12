@@ -17,7 +17,7 @@ struct value_info {
         const char *name;
 };
 
-DEFINE_FMT(fcntl_cmd, int cmd);
-DEFINE_FMT(flock_op, int op);
-DEFINE_FMT(fadvise64_advice, int advice);
-DEFINE_FMT(statfs_fs_type, int fs_type);
+int fmt_fcntl_cmd(struct parser_ctx_struct *ctx, int cmd);
+int fmt_flock_op(struct parser_ctx_struct *ctx, int op);
+int fmt_fadvise64_advice(struct parser_ctx_struct *ctx, int advice);
+int fmt_statfs_fs_type(struct parser_ctx_struct *ctx, int fs_type);

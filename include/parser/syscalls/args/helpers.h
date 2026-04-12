@@ -8,15 +8,6 @@
 #include "core/dispatch.h"
 
 /*
- * DEFINE_FMT(name, ...) - Define formatter function.
- * 
- * Helper that defines formatter function with 
- * specified params in __VA_ARGS__.
- */
-#define DEFINE_FMT(name, ...) \
-        int fmt_##name(struct parser_ctx_struct *ctx, ##__VA_ARGS__)
-
-/*
  * TRY_FMT(fmt_call, ctx, ...) - Try to format argument.
  * 
  * Helper macro that tries to format an argument using a function
@@ -86,16 +77,17 @@ struct parser_ctx_struct {
         long retval;
 };
 
-DEFINE_FMT(syscall_enter, const struct syscall_entry *syscall, reg_t args[]);
-
-DEFINE_FMT(string, char *src);
-DEFINE_FMT(int, int num);
-DEFINE_FMT(llu, unsigned long long num);
-DEFINE_FMT(oct, int num);
-DEFINE_FMT(off, off_t num);
-DEFINE_FMT(hex, int num);
-DEFINE_FMT(addr, unsigned long long addr);
-DEFINE_FMT(dev, dev_t dev);
-DEFINE_FMT(string_from_mem, unsigned long long addr, size_t size);
-DEFINE_FMT(fd, int fd);
-DEFINE_FMT(null);
+int fmt_syscall_enter(struct parser_ctx_struct *ctx, 
+                      const struct syscall_entry *syscall, reg_t args[]);
+                      
+int fmt_string(struct parser_ctx_struct *ctx, char *src);
+int fmt_int(struct parser_ctx_struct *ctx, int num);
+int fmt_llu(struct parser_ctx_struct *ctx, unsigned long long num);
+int fmt_oct(struct parser_ctx_struct *ctx,  int num);
+int fmt_off(struct parser_ctx_struct *ctx, off_t num);
+int fmt_hex(struct parser_ctx_struct *ctx, int num);
+int fmt_addr(struct parser_ctx_struct *ctx, unsigned long long addr);
+int fmt_dev(struct parser_ctx_struct *ctx, dev_t dev);
+int fmt_string_from_mem(struct parser_ctx_struct *ctx, unsigned long long addr, size_t size);
+int fmt_fd(struct parser_ctx_struct *ctx, int fd);
+int fmt_null(struct parser_ctx_struct *ctx);
