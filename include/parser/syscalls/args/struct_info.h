@@ -8,7 +8,6 @@
 #include "parser/syscalls/args/fs/flags.h"
 #include "parser/syscalls/args/fs/special.h"
 
-#define DEFINE_STRUCT_FMT(struct_name, struct_type) DEFINE_FMT(struct_name##_struct, struct_type)
 #define DEFINE_FIELDS_ARRAY(name) static const struct field_info name[]
 
 /* This macro takes an array as an argument, not a pointer. */
