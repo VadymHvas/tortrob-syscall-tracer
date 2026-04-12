@@ -43,7 +43,7 @@
 #define INIT_PARSER_CTX(var, buffer, buffer_size, tracee_pid) \
         struct parser_ctx_struct var = \
                 { \
-                        .in_syscall = SYSCALL_ENTRY, \
+                        .in_syscall = SYSCALL_ENTER, \
                         .buf        = buffer, \
                         .bufsize    = buffer_size, \
                         .offset     = 0, \
@@ -80,7 +80,7 @@ struct parser_ctx_struct {
         long retval;
 };
 
-DEFINE_FMT(syscall_entry, const struct syscall_entry *syscall, reg_t args[]);
+DEFINE_FMT(syscall_enter, const struct syscall_entry *syscall, reg_t args[]);
 
 DEFINE_FMT(string, char *src);
 DEFINE_FMT(int, int num);

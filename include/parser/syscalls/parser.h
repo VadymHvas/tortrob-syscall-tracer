@@ -6,7 +6,7 @@
 #include "parser/syscalls/ABI/abi.h"
 #include "parser/syscalls/args/helpers.h"
 
-#define SYSCALL_ENTRY_PARSER_NAME(name) syscall_entry_##name##_parser
+#define SYSCALL_ENTER_PARSER_NAME(name) syscall_enter_##name##_parser
 #define SYSCALL_EXIT_PARSER_NAME(name) syscall_exit_##name##_parser
 
 /*
@@ -18,8 +18,8 @@
  * Each parser is responsible for formatting syscall arguments into
  * the provided buffer and updating the offset.
  */
-#define DEFINE_SYSCALL_ENTRY_PARSER(name)\
-        int SYSCALL_ENTRY_PARSER_NAME(name)(struct parser_ctx_struct *ctx, reg_t args[])
+#define DEFINE_SYSCALL_ENTER_PARSER(name)\
+        int SYSCALL_ENTER_PARSER_NAME(name)(struct parser_ctx_struct *ctx, reg_t args[])
 
 #define DEFINE_SYSCALL_EXIT_PARSER(name)\
         int SYSCALL_EXIT_PARSER_NAME(name)(struct parser_ctx_struct *ctx, reg_t args[])
@@ -32,18 +32,18 @@
  * parsers directly from the X-macro syscall table
  * without introducing runtime branching logic.
  */
-#define ENTRY_IF_1(name) SYSCALL_ENTRY_PARSER_NAME(name)
-#define ENTRY_IF_0(name) NULL
+#define ENTER_IF_1(name) SYSCALL_ENTER_PARSER_NAME(name)
+#define ENTER_IF_0(name) NULL
 
 #define EXIT_IF_1(name)  SYSCALL_EXIT_PARSER_NAME(name)
 #define EXIT_IF_0(name)  NULL
 
-#define DEFINE_PARSER(nr, entry_fn, exit_fn) \
+#define DEFINE_PARSER(nr, enter_fn, exit_fn) \
         { \
                 nr, \
-                .entry_parse = entry_fn, \
+                .enter_parse = enter_fn, \
                 .exit_parse  = exit_fn, \
-                .needs_entry = (entry_fn != NULL), \
+                .needs_enter = (enter_fn != NULL), \
                 .needs_exit  = (exit_fn != NULL) \
         }
 
@@ -58,22 +58,22 @@
 typedef int (*parse_func_t) (struct parser_ctx_struct *ctx, reg_t args[]);
 
 /**
- * struct parser_struct - Represents single syscall parsers entry.
+ * struct parser_struct - Represents single syscall parser entry.
  * 
  * @nr:          The native syscall number.
- * @entry_parse: Function that formats syscall arguments in syscall entry.
+ * @enter_parse: Function that formats syscall arguments in syscall enter.
  * @exit_parse:  Function that formats syscall arguments in syscall exit.
  * 
- * @needs_entry: non-zero if entry parser should be used.
+ * @needs_enter: non-zero if enter parser should be used.
  * @needs_exit:  non-zero if exit parser should be used.
  */
 struct parser_struct {
         long nr;
         
-        parse_func_t entry_parse;
+        parse_func_t enter_parse;
         parse_func_t exit_parse;
         
-        int needs_entry;
+        int needs_enter;
         int needs_exit;
 };
 

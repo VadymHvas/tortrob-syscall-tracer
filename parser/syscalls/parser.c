@@ -64,8 +64,8 @@ static int default_syscall_parser(struct parser_ctx_struct *ctx, int nr_args, re
 static int handle_syscall_parser(struct parser_ctx_struct *ctx, struct parser_struct *entry, reg_t args[])
 {
         if (!ctx->in_syscall) {
-                if (entry->needs_entry)
-                        return entry->entry_parse(ctx, args);
+                if (entry->needs_enter)
+                        return entry->enter_parse(ctx, args);
                 
                 return 0;
         }

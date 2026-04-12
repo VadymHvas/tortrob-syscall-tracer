@@ -15,11 +15,11 @@
  *  - populate the parser table
  *
  * Each entry has the form:
- *       X(syscall_name, syscall_number, has_entry, has_exit)
+ *       X(syscall_name, syscall_number, has_enter, has_exit)
  * where:
  * syscall_name   - name of the syscall
  * syscall_number - syscall number (architecture-specific)
- * has_entry      - one if ENTRY parser should be used
+ * has_enter      - one if Enter parser should be used
  * has_exit       - one if EXIT parser should be used
  *
  * NOTE:
@@ -89,13 +89,13 @@
 
 #define NAME_MAX 255
 
-#define X(name, nr, has_entry, has_exit) \
-        DEFINE_SYSCALL_ENTRY_PARSER(name);
+#define X(name, nr, has_enter, has_exit) \
+        DEFINE_SYSCALL_ENTER_PARSER(name);
 
 FS_SYSCALL_LIST
 #undef X
 
-#define X(name, nr, has_entry, has_exit) \
+#define X(name, nr, has_enter, has_exit) \
         DEFINE_SYSCALL_EXIT_PARSER(name);
 
 FS_SYSCALL_LIST

@@ -55,7 +55,7 @@ void trace_loop(pid_t tracee)
                 if (WIFSTOPPED(status) && (WSTOPSIG(status) & 0x80)) {
                         struct user_regs_struct regs;
                         ptrace(PTRACE_GETREGS, tracee, NULL, &regs);
-                        entry_or_exit_syscall(&ctx, &regs);
+                        enter_or_exit_syscall(&ctx, &regs);
                 }
         }
 }

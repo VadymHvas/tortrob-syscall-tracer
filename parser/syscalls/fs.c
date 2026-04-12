@@ -18,10 +18,10 @@
 #include "parser/syscalls/args/fs/struct.h"
 
 const struct parser_struct fs_syscalls[] = {
-#define X(name, nr, has_entry, has_exit) \
+#define X(name, nr, has_enter, has_exit) \
         DEFINE_PARSER( \
                 nr, \
-                ENTRY_IF_##has_entry(name), \
+                ENTER_IF_##has_enter(name), \
                 EXIT_IF_##has_exit(name) \
         ), \
 
@@ -36,7 +36,7 @@ const char *STDFD_NAMES[] = {
 };
 
 /* read(int fd, void *buf, size_t count) */
-DEFINE_SYSCALL_ENTRY_PARSER(read)
+DEFINE_SYSCALL_ENTER_PARSER(read)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
@@ -53,7 +53,7 @@ DEFINE_SYSCALL_EXIT_PARSER(read)
 }
 
 /* write(int fd, const void *buf, size_t count) */
-DEFINE_SYSCALL_ENTRY_PARSER(write)
+DEFINE_SYSCALL_ENTER_PARSER(write)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
@@ -65,7 +65,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(write)
 };
 
 /* open(const char *path, int flags, mode_t mode) */
-DEFINE_SYSCALL_ENTRY_PARSER(open)
+DEFINE_SYSCALL_ENTER_PARSER(open)
 {
         FMT_STRING_MEM(ctx, args[0], NAME_MAX);
         FMT_SEPARATOR(ctx);
@@ -80,7 +80,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(open)
 }
 
 /* openat(int dirfd, const char *pathname, int flags, mode_t mode) */
-DEFINE_SYSCALL_ENTRY_PARSER(openat)
+DEFINE_SYSCALL_ENTER_PARSER(openat)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
@@ -97,7 +97,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(openat)
 }
 
 /* close(int fd) */
-DEFINE_SYSCALL_ENTRY_PARSER(close)
+DEFINE_SYSCALL_ENTER_PARSER(close)
 {
         FMT_FD(ctx, args[0]);
 
@@ -105,7 +105,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(close)
 }
 
 /* rename(const char *oldpath, const char *newpath) */
-DEFINE_SYSCALL_ENTRY_PARSER(rename)
+DEFINE_SYSCALL_ENTER_PARSER(rename)
 {
         FMT_STRING_MEM(ctx, args[0], NAME_MAX);
         FMT_SEPARATOR(ctx);
@@ -115,7 +115,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(rename)
 }
 
 /* renameat(int olddirfd, const char *oldpath, int newdirfd, const char *newpath) */
-DEFINE_SYSCALL_ENTRY_PARSER(renameat)
+DEFINE_SYSCALL_ENTER_PARSER(renameat)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
@@ -129,7 +129,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(renameat)
 }
 
 /* renameat2(int olddirfd, const char *oldpath, int newdirfd, const char *newpath, unsigned int flags) */
-DEFINE_SYSCALL_ENTRY_PARSER(renameat2)
+DEFINE_SYSCALL_ENTER_PARSER(renameat2)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
@@ -145,7 +145,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(renameat2)
 }
 
 /* unlink(const char *path) */
-DEFINE_SYSCALL_ENTRY_PARSER(unlink)
+DEFINE_SYSCALL_ENTER_PARSER(unlink)
 {
         FMT_STRING_MEM(ctx, args[0], NAME_MAX);
 
@@ -153,7 +153,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(unlink)
 }
 
 /* unlinkat(int dirfd, const char *pathname, int flags) */
-DEFINE_SYSCALL_ENTRY_PARSER(unlinkat)
+DEFINE_SYSCALL_ENTER_PARSER(unlinkat)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
@@ -165,7 +165,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(unlinkat)
 }
 
 /* link(const char *oldpath, const char *newpath) */
-DEFINE_SYSCALL_ENTRY_PARSER(link)
+DEFINE_SYSCALL_ENTER_PARSER(link)
 {
         FMT_STRING_MEM(ctx, args[0], NAME_MAX);
         FMT_SEPARATOR(ctx);
@@ -175,7 +175,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(link)
 }
 
 /* linkat(int olddirfd, const char *oldpath, int newdirfd, const char *newpath, int flags) */
-DEFINE_SYSCALL_ENTRY_PARSER(linkat)
+DEFINE_SYSCALL_ENTER_PARSER(linkat)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
@@ -191,7 +191,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(linkat)
 }
 
 /* symlink(const char *target, const char *linkpath) */
-DEFINE_SYSCALL_ENTRY_PARSER(symlink)
+DEFINE_SYSCALL_ENTER_PARSER(symlink)
 {
         FMT_STRING_MEM(ctx, args[0], NAME_MAX);
         FMT_SEPARATOR(ctx);
@@ -201,7 +201,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(symlink)
 }
 
 /* symlinkat(const char *target, int newdirfd, const char *linkpath) */
-DEFINE_SYSCALL_ENTRY_PARSER(symlinkat)
+DEFINE_SYSCALL_ENTER_PARSER(symlinkat)
 {
         FMT_STRING_MEM(ctx, args[0], NAME_MAX);
         FMT_SEPARATOR(ctx);
@@ -213,7 +213,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(symlinkat)
 }
 
 /* lseek(int fd, off_t offset, int whence) */
-DEFINE_SYSCALL_ENTRY_PARSER(lseek)
+DEFINE_SYSCALL_ENTER_PARSER(lseek)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
@@ -225,7 +225,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(lseek)
 }
 
 /* pread64(int fd, void *buf, size_t count, off_t offset) */
-DEFINE_SYSCALL_ENTRY_PARSER(pread64)
+DEFINE_SYSCALL_ENTER_PARSER(pread64)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
@@ -239,7 +239,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(pread64)
 }
 
 /* pwrite64(int fd, const void *buf, size_t count, off_t offset) */
-DEFINE_SYSCALL_ENTRY_PARSER(pwrite64)
+DEFINE_SYSCALL_ENTER_PARSER(pwrite64)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
@@ -253,7 +253,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(pwrite64)
 }
 
 /* readlink(const char *path, char *buf, size_t count) */
-DEFINE_SYSCALL_ENTRY_PARSER(readlink)
+DEFINE_SYSCALL_ENTER_PARSER(readlink)
 {
         FMT_STRING_MEM(ctx, args[0], NAME_MAX);
         FMT_SEPARATOR(ctx);
@@ -265,7 +265,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(readlink)
 }
 
 /* readlinkat(int dirfd, const char *pathname, char *buf, size_t bufsiz) */
-DEFINE_SYSCALL_ENTRY_PARSER(readlinkat)
+DEFINE_SYSCALL_ENTER_PARSER(readlinkat)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
@@ -279,7 +279,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(readlinkat)
 }
 
 /* getcwd(char *buf, size_t size) */
-DEFINE_SYSCALL_ENTRY_PARSER(getcwd)
+DEFINE_SYSCALL_ENTER_PARSER(getcwd)
 {
         FMT_ADDR(ctx, args[0]);
         FMT_SEPARATOR(ctx);
@@ -289,7 +289,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(getcwd)
 }
 
 /* chdir(const char *path) */
-DEFINE_SYSCALL_ENTRY_PARSER(chdir)
+DEFINE_SYSCALL_ENTER_PARSER(chdir)
 {
         FMT_STRING_MEM(ctx, args[0], NAME_MAX);
 
@@ -297,7 +297,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(chdir)
 }
 
 /* mkdir(const char *pathname, mode_t mode) */
-DEFINE_SYSCALL_ENTRY_PARSER(mkdir)
+DEFINE_SYSCALL_ENTER_PARSER(mkdir)
 {
         FMT_STRING_MEM(ctx, args[0], NAME_MAX);
         FMT_SEPARATOR(ctx);
@@ -307,7 +307,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(mkdir)
 }
 
 /* mkdirat(int dirfd, const char *pathname, mode_t mode) */
-DEFINE_SYSCALL_ENTRY_PARSER(mkdirat)
+DEFINE_SYSCALL_ENTER_PARSER(mkdirat)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
@@ -319,7 +319,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(mkdirat)
 }
 
 /* rmdir(const char *pathname) */
-DEFINE_SYSCALL_ENTRY_PARSER(rmdir)
+DEFINE_SYSCALL_ENTER_PARSER(rmdir)
 {
         FMT_STRING_MEM(ctx, args[0], NAME_MAX);
 
@@ -327,7 +327,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(rmdir)
 }
 
 /* creat(const char *pathname, mode_t mode) */
-DEFINE_SYSCALL_ENTRY_PARSER(creat)
+DEFINE_SYSCALL_ENTER_PARSER(creat)
 {
         FMT_STRING_MEM(ctx, args[0], NAME_MAX);
         FMT_SEPARATOR(ctx);
@@ -337,7 +337,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(creat)
 }
 
 /* truncate(const char *path, off_t length */
-DEFINE_SYSCALL_ENTRY_PARSER(truncate)
+DEFINE_SYSCALL_ENTER_PARSER(truncate)
 {
         FMT_STRING_MEM(ctx, args[0], NAME_MAX);
         FMT_SEPARATOR(ctx);
@@ -347,7 +347,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(truncate)
 }
 
 /* ftruncate(int fd, off_t length) */
-DEFINE_SYSCALL_ENTRY_PARSER(ftruncate)
+DEFINE_SYSCALL_ENTER_PARSER(ftruncate)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
@@ -357,7 +357,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(ftruncate)
 }
 
 /* stat(const char *pathname, struct stat *statbuf) */
-DEFINE_SYSCALL_ENTRY_PARSER(stat)
+DEFINE_SYSCALL_ENTER_PARSER(stat)
 {
         FMT_STRING_MEM(ctx, args[0], NAME_MAX);
         FMT_SEPARATOR(ctx);
@@ -373,7 +373,7 @@ DEFINE_SYSCALL_EXIT_PARSER(stat)
 }
 
 /* fstat(int fd, struct stat *statbuf) */
-DEFINE_SYSCALL_ENTRY_PARSER(fstat)
+DEFINE_SYSCALL_ENTER_PARSER(fstat)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
@@ -389,7 +389,7 @@ DEFINE_SYSCALL_EXIT_PARSER(fstat)
 }
 
 /* lstat(const char *pathname, struct stat *statbuf) */
-DEFINE_SYSCALL_ENTRY_PARSER(lstat)
+DEFINE_SYSCALL_ENTER_PARSER(lstat)
 {
         FMT_STRING_MEM(ctx, args[0], NAME_MAX);
         FMT_SEPARATOR(ctx);
@@ -405,7 +405,7 @@ DEFINE_SYSCALL_EXIT_PARSER(lstat)
 }
 
 /* access(const char *pathname, int mode) */
-DEFINE_SYSCALL_ENTRY_PARSER(access)
+DEFINE_SYSCALL_ENTER_PARSER(access)
 {
         FMT_STRING_MEM(ctx, args[0], NAME_MAX);
         FMT_SEPARATOR(ctx);
@@ -415,7 +415,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(access)
 }
 
 /* chmod(const char *path, mode_t mode) */
-DEFINE_SYSCALL_ENTRY_PARSER(chmod)
+DEFINE_SYSCALL_ENTER_PARSER(chmod)
 {
         FMT_STRING_MEM(ctx, args[0], NAME_MAX);
         FMT_SEPARATOR(ctx);
@@ -425,7 +425,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(chmod)
 }
 
 /* fchmod(int fd, mode_t mode) */
-DEFINE_SYSCALL_ENTRY_PARSER(fchmod)
+DEFINE_SYSCALL_ENTER_PARSER(fchmod)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
@@ -435,7 +435,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(fchmod)
 }
 
 /* chown(const char *path, uid_t owner, gid_t group) */
-DEFINE_SYSCALL_ENTRY_PARSER(chown)
+DEFINE_SYSCALL_ENTER_PARSER(chown)
 {
         FMT_STRING_MEM(ctx, args[0], NAME_MAX);
         FMT_SEPARATOR(ctx);
@@ -447,7 +447,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(chown)
 }
 
 /* fchownat(int fd, const char *path, uid_t owner, gid_t group, int flag) */
-DEFINE_SYSCALL_ENTRY_PARSER(fchownat)
+DEFINE_SYSCALL_ENTER_PARSER(fchownat)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
@@ -463,7 +463,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(fchownat)
 }
 
 /* statx(int dirfd, const char *pathname, int flags, unsigned int mask, struct statx *statxbuf) */
-DEFINE_SYSCALL_ENTRY_PARSER(statx)
+DEFINE_SYSCALL_ENTER_PARSER(statx)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
@@ -486,7 +486,7 @@ DEFINE_SYSCALL_EXIT_PARSER(statx)
 
 // TODO: make statfs struct formatter.
 /* statfs(const char *path, struct statfs *buf) */
-DEFINE_SYSCALL_ENTRY_PARSER(statfs)
+DEFINE_SYSCALL_ENTER_PARSER(statfs)
 {
         FMT_STRING_MEM(ctx, args[0], NAME_MAX);
         FMT_SEPARATOR(ctx);
@@ -496,7 +496,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(statfs)
 }
 
 /* fstatfs(int fd, struct statfs *buf) */
-DEFINE_SYSCALL_ENTRY_PARSER(fstatfs)
+DEFINE_SYSCALL_ENTER_PARSER(fstatfs)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
@@ -506,7 +506,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(fstatfs)
 }
 
 /* mknod(const char *path, mode_t mode, dev_t dev) */
-DEFINE_SYSCALL_ENTRY_PARSER(mknod)
+DEFINE_SYSCALL_ENTER_PARSER(mknod)
 {
         FMT_STRING_MEM(ctx, args[0], NAME_MAX);
         FMT_SEPARATOR(ctx);
@@ -518,7 +518,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(mknod)
 } 
 
 /* mknodat(int dirfd, const char *path, mode_t mode, dev_t dev) */
-DEFINE_SYSCALL_ENTRY_PARSER(mknodat)
+DEFINE_SYSCALL_ENTER_PARSER(mknodat)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
@@ -532,7 +532,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(mknodat)
 }
 
 /* fsync(int fd) */
-DEFINE_SYSCALL_ENTRY_PARSER(fsync)
+DEFINE_SYSCALL_ENTER_PARSER(fsync)
 {
         FMT_FD(ctx, args[0]);
 
@@ -540,7 +540,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(fsync)
 }
 
 /* fdatasync(int fd) */
-DEFINE_SYSCALL_ENTRY_PARSER(fdatasync)
+DEFINE_SYSCALL_ENTER_PARSER(fdatasync)
 {
         FMT_FD(ctx, args[0]);
 
@@ -548,7 +548,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(fdatasync)
 }
 
 /* dup(int oldfd) */
-DEFINE_SYSCALL_ENTRY_PARSER(dup)
+DEFINE_SYSCALL_ENTER_PARSER(dup)
 {
         FMT_FD(ctx, args[0]);
 
@@ -556,7 +556,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(dup)
 }
 
 /* dup2(int oldfd, int newfd) */
-DEFINE_SYSCALL_ENTRY_PARSER(dup2)
+DEFINE_SYSCALL_ENTER_PARSER(dup2)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
@@ -566,7 +566,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(dup2)
 }
 
 /* dup3(int oldfd, int newfd, int flags) */
-DEFINE_SYSCALL_ENTRY_PARSER(dup3)
+DEFINE_SYSCALL_ENTER_PARSER(dup3)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
@@ -578,7 +578,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(dup3)
 }
 
 /* fcntl(int fd, int op, ...) */
-DEFINE_SYSCALL_ENTRY_PARSER(fcntl)
+DEFINE_SYSCALL_ENTER_PARSER(fcntl)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
@@ -593,7 +593,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(fcntl)
 }
 
 /* readv(int fd, const struct iovec *iov, int iovcnt) */
-DEFINE_SYSCALL_ENTRY_PARSER(readv)
+DEFINE_SYSCALL_ENTER_PARSER(readv)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
@@ -611,7 +611,7 @@ DEFINE_SYSCALL_EXIT_PARSER(readv)
 }
 
 /* writev(int fd, const struct iovec *iov, int iovcnt) */
-DEFINE_SYSCALL_ENTRY_PARSER(writev)
+DEFINE_SYSCALL_ENTER_PARSER(writev)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
@@ -623,7 +623,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(writev)
 }
 
 /* preadv(int fd, const struct iovec *iov, int iovcnt, off_t offset) */
-DEFINE_SYSCALL_ENTRY_PARSER(preadv)
+DEFINE_SYSCALL_ENTER_PARSER(preadv)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
@@ -643,7 +643,7 @@ DEFINE_SYSCALL_EXIT_PARSER(preadv)
 }
 
 /* pwritev(int fd, const struct iovec *iov, int iovcnt, off_t offset) */
-DEFINE_SYSCALL_ENTRY_PARSER(pwritev)
+DEFINE_SYSCALL_ENTER_PARSER(pwritev)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
@@ -663,7 +663,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(pwritev)
  *       differ in one parameter pos_h which is passed in the r8 (args[4),
  *       but the parser of these calls ignores it
  */
-DEFINE_SYSCALL_ENTRY_PARSER(preadv2)
+DEFINE_SYSCALL_ENTER_PARSER(preadv2)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
@@ -685,7 +685,7 @@ DEFINE_SYSCALL_EXIT_PARSER(preadv2)
 }
 
 /* pwrite2(int fd, const struct iovec *iov, int iovcnt, off_t offset, int flags) */
-DEFINE_SYSCALL_ENTRY_PARSER(pwritev2)
+DEFINE_SYSCALL_ENTER_PARSER(pwritev2)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
@@ -701,7 +701,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(pwritev2)
 }
 
 /* umask(mode_t mode) */
-DEFINE_SYSCALL_ENTRY_PARSER(umask)
+DEFINE_SYSCALL_ENTER_PARSER(umask)
 {
         FMT_OCT(ctx, args[0]);
 
@@ -709,7 +709,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(umask)
 }
 
 /* syncfs(int fd) */
-DEFINE_SYSCALL_ENTRY_PARSER(syncfs)
+DEFINE_SYSCALL_ENTER_PARSER(syncfs)
 {
         FMT_FD(ctx, args[0]);
 
@@ -717,7 +717,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(syncfs)
 }
 
 /* fallocate(int fd, int mode, off_t offset, off_t size) */
-DEFINE_SYSCALL_ENTRY_PARSER(fallocate)
+DEFINE_SYSCALL_ENTER_PARSER(fallocate)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
@@ -731,7 +731,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(fallocate)
 }
 
 /* flock(int fd, int op) */
-DEFINE_SYSCALL_ENTRY_PARSER(flock)
+DEFINE_SYSCALL_ENTER_PARSER(flock)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
@@ -741,7 +741,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(flock)
 }
 
 /* fadvise64(int fd, off_t offset, off_t len, int advice) */
-DEFINE_SYSCALL_ENTRY_PARSER(fadvise64)
+DEFINE_SYSCALL_ENTER_PARSER(fadvise64)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
@@ -755,7 +755,7 @@ DEFINE_SYSCALL_ENTRY_PARSER(fadvise64)
 }
 
 /* newfstatat(int dirfd, const char *pathname, struct stat *statbuf, int flags) */
-DEFINE_SYSCALL_ENTRY_PARSER(newfstatat)
+DEFINE_SYSCALL_ENTER_PARSER(newfstatat)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);

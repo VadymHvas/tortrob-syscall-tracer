@@ -25,7 +25,7 @@ int begin_syscall_fmt(struct parser_ctx_struct *ctx, struct user_regs_struct *re
                 return -1;
 
         abi_get_syscall_args(regs, args);
-        fmt_syscall_entry(ctx, syscall, args);
+        fmt_syscall_enter(ctx, syscall, args);
 
         return 0;
 }

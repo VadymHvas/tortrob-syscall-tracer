@@ -28,7 +28,7 @@ static DEFINE_FMT(syscall_name, const struct syscall_entry *syscall);
 static inline int safe_append(struct parser_ctx_struct *ctx, int *n);
 static void escape_seq_parse(const char *src, char *dest, size_t dst_size);
 
-DEFINE_FMT(syscall_entry, const struct syscall_entry *syscall, reg_t args[])
+DEFINE_FMT(syscall_enter, const struct syscall_entry *syscall, reg_t args[])
 {
         TRY_FMT(fmt_syscall_name, ctx, syscall);
 
