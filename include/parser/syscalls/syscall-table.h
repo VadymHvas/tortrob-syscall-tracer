@@ -98,7 +98,7 @@ static const struct syscall_entry syscall_table[] = {
     [76] = { .nr = 76, .name = "truncate", 2 },
     [77] = { .nr = 77, .name = "ftruncate", 2 },
     [78] = { .nr = 78, .name = "getdents", 3 },
-    [79] = { .nr = 79, .name = "getcwd", 0 },
+    [79] = { .nr = 79, .name = "getcwd", 2 },
     [80] = { .nr = 80, .name = "chdir", 1 },
     [81] = { .nr = 81, .name = "fchdir", 1 },
     [82] = { .nr = 82, .name = "rename", 2 },
