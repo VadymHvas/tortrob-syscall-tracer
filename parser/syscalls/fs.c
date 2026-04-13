@@ -1023,7 +1023,7 @@ DEFINE_SYSCALL_ENTER_PARSER(sendfile)
         FMT_SEPARATOR(ctx);
         FMT_FD(ctx, args[1]);
         FMT_SEPARATOR(ctx);
-        FMT_ADDR(ctx, args[2]);
+        FMT_WORD_MEM(ctx, args[2]);
         FMT_SEPARATOR(ctx);
         FMT_LLU(ctx, args[3]);
 
@@ -1036,11 +1036,11 @@ DEFINE_SYSCALL_ENTER_PARSER(splice)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
-        FMT_ADDR(ctx, args[1]);
+        FMT_WORD_MEM(ctx, args[1]);
         FMT_SEPARATOR(ctx);
         FMT_FD(ctx, args[2]);
         FMT_SEPARATOR(ctx);
-        FMT_ADDR(ctx, args[3]);
+        FMT_WORD_MEM(ctx, args[3]);
         FMT_SEPARATOR(ctx);
         FMT_LLU(ctx, args[4]);
         FMT_SEPARATOR(ctx);
@@ -1084,11 +1084,11 @@ DEFINE_SYSCALL_ENTER_PARSER(copy_file_range)
 {
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
-        FMT_ADDR(ctx, args[1]);
+        FMT_WORD_MEM(ctx, args[1]);
         FMT_SEPARATOR(ctx);
         FMT_FD(ctx, args[2]);
         FMT_SEPARATOR(ctx);
-        FMT_ADDR(ctx, args[3]);
+        FMT_WORD_MEM(ctx, args[3]);
         FMT_SEPARATOR(ctx);
         FMT_LLU(ctx, args[4]);
         FMT_SEPARATOR(ctx);

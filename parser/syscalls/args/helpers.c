@@ -127,6 +127,23 @@ err:
         return 1;
 }
 
+int fmt_word_mem(struct parser_ctx_struct *ctx, unsigned long long addr)
+{
+        if (!addr)
+                return fmt_null(ctx);
+
+        long word;
+
+        if (read_tracee_word(ctx->tracee, addr, &word) == -1)
+                return fmt_string(ctx, "<failed>");
+
+        FMT_STRING(ctx, "[");
+        FMT_LLU(ctx, word);
+        FMT_STRING(ctx, "]");        
+
+        return 0;
+}
+
 int fmt_fd(struct parser_ctx_struct *ctx, int fd)
 {
         if (fd == AT_FDCWD)

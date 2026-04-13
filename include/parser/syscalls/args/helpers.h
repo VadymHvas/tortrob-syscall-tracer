@@ -37,6 +37,8 @@
                 FMT_STRING_MEM(ctx, addr, retval); \
         }
 
+#define FMT_WORD_MEM(ctx, addr) TRY_FMT(fmt_word_mem, ctx, addr)
+
 #define INIT_PARSER_CTX(var, buffer, buffer_size, tracee_pid) \
         struct parser_ctx_struct var = \
                 { \
@@ -89,5 +91,6 @@ int fmt_hex(struct parser_ctx_struct *ctx, int num);
 int fmt_addr(struct parser_ctx_struct *ctx, unsigned long long addr);
 int fmt_dev(struct parser_ctx_struct *ctx, dev_t dev);
 int fmt_string_from_mem(struct parser_ctx_struct *ctx, unsigned long long addr, size_t size);
+int fmt_word_mem(struct parser_ctx_struct *ctx, unsigned long long addr);
 int fmt_fd(struct parser_ctx_struct *ctx, int fd);
 int fmt_null(struct parser_ctx_struct *ctx);

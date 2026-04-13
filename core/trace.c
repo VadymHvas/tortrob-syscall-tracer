@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 #include <sys/ptrace.h>
 #include <sys/wait.h>
 #include <sys/user.h>
@@ -78,7 +79,7 @@ size_t read_tracee_mem(pid_t tracee, const void *addr, void *buf, size_t size)
                 long data = ptrace(PTRACE_PEEKDATA, tracee, (char *)addr + i, NULL);
 
                 if (data == -1 && errno)
-                        return 1;
+                        return -1;
 
                 size_t copy_size = word_size;
                 if (i + copy_size > size)
@@ -89,6 +90,20 @@ size_t read_tracee_mem(pid_t tracee, const void *addr, void *buf, size_t size)
         }
 
         return i;
+}
+
+int read_tracee_word(pid_t tracee, const void *addr, long *out)
+{
+        errno = 0;
+        long data = ptrace(PTRACE_PEEKDATA, tracee, addr, NULL);
+
+        if (data == -1 && errno)
+                return -1;
+
+        if (out)
+                *out = data;
+        
+        return 0;
 }
 
 static int wait_and_set_tracesysgood(pid_t tracee)

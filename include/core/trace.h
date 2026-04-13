@@ -48,3 +48,5 @@ void cleanup_trace(struct trace_opts *opts, pid_t tracee);
  * @size:   Bytes to read.
  */
 size_t read_tracee_mem(pid_t tracee, const void *addr, void *buf, size_t size);
+
+int read_tracee_word(pid_t tracee, const void *addr, long *out);
