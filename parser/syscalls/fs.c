@@ -913,3 +913,57 @@ DEFINE_SYSCALL_EXIT_PARSER(fgetxattr)
 
         return 0;
 }
+
+/* listxattr(const char *path, char *list, size_t size) */
+DEFINE_SYSCALL_ENTER_PARSER(listxattr)
+{
+        FMT_STRING_MEM(ctx, args[0], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+
+        return 0;
+}
+
+DEFINE_SYSCALL_EXIT_PARSER(listxattr)
+{
+        FMT_STRING_MEM_IF_OK(ctx, args[1], ctx->retval);
+        FMT_SEPARATOR(ctx);
+        FMT_LLU(ctx, args[2]);
+
+        return 0;
+}
+
+/* llistxattr(const char *path, char *list, size_t size) */
+DEFINE_SYSCALL_ENTER_PARSER(llistxattr)
+{
+        FMT_STRING_MEM(ctx, args[0], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+
+        return 0;
+}
+
+DEFINE_SYSCALL_EXIT_PARSER(llistxattr)
+{
+        FMT_STRING_MEM_IF_OK(ctx, args[1], ctx->retval);
+        FMT_SEPARATOR(ctx);
+        FMT_LLU(ctx, args[2]);
+        
+        return 0;
+}
+
+/* flistxattr(int fd, char *list, size_t size) */
+DEFINE_SYSCALL_ENTER_PARSER(flistxattr)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+
+        return 0;
+}
+
+DEFINE_SYSCALL_EXIT_PARSER(flistxattr)
+{
+        FMT_STRING_MEM_IF_OK(ctx, args[1], ctx->retval);
+        FMT_SEPARATOR(ctx);
+        FMT_LLU(ctx, args[2]);
+
+        return 0;
+}
