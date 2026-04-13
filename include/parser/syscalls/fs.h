@@ -97,9 +97,12 @@
         X(lremovexattr, 198, 1, 0) \
         X(fremovexattr, 199, 1, 0) \
         X(pivot_root,   155, 1, 0) \
-        X(chroot,       161, 1, 0)
+        X(chroot,       161, 1, 0) \
+        X(sendfile,     40,  1, 0) \
+        X(splice,       275, 1, 0) \
+        X(vmsplice,     278, 1, 0)
 
-#define FS_SYSCALL_COUNT 72
+#define FS_SYSCALL_COUNT 75
 
 #define NAME_MAX 255
 #define PATH_MAX 4096

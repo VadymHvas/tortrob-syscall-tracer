@@ -105,6 +105,13 @@ DEFINE_FLAGS_ARRAY(xattr_flags) = {
         INIT_FLAG_INFO(XATTR_REPLACE)
 };
 
+DEFINE_FLAGS_ARRAY(splice_flags) = {
+        INIT_FLAG_INFO(SPLICE_F_MOVE),
+        INIT_FLAG_INFO(SPLICE_F_NONBLOCK),
+        INIT_FLAG_INFO(SPLICE_F_MORE),
+        INIT_FLAG_INFO(SPLICE_F_GIFT)
+};
+
 int fmt_open_flags(struct parser_ctx_struct *ctx, int flags)
 {
         FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
@@ -301,11 +308,35 @@ int fmt_xattr_flags(struct parser_ctx_struct *ctx, int flags)
 
         FOR_EACH_FLAGS(xattr_flags) {
                 if (flags & xattr_flags[i].flag) {
-                        FMT_FLAG_SEPARATOR(ctx, xattr_flags[i].name);
+                        FMT_FLAG_SEPARATOR(ctx, first);
                         FMT_STRING(ctx, xattr_flags[i].name);
 
                         first = 0;
                         flags &= ~xattr_flags[i].flag;
+                }
+        }
+
+        if (flags) {
+                FMT_FLAG_SEPARATOR(ctx, first);
+                FMT_HEX(ctx, flags);
+        }
+
+        return 0;
+}
+
+int fmt_splice_flags(struct parser_ctx_struct *ctx, unsigned int flags)
+{
+        FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
+
+        int first = 1;
+
+        FOR_EACH_FLAGS(splice_flags) {
+                if (flags & splice_flags[i].flag) {
+                        FMT_FLAG_SEPARATOR(ctx, first);
+                        FMT_STRING(ctx, splice_flags[i].name);
+
+                        first = 0;
+                        flags &= ~splice_flags[i].flag;
                 }
         }
 
