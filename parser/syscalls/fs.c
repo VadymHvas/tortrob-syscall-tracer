@@ -967,3 +967,33 @@ DEFINE_SYSCALL_EXIT_PARSER(flistxattr)
 
         return 0;
 }
+
+/* removexattr(const char *path, const char *name) */
+DEFINE_SYSCALL_ENTER_PARSER(removexattr)
+{
+        FMT_STRING_MEM(ctx, args[0], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_MEM(ctx, args[1], NAME_MAX);
+
+        return 0;
+}
+
+/* lremovexattr(const char *path, const char *name) */
+DEFINE_SYSCALL_ENTER_PARSER(lremovexattr)
+{
+        FMT_STRING_MEM(ctx, args[0], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_MEM(ctx, args[1], NAME_MAX);
+
+        return 0;
+}
+
+/* fremovexattr(int fd, const char *name) */
+DEFINE_SYSCALL_ENTER_PARSER(fremovexattr)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_MEM(ctx, args[1], NAME_MAX);
+
+        return 0;
+}
