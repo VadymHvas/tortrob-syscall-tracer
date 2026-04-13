@@ -83,9 +83,12 @@
         X(fallocate,   285, 1, 0) \
         X(flock,       73,  1, 0) \
         X(fadvise64,   221, 1, 0) \
-        X(newfstatat,  262, 1, 1)
+        X(newfstatat,  262, 1, 1) \
+        X(setxattr,    188, 1, 0) \
+        X(lsetxattr,   189, 1, 0) \
+        X(fsetxattr,   190, 1, 0)
 
-#define FS_SYSCALL_COUNT 58
+#define FS_SYSCALL_COUNT 61
 
 #define NAME_MAX 255
 

@@ -8,6 +8,7 @@
 #define FMT_RENAMEAT2_FLAGS(ctx, flags) TRY_FMT(fmt_renameat2_flags, ctx, flags)
 #define FMT_DUP3_FLAGS(ctx, flags)      TRY_FMT(fmt_dup3_flags, ctx, flags)
 #define FMT_RWF_FLAGS(ctx, flags)       TRY_FMT(fmt_rwf_flags, ctx, flags)
+#define FMT_XATTR_FLAGS(ctx, flags)     TRY_FMT(fmt_xattr_flags, ctx, flags)
 
 struct parser_ctx_struct;
 
@@ -18,3 +19,4 @@ int fmt_dup3_flags(struct parser_ctx_struct *ctx, int flags);
 int fmt_rwf_flags(struct parser_ctx_struct *ctx, int flags);
 int fmt_st_mode_flags(struct parser_ctx_struct *ctx, unsigned int flags);
 int fmt_fflags_flags(struct parser_ctx_struct *ctx, long flags);
+int fmt_xattr_flags(struct parser_ctx_struct *ctx, int flags);

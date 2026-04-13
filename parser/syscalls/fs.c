@@ -803,3 +803,53 @@ DEFINE_SYSCALL_EXIT_PARSER(newfstatat)
 
         return 0;
 }
+
+/* int setxattr(const char *path,
+                const char *name, const void value[size], size_t size, int flags) */
+DEFINE_SYSCALL_ENTER_PARSER(setxattr)
+{
+        FMT_STRING_MEM(ctx, args[0], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_MEM(ctx, args[1], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_MEM(ctx, args[2], args[3]);
+        FMT_SEPARATOR(ctx);
+        FMT_LLU(ctx, args[3]);
+        FMT_SEPARATOR(ctx);
+        FMT_XATTR_FLAGS(ctx, args[4]);
+
+        return 0;
+}
+
+/* int lsetxattr(const char *path,
+                 const char *name, const void value[size], size_t size, int flags) */
+DEFINE_SYSCALL_ENTER_PARSER(lsetxattr)
+{
+        FMT_STRING_MEM(ctx, args[0], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_MEM(ctx, args[1], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_MEM(ctx, args[2], args[3]);
+        FMT_SEPARATOR(ctx);
+        FMT_LLU(ctx, args[3]);
+        FMT_SEPARATOR(ctx);
+        FMT_XATTR_FLAGS(ctx, args[4]);
+
+        return 0;
+}
+
+/* int fsetxattr(int fd, const char *name, const void value[size], size_t size, int flags) */
+DEFINE_SYSCALL_ENTER_PARSER(fsetxattr)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_MEM(ctx, args[1], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_MEM(ctx, args[2], args[3]);
+        FMT_SEPARATOR(ctx);
+        FMT_LLU(ctx, args[3]);
+        FMT_SEPARATOR(ctx);
+        FMT_XATTR_FLAGS(ctx, args[4]);
+
+        return 0;
+}

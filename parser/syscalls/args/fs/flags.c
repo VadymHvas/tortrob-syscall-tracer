@@ -5,6 +5,7 @@
 #include <sys/stat.h>
 #include <sys/uio.h>
 #include <sys/statvfs.h>
+#include <sys/xattr.h>
 
 #include "parser/syscalls/args/helpers.h"
 #include "parser/syscalls/args/flag_info.h"
@@ -97,6 +98,11 @@ DEFINE_FLAGS_ARRAY(fflags_flags) = {
         INIT_FLAG_INFO(ST_NODIRATIME),
         INIT_FLAG_INFO(ST_RELATIME),
         INIT_FLAG_INFO(ST_NOSYMFOLLOW)
+};
+
+DEFINE_FLAGS_ARRAY(xattr_flags) = {
+        INIT_FLAG_INFO(XATTR_CREATE),
+        INIT_FLAG_INFO(XATTR_REPLACE)
 };
 
 int fmt_open_flags(struct parser_ctx_struct *ctx, int flags)
@@ -276,6 +282,30 @@ int fmt_fflags_flags(struct parser_ctx_struct *ctx, long flags)
 
                         first = 0;
                         flags &= ~fflags_flags[i].flag;
+                }
+        }
+
+        if (flags) {
+                FMT_FLAG_SEPARATOR(ctx, first);
+                FMT_HEX(ctx, flags);
+        }
+
+        return 0;
+}
+
+int fmt_xattr_flags(struct parser_ctx_struct *ctx, int flags)
+{
+        FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
+
+        int first = 1;
+
+        FOR_EACH_FLAGS(xattr_flags) {
+                if (flags & xattr_flags[i].flag) {
+                        FMT_FLAG_SEPARATOR(ctx, xattr_flags[i].name);
+                        FMT_STRING(ctx, xattr_flags[i].name);
+
+                        first = 0;
+                        flags &= ~xattr_flags[i].flag;
                 }
         }
 
