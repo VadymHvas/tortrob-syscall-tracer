@@ -1,5 +1,7 @@
 #pragma once
 
+#include "parser/syscalls/args/helpers.h"
+
 #define FOR_EACH_FLAGS(flags_arr) for (int i = 0; i < sizeof(flags_arr) / sizeof(flags_arr[0]); i++)
 #define FMT_FLAGS_ZERO_IF_NONE(ctx, flags) \
         if (!(flags)) { \
@@ -26,6 +28,7 @@
                 FMT_STRING(ctx, "|")
 
 #define DEFINE_FLAGS_ARRAY(name) static const struct flag_info name[]
+#define FLAGS_ARR_SIZE(flags_arr) sizeof(flags_arr) / sizeof(flags_arr[0])
 #define INIT_FLAG_INFO(flag) { flag, #flag }
 
 /**
@@ -41,3 +44,9 @@ struct flag_info {
         unsigned long long flag;
         const char *name;
 };
+
+struct parser_ctx_struct;
+
+int fmt_flags_generic(struct parser_ctx_struct *ctx, 
+                      int flags, const struct flag_info *flags_arr,
+                      size_t flags_arr_count, int is_first);

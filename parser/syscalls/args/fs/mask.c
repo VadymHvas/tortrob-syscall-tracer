@@ -74,22 +74,13 @@ int fmt_statx_mask(struct parser_ctx_struct *ctx, unsigned int mask)
                 first = 0;
         }
 
-        FOR_EACH_MASKS(statx_masks) {
-                if (mask & statx_masks[i].flag) {
-                        FMT_FLAG_SEPARATOR(ctx, first);
-                        FMT_STRING(ctx, statx_masks[i].name);
-
-                        mask &= ~statx_masks[i].flag;
-                        first = 0;
-                }
-        }
-
-        if (mask) {
-                FMT_FLAG_SEPARATOR(ctx, first);
-                FMT_HEX(ctx, mask);
-        }
-
-        return 0;
+        return fmt_flags_generic(
+                ctx,
+                mask,
+                statx_masks,
+                FLAGS_ARR_SIZE(statx_masks),
+                first
+        );
 }
 
 int fmt_access_mask(struct parser_ctx_struct *ctx, int mask)
@@ -99,70 +90,33 @@ int fmt_access_mask(struct parser_ctx_struct *ctx, int mask)
                 return 0;
         }
 
-        int first = 1;
-
-        FOR_EACH_MASKS(access_masks) {
-                if (mask & access_masks[i].flag) {
-                        FMT_FLAG_SEPARATOR(ctx, first);
-                        FMT_STRING(ctx, access_masks[i].name);
-
-                        mask &= ~access_masks[i].flag;
-                        first = 0;
-                }
-        }
-
-        if (mask) {
-                FMT_FLAG_SEPARATOR(ctx, first);
-                FMT_HEX(ctx, mask);
-        }
-
-        return 0;
+        return fmt_flags_generic(
+                ctx,
+                mask,
+                access_masks,
+                FLAGS_ARR_SIZE(access_masks), 
+                1
+        );
 }
 
 int fmt_fallocate_mask(struct parser_ctx_struct *ctx, int mask)
 {
-        FMT_FLAGS_ZERO_IF_NONE(ctx, mask);
-
-        int first = 1;
-
-        FOR_EACH_MASKS(fallocate_masks) {
-                if (mask & fallocate_masks[i].flag) {
-                        FMT_FLAG_SEPARATOR(ctx, first);
-                        FMT_STRING(ctx, fallocate_masks[i].name);
-
-                        mask &= ~fallocate_masks[i].flag;
-                        first = 0;
-                }
-        }
-
-        if (mask) {
-                FMT_FLAG_SEPARATOR(ctx, first);
-                FMT_HEX(ctx, mask);
-        }
-
-        return 0;
+        return fmt_flags_generic(
+                ctx,
+                mask,
+                fallocate_masks,
+                FLAGS_ARR_SIZE(fallocate_masks), 
+                1
+        );
 }
 
 int fmt_inotify_mask(struct parser_ctx_struct *ctx, unsigned int mask)
 {
-        FMT_FLAGS_ZERO_IF_NONE(ctx, mask);
-
-        int first = 1;
-
-        FOR_EACH_MASKS(inotify_masks) {
-                if (mask & inotify_masks[i].flag) {
-                        FMT_FLAG_SEPARATOR(ctx, first);
-                        FMT_STRING(ctx, inotify_masks[i].name);
-
-                        mask &= ~inotify_masks[i].flag;
-                        first = 0;
-                }
-        }
-
-        if (mask) {
-                FMT_FLAG_SEPARATOR(ctx, first);
-                FMT_HEX(ctx, mask);
-        }
-
-        return 0;
+        return fmt_flags_generic(
+                ctx,
+                mask,
+                inotify_masks,
+                FLAGS_ARR_SIZE(inotify_masks),
+                1
+        );
 }

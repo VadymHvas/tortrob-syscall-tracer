@@ -136,22 +136,13 @@ int fmt_open_flags(struct parser_ctx_struct *ctx, int flags)
         first = 0;
         flags &= ~O_ACCMODE;
 
-        FOR_EACH_FLAGS(open_flags) {
-                if (flags & open_flags[i].flag) {
-                        FMT_FLAG_SEPARATOR(ctx, first);
-                        FMT_STRING(ctx, open_flags[i].name);
-
-                        first = 0;
-                        flags &= ~open_flags[i].flag;
-                }
-        }
-
-        if (flags) {
-                FMT_FLAG_SEPARATOR(ctx, first);
-                FMT_HEX(ctx, flags);
-        }
-
-        return 0;
+        return fmt_flags_generic(
+                ctx,
+                flags,
+                open_flags,
+                FLAGS_ARR_SIZE(open_flags),
+                first
+        );
 }
 
 int fmt_at_flags(struct parser_ctx_struct *ctx, int flags)
@@ -176,46 +167,24 @@ int fmt_at_flags(struct parser_ctx_struct *ctx, int flags)
                 }
         }
 
-        FOR_EACH_FLAGS(at_flags) {
-                if (flags & at_flags[i].flag) {
-                        FMT_FLAG_SEPARATOR(ctx, first);        
-                        FMT_STRING(ctx, at_flags[i].name);
-                        
-                        first = 0;
-                        flags &= ~at_flags[i].flag;
-                }
-        }
-
-        if (flags) {
-                FMT_FLAG_SEPARATOR(ctx, first);
-                FMT_HEX(ctx, flags);
-        }
-        
-        return 0;
+        return fmt_flags_generic(
+                ctx, 
+                flags,
+                at_flags, 
+                FLAGS_ARR_SIZE(at_flags), 
+                first
+        );
 }
 
 int fmt_renameat2_flags(struct parser_ctx_struct *ctx, unsigned int flags)
 {
-        FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
-
-        int first = 1;
-
-        FOR_EACH_FLAGS(renameat2_flags) {
-                if (flags & renameat2_flags[i].flag) {
-                        FMT_FLAG_SEPARATOR(ctx, first); 
-                        FMT_STRING(ctx, renameat2_flags[i].name);
-
-                        first = 0;
-                        flags &= ~renameat2_flags[i].flag;
-                }
-        }
-
-        if (flags) {
-                FMT_FLAG_SEPARATOR(ctx, first);
-                FMT_HEX(ctx, flags);
-        }
-
-        return 0;
+        return fmt_flags_generic(
+                ctx,
+                flags,
+                renameat2_flags,
+                FLAGS_ARR_SIZE(renameat2_flags),
+                1
+        );
 }
 
 int fmt_dup3_flags(struct parser_ctx_struct *ctx, int flags)
@@ -232,51 +201,31 @@ int fmt_dup3_flags(struct parser_ctx_struct *ctx, int flags)
 
 int fmt_rwf_flags(struct parser_ctx_struct *ctx, int flags)
 {
-        FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
-
-        int first = 1;
-
-        FOR_EACH_FLAGS(rwf_flags) {
-                if (flags & rwf_flags[i].flag) {
-                        FMT_FLAG_SEPARATOR(ctx, first);
-                        FMT_STRING(ctx, rwf_flags[i].name);
-
-                        first = 0;
-                        flags &= ~rwf_flags[i].flag;
-                }
-        }
-
-        if (flags) {
-                FMT_FLAG_SEPARATOR(ctx, first);
-                FMT_HEX(ctx, flags);
-        }
-
-        return 0;
+        return fmt_flags_generic(
+                ctx,
+                flags,
+                rwf_flags,
+                FLAGS_ARR_SIZE(rwf_flags),
+                1
+        );
 }
 
 int fmt_st_mode_flags(struct parser_ctx_struct *ctx, unsigned int flags)
 {
-        FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
-
-        int first = 1;
         mode_t mode = 0;
-
-        FOR_EACH_FLAGS(st_file_types) {
-                if (flags & st_file_types[i].flag) { 
-                        FMT_STRING(ctx, st_file_types[i].name);
-                        FMT_STRING(ctx, "|");
-
-                        first = 0;       
-                        flags &= ~st_file_types[i].flag;
-                        break;
-                }
-        }
 
         FOR_EACH_FLAGS(st_file_modes) {
                 if (flags & st_file_modes[i].flag)
                         mode |= st_file_modes[i].flag;
         }
 
+        flags &= S_IFMT;
+
+        TRY_FMT(fmt_flags_generic, 
+                ctx, flags, st_file_types, FLAGS_ARR_SIZE(st_file_types), 1);
+
+        FMT_STRING(ctx, "|");
+        
         FMT_OCT(ctx, mode);
 
         return 0;
@@ -284,96 +233,44 @@ int fmt_st_mode_flags(struct parser_ctx_struct *ctx, unsigned int flags)
 
 int fmt_fflags_flags(struct parser_ctx_struct *ctx, long flags)
 {
-        FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
-
-        int first = 1;
-
-        FOR_EACH_FLAGS(fflags_flags) {
-                if (flags & fflags_flags[i].flag) {
-                        FMT_FLAG_SEPARATOR(ctx, first);
-                        FMT_STRING(ctx, fflags_flags[i].name);
-
-                        first = 0;
-                        flags &= ~fflags_flags[i].flag;
-                }
-        }
-
-        if (flags) {
-                FMT_FLAG_SEPARATOR(ctx, first);
-                FMT_HEX(ctx, flags);
-        }
-
-        return 0;
+        return fmt_flags_generic(
+                ctx,
+                flags,
+                fflags_flags,
+                FLAGS_ARR_SIZE(fflags_flags),
+                1
+        );
 }
 
 int fmt_xattr_flags(struct parser_ctx_struct *ctx, int flags)
 {
-        FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
-
-        int first = 1;
-
-        FOR_EACH_FLAGS(xattr_flags) {
-                if (flags & xattr_flags[i].flag) {
-                        FMT_FLAG_SEPARATOR(ctx, first);
-                        FMT_STRING(ctx, xattr_flags[i].name);
-
-                        first = 0;
-                        flags &= ~xattr_flags[i].flag;
-                }
-        }
-
-        if (flags) {
-                FMT_FLAG_SEPARATOR(ctx, first);
-                FMT_HEX(ctx, flags);
-        }
-
-        return 0;
+        return fmt_flags_generic(
+                ctx,
+                flags,
+                xattr_flags,
+                FLAGS_ARR_SIZE(xattr_flags),
+                1
+        );
 }
 
 int fmt_splice_flags(struct parser_ctx_struct *ctx, unsigned int flags)
 {
-        FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
-
-        int first = 1;
-
-        FOR_EACH_FLAGS(splice_flags) {
-                if (flags & splice_flags[i].flag) {
-                        FMT_FLAG_SEPARATOR(ctx, first);
-                        FMT_STRING(ctx, splice_flags[i].name);
-
-                        first = 0;
-                        flags &= ~splice_flags[i].flag;
-                }
-        }
-
-        if (flags) {
-                FMT_FLAG_SEPARATOR(ctx, first);
-                FMT_HEX(ctx, flags);
-        }
-
-        return 0;
+        return fmt_flags_generic(
+                ctx,
+                flags,
+                splice_flags,
+                FLAGS_ARR_SIZE(splice_flags),
+                1
+        );
 }
 
 int fmt_inotify_flags(struct parser_ctx_struct *ctx, int flags)
 {
-        FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
-
-        int first = 1;
-
-        FOR_EACH_FLAGS(inotify_flags) {
-                if (flags & inotify_flags[i].flag) {
-                        FMT_FLAG_SEPARATOR(ctx, first);
-                        FMT_STRING(ctx, inotify_flags[i].name);
-
-                        first = 0;
-                        flags &= ~inotify_flags[i].flag;
-                }
-        }
-
-        if (flags) {
-                FMT_FLAG_SEPARATOR(ctx, first);
-                FMT_HEX(ctx, flags);
-        }
-
-        return 0;
+        return fmt_flags_generic(
+                ctx,
+                flags,
+                inotify_flags,
+                FLAGS_ARR_SIZE(inotify_flags),
+                1
+        );
 }
