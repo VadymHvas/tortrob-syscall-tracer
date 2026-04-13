@@ -23,7 +23,7 @@
                          fmt, __VA_ARGS__); \
         return safe_append(ctx, &n)
 
-static DEFINE_FMT(syscall_name, const struct syscall_entry *syscall);
+static fmt_syscall_name(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall);
 
 static inline int safe_append(struct parser_ctx_struct *ctx, int *n);
 static void escape_seq_parse(const char *src, char *dest, size_t dst_size);

@@ -4,6 +4,8 @@
 
 #include "parser/syscalls/args/helpers.h"
 #include "parser/syscalls/args/flag_info.h"
+#include "parser/syscalls/args/value_info.h"
+
 #include "parser/syscalls/args/fs/value.h"
 #include "parser/syscalls/args/fs/special.h"
 #include "parser/syscalls/args/fs/flags.h"
@@ -88,15 +90,7 @@ int fmt_fcntl_cmd(struct parser_ctx_struct *ctx, int cmd)
                  cmd == F_GETSIG)
                 ctx->extra = FCNTL_IGNORE_ARG3;
 
-        FOR_EACH_VALUES(fcntl_cmds) {
-                if (cmd == fcntl_cmds[i].value) {
-                        FMT_STRING(ctx, fcntl_cmds[i].name);
-
-                        return 0;
-                }
-        }
-
-        FMT_INT(ctx, cmd);
+        TRY_FMT(fmt_value_generic, ctx, cmd, fcntl_cmds, VALUES_ARR_SIZE(fcntl_cmds));
 
         ctx->extra = FCNTL_INVALID;
         return 0;
@@ -104,46 +98,30 @@ int fmt_fcntl_cmd(struct parser_ctx_struct *ctx, int cmd)
 
 int fmt_flock_op(struct parser_ctx_struct *ctx, int op)
 {
-        FMT_FLAGS_ZERO_IF_NONE(ctx, op);
-
-        FOR_EACH_VALUES(flock_ops) {
-                if (op == flock_ops[i].value) {
-                        FMT_STRING(ctx, flock_ops[i].name);
-                        return 0;
-                }
-        }
-
-        FMT_INT(ctx, op);
-        return 0;
+        return fmt_value_generic(
+                ctx,
+                op,
+                flock_ops,
+                VALUES_ARR_SIZE(flock_ops)
+        );
 }
 
 int fmt_fadvise64_advice(struct parser_ctx_struct *ctx, int advice)
 {
-        FMT_FLAGS_ZERO_IF_NONE(ctx, advice);
-
-        FOR_EACH_VALUES(fadvise64_advices) {
-                if (advice == fadvise64_advices[i].value) {
-                        FMT_STRING(ctx, fadvise64_advices[i].name);
-                        return 0;
-                }
-        }
-
-        FMT_INT(ctx, advice);
-        return 0;
+        return fmt_value_generic(
+                ctx,
+                advice,
+                fadvise64_advices,
+                VALUES_ARR_SIZE(fadvise64_advices)
+        );
 }
 
 int fmt_statfs_fs_type(struct parser_ctx_struct *ctx, int fs_type)
 {
-        FMT_FLAGS_ZERO_IF_NONE(ctx, fs_type);
-
-        FOR_EACH_VALUES(fs_types) {
-                if (fs_type == fs_types[i].value) {
-                        FMT_STRING(ctx, fs_types[i].name);
-                        return 0;
-                }
-        }
-
-        FMT_HEX(ctx, fs_type);
-
-        return 0;
+        return fmt_value_generic(
+                ctx, 
+                fs_type,
+                fs_types,
+                VALUES_ARR_SIZE(fs_types)
+        );
 }
