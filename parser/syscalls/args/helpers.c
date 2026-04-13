@@ -89,9 +89,9 @@ int fmt_string_from_mem(struct parser_ctx_struct *ctx, unsigned long long addr, 
         char *escaped_buf = malloc(max_len * 4 + 1);
 
         if (!buf || !escaped_buf) {
-                if (buf) 
+                if (!buf)
                         free(buf);
-                if (escaped_buf) 
+                if (!escaped_buf) 
                         free(escaped_buf);
                 return 1;
         }
