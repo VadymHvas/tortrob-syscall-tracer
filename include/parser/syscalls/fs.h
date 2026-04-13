@@ -95,11 +95,13 @@
         X(flistxattr,   196, 1, 1) \
         X(removexattr,  197, 1, 0) \
         X(lremovexattr, 198, 1, 0) \
-        X(fremovexattr, 199, 1, 0)
+        X(fremovexattr, 199, 1, 0) \
+        X(pivot_root,   155, 1, 0)
 
-#define FS_SYSCALL_COUNT 70
+#define FS_SYSCALL_COUNT 71
 
 #define NAME_MAX 255
+#define PATH_MAX 4096
 
 #define X(name, nr, has_enter, has_exit) \
         DEFINE_SYSCALL_ENTER_PARSER(name);

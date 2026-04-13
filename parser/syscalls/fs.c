@@ -997,3 +997,13 @@ DEFINE_SYSCALL_ENTER_PARSER(fremovexattr)
 
         return 0;
 }
+
+/* syscall(SYS_pivot_root, const char *new_root, const char *put_old) */
+DEFINE_SYSCALL_ENTER_PARSER(pivot_root)
+{
+        FMT_STRING_MEM(ctx, args[0], PATH_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_MEM(ctx, args[1], PATH_MAX);
+
+        return 0;
+}
