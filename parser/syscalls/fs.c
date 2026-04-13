@@ -1063,3 +1063,36 @@ DEFINE_SYSCALL_ENTER_PARSER(vmsplice)
 
         return 0;
 }
+
+/* tee(int fd_in, int fd_out, size_t size, unsigned int flags) */
+DEFINE_SYSCALL_ENTER_PARSER(tee)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_FD(ctx, args[1]);
+        FMT_SEPARATOR(ctx);
+        FMT_LLU(ctx, args[2]);
+        FMT_SEPARATOR(ctx);
+        FMT_SPLICE_FLAGS(ctx, args[3]);
+
+        return 0;
+}
+
+/* copy_file_range(int fd_in, off_t *off_in,
+                   int fd_out, off_t *off_out, size_t size, unsigned int flags) */
+DEFINE_SYSCALL_ENTER_PARSER(copy_file_range)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_ADDR(ctx, args[1]);
+        FMT_SEPARATOR(ctx);
+        FMT_FD(ctx, args[2]);
+        FMT_SEPARATOR(ctx);
+        FMT_ADDR(ctx, args[3]);
+        FMT_SEPARATOR(ctx);
+        FMT_LLU(ctx, args[4]);
+        FMT_SEPARATOR(ctx);
+        FMT_HEX(ctx, args[5]);
+
+        return 0;
+}
