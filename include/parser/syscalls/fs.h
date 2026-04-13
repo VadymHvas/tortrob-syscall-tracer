@@ -86,9 +86,12 @@
         X(newfstatat,  262, 1, 1) \
         X(setxattr,    188, 1, 0) \
         X(lsetxattr,   189, 1, 0) \
-        X(fsetxattr,   190, 1, 0)
+        X(fsetxattr,   190, 1, 0) \
+        X(getxattr,    191, 1, 1) \
+        X(lgetxattr,   192, 1, 1) \
+        X(fgetxattr,   193, 1, 1)
 
-#define FS_SYSCALL_COUNT 61
+#define FS_SYSCALL_COUNT 64
 
 #define NAME_MAX 255
 
