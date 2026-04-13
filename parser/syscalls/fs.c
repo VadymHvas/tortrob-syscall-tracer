@@ -1007,3 +1007,11 @@ DEFINE_SYSCALL_ENTER_PARSER(pivot_root)
 
         return 0;
 }
+
+/* chroot(const char *path) */
+DEFINE_SYSCALL_ENTER_PARSER(chroot)
+{
+        FMT_STRING_MEM(ctx, args[0], PATH_MAX);
+
+        return 0;
+}
