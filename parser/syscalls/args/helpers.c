@@ -26,7 +26,7 @@
 static int fmt_syscall_name(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall);
 
 static inline int safe_append(struct parser_ctx_struct *ctx, int *n);
-static void escape_seq_parse(const char *src, char *dest, size_t dst_size);
+static void escape_seq_parse(const char *src, size_t src_len, char *dest, size_t dst_size);
 
 int fmt_syscall_enter(struct parser_ctx_struct *ctx, const struct syscall_entry *syscall, reg_t args[])
 {
@@ -80,7 +80,7 @@ int fmt_dev(struct parser_ctx_struct *ctx, dev_t dev)
 
 int fmt_string_from_mem(struct parser_ctx_struct *ctx, unsigned long long addr, size_t size)
 {
-        if (!addr) 
+        if (!addr || !size) 
                 return fmt_null(ctx);
 
         size_t max_len = (size > TRACE_MAX_STRLEN) ? TRACE_MAX_STRLEN : size; 
@@ -101,9 +101,10 @@ int fmt_string_from_mem(struct parser_ctx_struct *ctx, unsigned long long addr, 
 
         buf[max_len] = '\0';
 
-        escape_seq_parse(buf, escaped_buf, max_len * 4 + 1);
+        size_t actual_len = strnlen(buf, max_len);
+        escape_seq_parse(buf, actual_len, escaped_buf, max_len * 4 + 1);
         
-        size_t escaped_buf_len = strnlen(escaped_buf, max_len); // Bytes to format.
+        size_t escaped_buf_len = strnlen(escaped_buf, max_len * 4 + 1); // Bytes to format.
 
         if (fmt_string(ctx, "\"") || fmt_string(ctx, escaped_buf))
                 goto err;
@@ -159,29 +160,47 @@ static inline int safe_append(struct parser_ctx_struct *ctx, int *n)
         return 0;
 }
 
-static void escape_seq_parse(const char *src, char *dest, size_t dst_size)
+static void escape_seq_parse(const char *src, size_t src_len, char *dest, size_t dst_size)
 {
-        size_t i = 0;
+    size_t d_i = 0;
 
-        while (src && i < dst_size - 1) {
-                if (*src == '\n') {
-                        if (i + 2 >= dst_size)
-                                break;
+    for (size_t s = 0; s < src_len; s++) {
+        if (d_i + 1 >= dst_size) 
+                break;
 
-                        dest[i++] = '\\';
-                        dest[i++] = 'n';
-                } else if (*src == '\t') {
-                        if (i + 2 >= dst_size)
-                                break;
-                        
-                        dest[i++] = '\\';
-                        dest[i++] = 't';
-                } else {
-                        dest[i++] = *src;
+        unsigned char c = (unsigned char)src[s];
+
+        switch (c) 
+        {
+        case '\n':
+                if (d_i + 2 < dst_size) { dest[d_i++] = '\\'; dest[d_i++] = 'n'; }
+                break;
+        case '\r':
+                if (d_i + 2 < dst_size) { dest[d_i++] = '\\'; dest[d_i++] = 'r'; }
+                break;
+        case '\t':
+                if (d_i + 2 < dst_size) { dest[d_i++] = '\\'; dest[d_i++] = 't'; }
+        break;
+        case '\\':
+                if (d_i + 2 < dst_size) { dest[d_i++] = '\\'; dest[d_i++] = '\\'; }
+                break;
+        case '\"':
+                if (d_i + 2 < dst_size) { dest[d_i++] = '\\'; dest[d_i++] = '\"'; }
+                break;
+
+        default:
+                if (c >= 32 && c <= 126) {
+                        dest[d_i++] = c;
+                } 
+                else {
+                        if (d_i + 4 < dst_size) {
+                        snprintf(&dest[d_i], 5, "\\x%02x", c);
+                        d_i += 4;
+                        }
                 }
-
-                src++;
+                break;
         }
+    }
 
-        dest[i] = '\0';
+    dest[d_i] = '\0';
 }
