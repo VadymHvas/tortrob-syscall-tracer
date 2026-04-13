@@ -90,7 +90,12 @@ int fmt_fcntl_cmd(struct parser_ctx_struct *ctx, int cmd)
                  cmd == F_GETSIG)
                 ctx->extra = FCNTL_IGNORE_ARG3;
 
-        TRY_FMT(fmt_value_generic, ctx, cmd, fcntl_cmds, VALUES_ARR_SIZE(fcntl_cmds));
+        for (int i = 0; i < sizeof(fcntl_cmds) / sizeof(fcntl_cmds[0]); i++) {
+                if (cmd == fcntl_cmds[i].value) {
+                        FMT_STRING(ctx, fcntl_cmds[i].name);
+                        return 0;
+                }
+        }
 
         ctx->extra = FCNTL_INVALID;
         return 0;
