@@ -1096,3 +1096,33 @@ DEFINE_SYSCALL_ENTER_PARSER(copy_file_range)
 
         return 0;
 }
+
+/* inotify_init1(int flags) */
+DEFINE_SYSCALL_ENTER_PARSER(inotify_init1)
+{
+        FMT_INOTIFY_FLAGS(ctx, args[0]);
+
+        return 0;
+}
+
+/* inotify_add_watch(int fd, const char *path, uint32_t mask) */
+DEFINE_SYSCALL_ENTER_PARSER(inotify_add_watch)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_MEM(ctx, args[1], NAME_MAX);
+        FMT_SEPARATOR(ctx);
+        FMT_INOTIFY_MASK(ctx, args[2]);
+
+        return 0;
+}
+
+/* inotify_rm_watch(int fd, int wd) */
+DEFINE_SYSCALL_ENTER_PARSER(inotify_rm_watch)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[1]);
+
+        return 0;
+} 

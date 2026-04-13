@@ -6,6 +6,7 @@
 #include <sys/uio.h>
 #include <sys/statvfs.h>
 #include <sys/xattr.h>
+#include <sys/inotify.h>
 
 #include "parser/syscalls/args/helpers.h"
 #include "parser/syscalls/args/flag_info.h"
@@ -110,6 +111,11 @@ DEFINE_FLAGS_ARRAY(splice_flags) = {
         INIT_FLAG_INFO(SPLICE_F_NONBLOCK),
         INIT_FLAG_INFO(SPLICE_F_MORE),
         INIT_FLAG_INFO(SPLICE_F_GIFT)
+};
+
+DEFINE_FLAGS_ARRAY(inotify_flags) = {
+        INIT_FLAG_INFO(IN_NONBLOCK),
+        INIT_FLAG_INFO(IN_CLOEXEC)
 };
 
 int fmt_open_flags(struct parser_ctx_struct *ctx, int flags)
@@ -337,6 +343,30 @@ int fmt_splice_flags(struct parser_ctx_struct *ctx, unsigned int flags)
 
                         first = 0;
                         flags &= ~splice_flags[i].flag;
+                }
+        }
+
+        if (flags) {
+                FMT_FLAG_SEPARATOR(ctx, first);
+                FMT_HEX(ctx, flags);
+        }
+
+        return 0;
+}
+
+int fmt_inotify_flags(struct parser_ctx_struct *ctx, int flags)
+{
+        FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
+
+        int first = 1;
+
+        FOR_EACH_FLAGS(inotify_flags) {
+                if (flags & inotify_flags[i].flag) {
+                        FMT_FLAG_SEPARATOR(ctx, first);
+                        FMT_STRING(ctx, inotify_flags[i].name);
+
+                        first = 0;
+                        flags &= ~inotify_flags[i].flag;
                 }
         }
 
