@@ -16,6 +16,7 @@
 #include "core/trace.h"
 
 #define TRACE_MAX_STRLEN 48
+#define TRACE_MAX_BUFLEN 48
 
 #define APPEND_FMT(ctx, fmt, ...) \
         int n = snprintf(ctx->buf + ctx->offset, \
@@ -78,53 +79,93 @@ int fmt_dev(struct parser_ctx_struct *ctx, dev_t dev)
         APPEND_FMT(ctx, "%d:%d", major(dev), minor(dev));
 }
 
-int fmt_string_from_mem(struct parser_ctx_struct *ctx, unsigned long long addr, size_t size)
+int fmt_bytes_from_mem(struct parser_ctx_struct *ctx, unsigned long long addr, size_t size)
 {
-        if (!addr || !size) 
+        if (!addr || !size)
                 return fmt_null(ctx);
 
-        size_t max_len = (size > TRACE_MAX_STRLEN) ? TRACE_MAX_STRLEN : size; 
-
-        char *buf = malloc(max_len + 1);
-        char *escaped_buf = malloc(max_len * 4 + 1);
-
-        if (!buf || !escaped_buf) {
-                if (!buf)
-                        free(buf);
-                if (!escaped_buf) 
-                        free(escaped_buf);
-                return 1;
-        }
-
-        if (read_tracee_mem(ctx->tracee, (void *)addr, buf, max_len) <= 0)
-                goto err;
-
-        buf[max_len] = '\0';
-
-        size_t actual_len = strnlen(buf, max_len);
-        escape_seq_parse(buf, actual_len, escaped_buf, max_len * 4 + 1);
+        size_t max_len = (size > TRACE_MAX_BUFLEN) ? TRACE_MAX_BUFLEN : size;
         
-        size_t escaped_buf_len = strnlen(escaped_buf, max_len * 4 + 1); // Bytes to format.
+        char raw_buf[max_len + 1];
+        char escaped_buf[max_len * 4 + 1];
 
-        if (fmt_string(ctx, "\"") || fmt_string(ctx, escaped_buf))
-                goto err;
+        ssize_t bytes_read = read_tracee_mem(ctx->tracee, (void *)addr, raw_buf, max_len);
+        if (bytes_read <= 0)
+                return fmt_string(ctx, "<failed>");
 
-        if (escaped_buf_len == TRACE_MAX_STRLEN) {
-                if (fmt_string(ctx, "\"...")) 
-                        goto err;
-        } else {
-                if (fmt_string(ctx, "\"")) 
-                        goto err;
+        if (bytes_read > max_len)
+                bytes_read = max_len;
+
+        escape_seq_parse(raw_buf, bytes_read, escaped_buf, sizeof(escaped_buf));
+
+        size_t escaped_len = strnlen(escaped_buf, sizeof(escaped_buf));
+
+        FMT_STRING(ctx, "\"");
+        FMT_STRING(ctx, escaped_buf);
+        FMT_STRING(ctx, "\"");
+
+        int truncate = (bytes_read == TRACE_MAX_BUFLEN);
+
+        if (truncate)
+                FMT_STRING(ctx, "...");
+
+        return 0;
+}
+
+int fmt_cstring_from_mem(struct parser_ctx_struct *ctx, unsigned long long addr)
+{
+        if (!addr)
+                return fmt_null(ctx);
+
+        size_t total = 0;
+        const size_t chunk_size = 16;
+
+        char raw_buf[TRACE_MAX_STRLEN + 1];
+        char tmp[chunk_size];
+
+        while (total < TRACE_MAX_STRLEN) {
+                size_t to_read = chunk_size;
+
+                if (total + to_read > TRACE_MAX_STRLEN)
+                        to_read = TRACE_MAX_STRLEN - total;
+
+                ssize_t n = read_tracee_mem(ctx->tracee, (void *)(addr + total), tmp, to_read);
+
+                if (n <= 0)
+                        return fmt_string(ctx, "<failed>");
+
+                for (ssize_t i = 0; i < n; i++) {
+                        raw_buf[total++] = tmp[i];
+
+                        if (tmp[i] == '\0') {
+                                raw_buf[total] = '\0';
+                                goto done;
+                        }
+
+                        if (total == TRACE_MAX_STRLEN)
+                                break;
+                }
+
+                if ((size_t)n < to_read)
+                        break;
         }
 
-        free(buf);
-        free(escaped_buf);
-        return 0;
+done:
+        raw_buf[total] = '\0';
 
-err:
-        free(buf);
-        free(escaped_buf);
-        return 1;
+        char escaped_buf[TRACE_MAX_STRLEN * 4 + 1];
+        size_t actual_len = strnlen(raw_buf, total);
+
+        escape_seq_parse(raw_buf, actual_len, escaped_buf, sizeof(escaped_buf));
+
+        FMT_STRING(ctx, "\"");
+        FMT_STRING(ctx, escaped_buf);
+        FMT_STRING(ctx, "\"");
+
+        if (total == TRACE_MAX_STRLEN && raw_buf[total - 1] != '\0')
+                FMT_STRING(ctx, "...");
+
+        return 0;
 }
 
 int fmt_word_mem(struct parser_ctx_struct *ctx, unsigned long long addr)
@@ -211,8 +252,8 @@ static void escape_seq_parse(const char *src, size_t src_len, char *dest, size_t
                 } 
                 else {
                         if (d_i + 4 < dst_size) {
-                        snprintf(&dest[d_i], 5, "\\x%02x", c);
-                        d_i += 4;
+                                snprintf(&dest[d_i], 5, "\\x%02x", c);
+                                d_i += 4;
                         }
                 }
                 break;
