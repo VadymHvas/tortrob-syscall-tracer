@@ -173,6 +173,23 @@ DEFINE_FLAGS_ARRAY(fspick_flags) = {
         INIT_FLAG_INFO(FSPICK_SYMLINK_NOFOLLOW)
 };
 
+DEFINE_FLAGS_ARRAY(open_tree_flags) = {
+        INIT_FLAG_INFO(OPEN_TREE_CLOEXEC),
+        INIT_FLAG_INFO(OPEN_TREE_CLONE)
+};
+
+DEFINE_FLAGS_ARRAY(move_mount_flags) = {
+        INIT_FLAG_INFO(MOVE_MOUNT_T_SYMLINKS),
+        INIT_FLAG_INFO(MOVE_MOUNT_T_EMPTY_PATH),
+        INIT_FLAG_INFO(MOVE_MOUNT_T_AUTOMOUNTS),
+
+        INIT_FLAG_INFO(MOVE_MOUNT_SET_GROUP),
+        INIT_FLAG_INFO(MOVE_MOUNT_F_SYMLINKS),
+        INIT_FLAG_INFO(MOVE_MOUNT_F_EMPTY_PATH),
+        INIT_FLAG_INFO(MOVE_MOUNT_F_AUTOMOUNTS),
+        INIT_FLAG_INFO(MOVE_MOUNT_BENEATH)
+};
+
 int fmt_open_flags(struct parser_ctx_struct *ctx, int flags)
 {
         FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
@@ -392,6 +409,28 @@ int fmt_fspick_flags(struct parser_ctx_struct *ctx, unsigned int flags)
                 flags,
                 fspick_flags,
                 FLAGS_ARR_SIZE(fspick_flags),
+                1
+        );
+}
+
+int fmt_open_tree_flags(struct parser_ctx_struct *ctx, unsigned int flags)
+{
+        return fmt_flags_generic(
+                ctx,
+                flags,
+                open_tree_flags,
+                FLAGS_ARR_SIZE(open_tree_flags),
+                1
+        );
+}
+
+int fmt_move_mount_flags(struct parser_ctx_struct *ctx, unsigned int flags)
+{
+        return fmt_flags_generic(
+                ctx,
+                flags,
+                move_mount_flags,
+                FLAGS_ARR_SIZE(move_mount_flags),
                 1
         );
 }

@@ -1205,3 +1205,33 @@ DEFINE_SYSCALL_ENTER_PARSER(fspick)
 
         return 0;
 }
+
+/* open_tree(int dirfd, const char *path, unsigned int flags) */
+DEFINE_SYSCALL_ENTER_PARSER(open_tree)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_CSTRING_MEM(ctx, args[1]);
+        FMT_SEPARATOR(ctx);
+        FMT_OPEN_TREE_FLAGS(ctx, args[2]);
+
+        return 0;
+}
+
+/* move_mount(int from_dirfd, const char *from_path,
+              int to_dirfd, const char *to_path, unsigned int flags) */
+
+DEFINE_SYSCALL_ENTER_PARSER(move_mount)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_CSTRING_MEM(ctx, args[1]);
+        FMT_SEPARATOR(ctx);
+        FMT_FD(ctx, args[2]);
+        FMT_SEPARATOR(ctx);
+        FMT_CSTRING_MEM(ctx, args[3]);
+        FMT_SEPARATOR(ctx);
+        FMT_MOVE_MOUNT_FLAGS(ctx, args[4]);
+
+        return 0;
+}

@@ -17,6 +17,8 @@
 #define FMT_FSMOUNT_FLAGS(ctx, flags)      TRY_FMT(fmt_fsmount_flags, ctx, flags)
 #define FMT_FSMOUNT_ATTR_FLAGS(ctx, flags) TRY_FMT(fmt_fsmount_attr_flags, ctx, flags)
 #define FMT_FSPICK_FLAGS(ctx, flags)       TRY_FMT(fmt_fspick_flags, ctx, flags)
+#define FMT_OPEN_TREE_FLAGS(ctx, flags)    TRY_FMT(fmt_open_tree_flags, ctx, flags)
+#define FMT_MOVE_MOUNT_FLAGS(ctx, flags)   TRY_FMT(fmt_move_mount_flags, ctx, flags)
 
 struct parser_ctx_struct;
 
@@ -36,3 +38,5 @@ int fmt_fsopen_flags(struct parser_ctx_struct *ctx, unsigned int flags);
 int fmt_fsmount_flags(struct parser_ctx_struct *ctx, unsigned int flags);
 int fmt_fsmount_attr_flags(struct parser_ctx_struct *ctx, unsigned int flags);
 int fmt_fspick_flags(struct parser_ctx_struct *ctx, unsigned int flags);
+int fmt_open_tree_flags(struct parser_ctx_struct *ctx, unsigned int flags);
+int fmt_move_mount_flags(struct parser_ctx_struct *ctx, unsigned int flags);

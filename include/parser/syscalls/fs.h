@@ -112,8 +112,10 @@
         X(fsconfig,          431, 1, 0) \
         X(fsmount,           432, 1, 0) \
         X(fspick,            433, 1, 0) \
+        X(open_tree,         428, 1, 0) \
+        X(move_mount,        429, 1, 0) \
 
-#define FS_SYSCALL_COUNT 86
+#define FS_SYSCALL_COUNT 88
 
 #define NAME_MAX 255
 #define PATH_MAX 4096
