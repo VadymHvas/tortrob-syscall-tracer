@@ -7,6 +7,7 @@
 #include <sys/statvfs.h>
 #include <sys/xattr.h>
 #include <sys/inotify.h>
+#include <sys/mount.h>
 
 #include "parser/syscalls/args/helpers.h"
 #include "parser/syscalls/args/flag_info.h"
@@ -116,6 +117,31 @@ DEFINE_FLAGS_ARRAY(splice_flags) = {
 DEFINE_FLAGS_ARRAY(inotify_flags) = {
         INIT_FLAG_INFO(IN_NONBLOCK),
         INIT_FLAG_INFO(IN_CLOEXEC)
+};
+
+DEFINE_FLAGS_ARRAY(mount_flags) = {
+        INIT_FLAG_INFO(MS_DIRSYNC),
+        INIT_FLAG_INFO(MS_LAZYTIME),
+        INIT_FLAG_INFO(MS_MANDLOCK),
+        INIT_FLAG_INFO(MS_NOATIME),
+        INIT_FLAG_INFO(MS_NODEV),
+        INIT_FLAG_INFO(MS_NODIRATIME),
+        INIT_FLAG_INFO(MS_NOEXEC),
+        INIT_FLAG_INFO(MS_NOSUID),
+        INIT_FLAG_INFO(MS_RDONLY),
+        INIT_FLAG_INFO(MS_REC),
+        INIT_FLAG_INFO(MS_RELATIME),
+        INIT_FLAG_INFO(MS_SILENT),
+        INIT_FLAG_INFO(MS_STRICTATIME),
+        INIT_FLAG_INFO(MS_SYNCHRONOUS),
+        INIT_FLAG_INFO(MS_NOSYMFOLLOW)
+};
+
+DEFINE_FLAGS_ARRAY(umount2_flags) = {
+        INIT_FLAG_INFO(MNT_FORCE),
+        INIT_FLAG_INFO(MNT_DETACH),
+        INIT_FLAG_INFO(MNT_EXPIRE),
+        INIT_FLAG_INFO(UMOUNT_NOFOLLOW),
 };
 
 int fmt_open_flags(struct parser_ctx_struct *ctx, int flags)
@@ -271,6 +297,28 @@ int fmt_inotify_flags(struct parser_ctx_struct *ctx, int flags)
                 flags,
                 inotify_flags,
                 FLAGS_ARR_SIZE(inotify_flags),
+                1
+        );
+}
+
+int fmt_mount_flags(struct parser_ctx_struct *ctx, unsigned long flags)
+{
+        return fmt_flags_generic(
+                ctx,
+                flags,
+                mount_flags,
+                FLAGS_ARR_SIZE(mount_flags),
+                1
+        );
+}
+
+int fmt_umount2_flags(struct parser_ctx_struct *ctx, int flags)
+{
+        return fmt_flags_generic(
+                ctx,
+                flags,
+                umount2_flags,
+                FLAGS_ARR_SIZE(umount2_flags),
                 1
         );
 }

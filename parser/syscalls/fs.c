@@ -1126,3 +1126,30 @@ DEFINE_SYSCALL_ENTER_PARSER(inotify_rm_watch)
 
         return 0;
 } 
+
+/* mount(const char *source, const char *target, 
+         const char *filesystemtype, unsigned long mountflags, const void *data) */
+DEFINE_SYSCALL_ENTER_PARSER(mount)
+{
+        FMT_CSTRING_MEM(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_CSTRING_MEM(ctx, args[1]);
+        FMT_SEPARATOR(ctx);
+        FMT_CSTRING_MEM(ctx, args[2]);
+        FMT_SEPARATOR(ctx);
+        FMT_MOUNT_FLAGS(ctx, args[3]);
+        FMT_SEPARATOR(ctx);
+        FMT_CSTRING_MEM(ctx, args[4]);
+
+        return 0;
+}
+
+/* umount2(const char *target, int flags) */
+DEFINE_SYSCALL_ENTER_PARSER(umount2)
+{
+        FMT_CSTRING_MEM(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_UMOUNT2_FLAGS(ctx, args[1]);
+
+        return 0;
+}

@@ -106,8 +106,10 @@
         X(inotify_init1,     294, 1, 0) \
         X(inotify_add_watch, 254, 1, 0) \
         X(inotify_rm_watch,  255, 1, 0) \
+        X(mount,             165, 1, 0) \
+        X(umount2,           166, 1, 0)
 
-#define FS_SYSCALL_COUNT 80
+#define FS_SYSCALL_COUNT 82
 
 #define NAME_MAX 255
 #define PATH_MAX 4096
