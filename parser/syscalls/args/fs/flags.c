@@ -144,6 +144,35 @@ DEFINE_FLAGS_ARRAY(umount2_flags) = {
         INIT_FLAG_INFO(UMOUNT_NOFOLLOW),
 };
 
+DEFINE_FLAGS_ARRAY(fsopen_flags) = {
+        INIT_FLAG_INFO(FSOPEN_CLOEXEC)
+};
+
+DEFINE_FLAGS_ARRAY(fsmount_flags) = {
+        INIT_FLAG_INFO(FSMOUNT_CLOEXEC)      
+};
+
+DEFINE_FLAGS_ARRAY(fsmount_attr_flags) = {
+        INIT_FLAG_INFO(MOUNT_ATTR_IDMAP),
+        INIT_FLAG_INFO(MOUNT_ATTR_NOATIME),
+        INIT_FLAG_INFO(MOUNT_ATTR_NODEV),
+        INIT_FLAG_INFO(MOUNT_ATTR_NODIRATIME),
+        INIT_FLAG_INFO(MOUNT_ATTR_NOEXEC),
+        INIT_FLAG_INFO(MOUNT_ATTR_NOSUID),
+        INIT_FLAG_INFO(MOUNT_ATTR_NOSYMFOLLOW),
+        INIT_FLAG_INFO(MOUNT_ATTR_RDONLY),
+        INIT_FLAG_INFO(MOUNT_ATTR_RELATIME),
+        INIT_FLAG_INFO(MOUNT_ATTR_SIZE_VER0),
+        INIT_FLAG_INFO(MOUNT_ATTR_STRICTATIME)
+};
+
+DEFINE_FLAGS_ARRAY(fspick_flags) = {
+        INIT_FLAG_INFO(FSPICK_CLOEXEC),
+        INIT_FLAG_INFO(FSPICK_EMPTY_PATH),
+        INIT_FLAG_INFO(FSPICK_NO_AUTOMOUNT),
+        INIT_FLAG_INFO(FSPICK_SYMLINK_NOFOLLOW)
+};
+
 int fmt_open_flags(struct parser_ctx_struct *ctx, int flags)
 {
         FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
@@ -319,6 +348,50 @@ int fmt_umount2_flags(struct parser_ctx_struct *ctx, int flags)
                 flags,
                 umount2_flags,
                 FLAGS_ARR_SIZE(umount2_flags),
+                1
+        );
+}
+
+int fmt_fsopen_flags(struct parser_ctx_struct *ctx, unsigned int flags)
+{
+        return fmt_flags_generic(
+                ctx,
+                flags,
+                fsopen_flags,
+                FLAGS_ARR_SIZE(fsopen_flags),
+                1
+        );
+}
+
+int fmt_fsmount_flags(struct parser_ctx_struct *ctx, unsigned int flags)
+{
+        return fmt_flags_generic(
+                ctx,
+                flags,
+                fsmount_flags,
+                FLAGS_ARR_SIZE(fsmount_flags),
+                1
+        );
+}
+
+int fmt_fsmount_attr_flags(struct parser_ctx_struct *ctx, unsigned int flags)
+{
+        return fmt_flags_generic(
+                ctx,
+                flags,
+                fsmount_attr_flags,
+                FLAGS_ARR_SIZE(fsmount_attr_flags),
+                1
+        );
+}
+
+int fmt_fspick_flags(struct parser_ctx_struct *ctx, unsigned int flags)
+{
+        return fmt_flags_generic(
+                ctx,
+                flags,
+                fspick_flags,
+                FLAGS_ARR_SIZE(fspick_flags),
                 1
         );
 }

@@ -1,6 +1,7 @@
 #define _GNU_SOURCE
 
 #include <sys/file.h>
+#include <sys/mount.h>
 
 #include "parser/syscalls/args/helpers.h"
 #include "parser/syscalls/args/flag_info.h"
@@ -71,6 +72,18 @@ DEFINE_VALUES_ARRAY(fs_types) = {
         { 0xcafe4a11, "BPF_FS" },
 };
 
+DEFINE_VALUES_ARRAY(fsconfig_cmds) = {
+        INIT_VALUE(FSCONFIG_SET_FLAG),
+        INIT_VALUE(FSCONFIG_SET_STRING),
+        INIT_VALUE(FSCONFIG_SET_BINARY),
+        INIT_VALUE(FSCONFIG_SET_FD),
+        INIT_VALUE(FSCONFIG_SET_PATH),
+        INIT_VALUE(FSCONFIG_SET_PATH_EMPTY),
+        INIT_VALUE(FSCONFIG_CMD_CREATE),
+        INIT_VALUE(FSCONFIG_CMD_CREATE_EXCL),
+        INIT_VALUE(FSCONFIG_CMD_RECONFIGURE)
+};
+
 /* 
  * For F_GET* commands (except F_GETLK) we don't format 3rd argument, 
  * therefore ctx->extra is equals to FCNTL_IGNORE_ARG3.
@@ -128,5 +141,17 @@ int fmt_statfs_fs_type(struct parser_ctx_struct *ctx, int fs_type)
                 fs_type,
                 fs_types,
                 VALUES_ARR_SIZE(fs_types)
+        );
+}
+
+int fmt_fsconfig_cmd(struct parser_ctx_struct *ctx, unsigned int cmd)
+{
+        ctx->extra = cmd;
+
+        return fmt_value_generic(
+                ctx,
+                cmd,
+                fsconfig_cmds,
+                VALUES_ARR_SIZE(fsconfig_cmds)
         );
 }

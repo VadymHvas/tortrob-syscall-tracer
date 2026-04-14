@@ -1153,3 +1153,55 @@ DEFINE_SYSCALL_ENTER_PARSER(umount2)
 
         return 0;
 }
+
+/* fsopen(const char *fsname, unsigned int flags) */
+DEFINE_SYSCALL_ENTER_PARSER(fsopen)
+{
+        FMT_CSTRING_MEM(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_FSOPEN_FLAGS(ctx, args[1]);
+
+        return 0;
+}
+
+/* fsconfig(int fd, unsigned int cmd,
+            const char *key, const void *value, int aux) */
+
+DEFINE_SYSCALL_ENTER_PARSER(fsconfig)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_FSCONFIG_CMD(ctx, args[1]);
+        FMT_SEPARATOR(ctx);
+        FMT_CSTRING_MEM(ctx, args[2]);
+        FMT_SEPARATOR(ctx);
+        FMT_FSCONFIG_VALUE(ctx, args[3], args[4]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[4]);
+
+        return 0;
+}
+
+/* fsmount(int fsfd, unsigned int flags, unsigned int attr_flags) */
+DEFINE_SYSCALL_ENTER_PARSER(fsmount)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_FSMOUNT_FLAGS(ctx, args[1]);
+        FMT_SEPARATOR(ctx);
+        FMT_FSMOUNT_ATTR_FLAGS(ctx, args[2]);
+
+        return 0;
+}
+
+/* fspick(int dirfd, const char *path, unsigned int flags) */
+DEFINE_SYSCALL_ENTER_PARSER(fspick)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_CSTRING_MEM(ctx, args[1]);
+        FMT_SEPARATOR(ctx);
+        FMT_FSPICK_FLAGS(ctx, args[2]);
+
+        return 0;
+}
