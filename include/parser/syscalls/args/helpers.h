@@ -19,7 +19,10 @@
 
 #define FMT_STRING(ctx, str) TRY_FMT(fmt_string, ctx, str)
 #define FMT_INT(ctx, num)    TRY_FMT(fmt_int, ctx, num)
+#define FMT_UINT(ctx, num)   TRY_FMT(fmt_uint, ctx, num)
 #define FMT_LLU(ctx, num)    TRY_FMT(fmt_llu, ctx, num)
+#define FMT_LONG(ctx, num)   TRY_FMT(fmt_long, ctx, num)
+#define FMT_ULONG(ctx, num)  TRY_FMT(fmt_ulong, ctx, num)
 #define FMT_OCT(ctx, num)    TRY_FMT(fmt_oct, ctx, num)
 #define FMT_OFF(ctx, num)    TRY_FMT(fmt_off, ctx, num)
 #define FMT_HEX(ctx, num)    TRY_FMT(fmt_hex, ctx, num)
@@ -86,7 +89,10 @@ int fmt_syscall_enter(struct parser_ctx_struct *ctx,
                       
 int fmt_string(struct parser_ctx_struct *ctx, char *src);
 int fmt_int(struct parser_ctx_struct *ctx, int num);
+int fmt_uint(struct parser_ctx_struct *ctx, unsigned int num);
 int fmt_llu(struct parser_ctx_struct *ctx, unsigned long long num);
+int fmt_long(struct parser_ctx_struct *ctx, long num);
+int fmt_ulong(struct parser_ctx_struct *ctx, unsigned long num);
 int fmt_oct(struct parser_ctx_struct *ctx,  int num);
 int fmt_off(struct parser_ctx_struct *ctx, off_t num);
 int fmt_hex(struct parser_ctx_struct *ctx, int num);

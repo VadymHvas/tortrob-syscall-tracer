@@ -174,46 +174,6 @@ struct field_info {
 };
 
 /**
- * read_field - Extracts a field value from memory according to its semantic type.
- *
- * @field: Pointer to field memory (within traced struct).
- * @type:  Field type descriptor (see enum field_type).
- *
- * Reads raw field data from memory and converts it into a normalized
- * unsigned long long representation for further formatting.
- *
- * Note:
- * - Signed values are cast to unsigned long long (no sign preservation in return type).
- * - Pointer values are returned as integer addresses.
- * - The caller is responsible for interpreting the value via field_repr.
- *
- * Return: Field value converted to unsigned long long.
- */
-unsigned long long read_field(void *field, field_type type);
-
-/**
- * repr_field - Format a field value according to its metadata.
- *
- * @ctx:   Parser context.
- * @value: Field value normalized by read_field().
- * @field: Field metadata descriptor (see struct field_info).
- *
- * Applies output formatting based on field->field_repr and emits the result
- * using the corresponding FMT_* helpers.
- *
- * Special handling:
- * - REPR_FLAGS uses field->field_flags_func if provided.
- * - Other representations are handled via built-in formatters.
- *
- * This function is part of the formatting stage and assumes that the value
- * has already been correctly extracted and normalized.
- *
- * Return: 0 on success, non-zero on error.
- */
-int repr_field(struct parser_ctx_struct *ctx,
-               unsigned long long value, struct field_info *field);
-
-/**
  * fmt_struct_common - Generic formatter for structures from tracee memory.
  *
  * @ctx:               Parser context.

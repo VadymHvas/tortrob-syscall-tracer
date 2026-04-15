@@ -53,54 +53,54 @@ int fmt_array_sized_common(struct parser_ctx_struct *ctx,
 
 static int fmt_array_el(struct parser_ctx_struct *ctx, struct el_info *el, void *element)
 {
-    switch (el->type)
-    {
+        switch (el->type)
+        {
         case EL_CSTRING:
-            FMT_CSTRING_MEM(ctx, *(unsigned long long *)element);
-            break;
+                FMT_CSTRING_MEM(ctx, *(unsigned long long *)element);
+                break;
 
         case EL_BYTES:
-            FMT_BYTES_MEM(ctx, (unsigned long long)element, el->size);
-            break;
+                FMT_BYTES_MEM(ctx, (unsigned long long)element, el->size);
+                break;
 
         case EL_INT:
-            FMT_INT(ctx, *(int *)element);
-            break;
+                FMT_INT(ctx, *(int *)element);
+                break;
 
         case EL_UINT:
-            FMT_INT(ctx, *(unsigned int *)element);
-            break;
+                FMT_UINT(ctx, *(unsigned int *)element);
+                break;
 
         case EL_LONG:
-            FMT_LLU(ctx, *(long *)element);
-            break;
+                FMT_LONG(ctx, *(long *)element);
+                break;
 
         case EL_ULONG:
-            FMT_LLU(ctx, *(unsigned long long *)element);
-            break;
+                FMT_ULONG(ctx, *(unsigned long long *)element);
+                break;
 
         case EL_PTR:
-            FMT_ADDR(ctx, *(unsigned long long *)element);
-            break;
+                FMT_ADDR(ctx, *(unsigned long long *)element);
+                break;
 
         case EL_FD:
-            FMT_FD(ctx, *(int *)element);
-            break;
+                FMT_FD(ctx, *(int *)element);
+                break;
 
         case EL_STRUCT:
-            if (el->fmt_struct_func) {
-                FMT_STRING(ctx, "{");
-                el->fmt_struct_func(ctx, element);
-                FMT_STRING(ctx, "}");
-            } else {
-                FMT_STRING(ctx, "{struct}");
-            }
-            break;
+                if (el->fmt_struct_func) {
+                        FMT_STRING(ctx, "{");
+                        el->fmt_struct_func(ctx, element);
+                        FMT_STRING(ctx, "}");
+                } else {
+                        FMT_STRING(ctx, "{struct}");
+                }
+                break;
 
         default:
-            FMT_HEX(ctx, *(unsigned char *)element);
-            break;
-    }
+                FMT_HEX(ctx, *(unsigned char *)element);
+                break;
+        }
 
-    return 0;
+        return 0;
 }

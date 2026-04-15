@@ -49,9 +49,24 @@ int fmt_int(struct parser_ctx_struct *ctx, int num)
         APPEND_FMT(ctx, "%d", num);
 }
 
+int fmt_uint(struct parser_ctx_struct *ctx, unsigned int num)
+{
+        APPEND_FMT(ctx, "%u", num);
+}
+
 int fmt_llu(struct parser_ctx_struct *ctx, unsigned long long num)
 {
         APPEND_FMT(ctx, "%llu", num);
+}
+
+int fmt_long(struct parser_ctx_struct *ctx, long num)
+{
+        APPEND_FMT(ctx, "%ld", num);
+}
+
+int fmt_ulong(struct parser_ctx_struct *ctx, unsigned long num)
+{
+        APPEND_FMT(ctx, "%lu", num);
 }
 
 int fmt_oct(struct parser_ctx_struct *ctx,  int num)
