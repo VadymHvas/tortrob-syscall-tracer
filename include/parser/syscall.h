@@ -3,7 +3,7 @@
 #include <sys/user.h>
 #include <sys/types.h>
 
-#include "parser/syscalls/args/helpers.h"
+#include "args/helpers.h"
 
 /**
  * begin_syscall_fmt - Initialize syscall formatting for a traced process.

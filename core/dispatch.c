@@ -6,10 +6,10 @@
 #include <sys/types.h>
 #include <sys/user.h>
 
+#include "abi/x86_64.h"
 #include "core/dispatch.h"
-#include "parser/syscalls/ABI/abi.h"
 #include "parser/syscall.h"
-#include "parser/syscalls/args/helpers.h"
+#include "args/helpers.h"
 
 static void enter_syscall(struct parser_ctx_struct *ctx, struct user_regs_struct *regs)
 {

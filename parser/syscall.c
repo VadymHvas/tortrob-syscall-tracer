@@ -8,11 +8,11 @@
 #include <sys/types.h>
 #include <sys/user.h>
 
+#include "syscalls/x86_64_table.h"
+#include "abi/x86_64.h"
 #include "parser/syscall.h"
-#include "parser/syscalls/syscall-table.h"
-#include "parser/syscalls/ABI/abi.h"
-#include "parser/syscalls/parser.h"
-#include "parser/syscalls/args/helpers.h"
+#include "parser/args.h"
+#include "args/helpers.h"
 
 static const struct syscall_entry *get_syscall_by_nr(long nr);
 

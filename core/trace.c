@@ -22,12 +22,13 @@
 #include "core/dispatch.h"
 #include "parser/syscall.h"
 #include "parser/opt.h"
-#include "parser/syscalls/args/helpers.h"
+#include "args/helpers.h"
 
 #define SYSCALL_BUF_SIZE 256
 
 static int wait_and_set_tracesysgood(pid_t tracee);
 static int trace_syscall_and_wait(pid_t tracee, int *status);
+static int is_syscall_stop(int status);
 
 int init_trace(char **argv, struct trace_opts *opts, pid_t *tracee)
 {
@@ -53,7 +54,7 @@ void trace_loop(pid_t tracee)
                         break;
                 
                 /* 0x80 bit is set by wait_and_set_tracesysgood(). */
-                if (WIFSTOPPED(status) && (WSTOPSIG(status) & 0x80)) {
+                if (is_syscall_stop(status)) {
                         struct user_regs_struct regs;
                         ptrace(PTRACE_GETREGS, tracee, NULL, &regs);
                         enter_or_exit_syscall(&ctx, &regs);
@@ -64,7 +65,8 @@ void trace_loop(pid_t tracee)
 void cleanup_trace(struct trace_opts *opts, pid_t tracee)
 {
         if (opts->attach && tracee > 0)
-                ptrace(PTRACE_DETACH, tracee, NULL, NULL);
+                if (ptrace(PTRACE_DETACH, tracee, NULL, NULL) == -1)
+                        perror("ptrace detach");
 
         free(opts);
 }
@@ -138,4 +140,9 @@ static int trace_syscall_and_wait(pid_t tracee, int *status)
                 return 1;
         
         return 0;
+}
+
+static int is_syscall_stop(int status)
+{
+        return WIFSTOPPED(status) && (WSTOPSIG(status) & 0x80);
 }

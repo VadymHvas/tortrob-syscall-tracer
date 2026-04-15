@@ -3,8 +3,11 @@
 #include <sys/user.h>
 #include <sys/types.h>
 
-#include "parser/syscalls/args/helpers.h"
+#include "args/helpers.h"
 
+/**
+ * syscall_state_t - Enum to track syscall entry and exit states.
+ */
 typedef enum {
         SYSCALL_ENTER = 0,      /* Before entering the syscall. */
         SYSCALL_EXIT  = 1       /* Before exiting the syscall. */

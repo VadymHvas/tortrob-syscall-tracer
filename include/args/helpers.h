@@ -1,0 +1,119 @@
+#pragma once
+
+#include <sys/types.h>
+
+#include "syscalls/x86_64_table.h"
+#include "abi/x86_64.h"
+#include "args/struct_info.h"
+#include "core/dispatch.h"
+
+/*
+ * TRY_FMT(fmt_call, ctx, ...) - Try to format argument.
+ * 
+ * Helper macro that tries to format an argument using a function
+ * fmt_call, with arguments ctx, args.
+ */
+#define TRY_FMT(fmt_call, ctx, ...) \
+        if (fmt_call(ctx, __VA_ARGS__)) \
+                return 1
+
+#define FMT_STRING(ctx, str) TRY_FMT(fmt_string, ctx, str)
+#define FMT_INT(ctx, num)    TRY_FMT(fmt_int, ctx, num)
+#define FMT_UINT(ctx, num)   TRY_FMT(fmt_uint, ctx, num)
+#define FMT_LLU(ctx, num)    TRY_FMT(fmt_llu, ctx, num)
+#define FMT_LONG(ctx, num)   TRY_FMT(fmt_long, ctx, num)
+#define FMT_ULONG(ctx, num)  TRY_FMT(fmt_ulong, ctx, num)
+#define FMT_OCT(ctx, num)    TRY_FMT(fmt_oct, ctx, num)
+#define FMT_OFF(ctx, num)    TRY_FMT(fmt_off, ctx, num)
+#define FMT_HEX(ctx, num)    TRY_FMT(fmt_hex, ctx, num)
+
+#define FMT_ADDR(ctx, addr)  TRY_FMT(fmt_addr, ctx, addr)
+#define FMT_DEV(ctx, dev)    TRY_FMT(fmt_dev, ctx, dev)
+#define FMT_FD(ctx, fd)      TRY_FMT(fmt_fd, ctx, fd)
+#define FMT_SEPARATOR(ctx)   TRY_FMT(fmt_string, ctx, ", ")
+
+#define FMT_BYTES_MEM(ctx, addr, size) TRY_FMT(fmt_bytes_from_mem, ctx, addr, size)
+
+/* For syscall exit parsers */
+#define FMT_BYTES_MEM_IF_OK(ctx, addr, retval) \
+        if (retval < 0) { \
+                FMT_ADDR(ctx, addr); \
+        } else { \
+                FMT_BYTES_MEM(ctx, addr, retval); \
+        }
+
+#define FMT_CSTRING_MEM(ctx, addr) TRY_FMT(fmt_cstring_from_mem, ctx, addr)
+
+#define FMT_WORD_MEM(ctx, addr) TRY_FMT(fmt_word_mem, ctx, addr)
+
+#define INIT_PARSER_CTX(var, buffer, buffer_size, tracee_pid) \
+        struct parser_ctx_struct var = \
+                { \
+                        .in_syscall = SYSCALL_ENTER, \
+                        .buf        = buffer, \
+                        .bufsize    = buffer_size, \
+                        .offset     = 0, \
+                        .tracee     = tracee_pid, \
+                        .extra      = 0, \
+                        .retval     = 0 \
+                }
+
+/**
+ * struct parser_ctx_struct - Parser context.
+ * 
+ * @in_syscall: Parser syscall state.
+ * @buf:        Buffer addr.
+ * @bufsize:    Max size of buffer.
+ * @offset:     Pointer to offset variable.
+ * @tracee:     Tracee process PID.
+ * @extra:      Field for special cases, for instance fcntl(), prctl(), ioctl() etc.
+ * @retval:     Return value (is set when exit syscall).      
+ * 
+ * This structure stores all the necessary
+ * information for correct parsing using offsets.
+ */
+struct parser_ctx_struct {
+        int in_syscall;
+
+        char *buf;
+        size_t bufsize;
+        size_t offset;
+
+        pid_t tracee;
+
+        int extra;
+
+        long retval;
+};
+
+/**
+ * fmt_syscall_enter - Format syscall arguments on syscall enter.
+ * 
+ * @param ctx: Parser context.
+ * @param syscall: Syscall entry containing information about the syscall being parsed.
+ * @param args: Array of syscall arguments (according to ABI).
+ * 
+ * This function is responsible for formatting the arguments of a syscall when it is entered.
+ * It uses the syscall entry information to determine 
+ * how to format each argument and updates the parser context accordingly.
+ */
+int fmt_syscall_enter(struct parser_ctx_struct *ctx, 
+                      const struct syscall_entry *syscall, reg_t args[]);
+
+// Format functions for different argument types.                      
+int fmt_string(struct parser_ctx_struct *ctx, char *src);
+int fmt_int(struct parser_ctx_struct *ctx, int num);
+int fmt_uint(struct parser_ctx_struct *ctx, unsigned int num);
+int fmt_llu(struct parser_ctx_struct *ctx, unsigned long long num);
+int fmt_long(struct parser_ctx_struct *ctx, long num);
+int fmt_ulong(struct parser_ctx_struct *ctx, unsigned long num);
+int fmt_oct(struct parser_ctx_struct *ctx,  int num);
+int fmt_off(struct parser_ctx_struct *ctx, off_t num);
+int fmt_hex(struct parser_ctx_struct *ctx, int num);
+int fmt_addr(struct parser_ctx_struct *ctx, unsigned long long addr);
+int fmt_dev(struct parser_ctx_struct *ctx, dev_t dev);
+int fmt_bytes_from_mem(struct parser_ctx_struct *ctx, unsigned long long addr, size_t size);
+int fmt_cstring_from_mem(struct parser_ctx_struct *ctx, unsigned long long addr);
+int fmt_word_mem(struct parser_ctx_struct *ctx, unsigned long long addr);
+int fmt_fd(struct parser_ctx_struct *ctx, int fd);
+int fmt_null(struct parser_ctx_struct *ctx);

@@ -46,7 +46,18 @@ void cleanup_trace(struct trace_opts *opts, pid_t tracee);
  * @addr:   Memory address (src).
  * @buf:    Buffer address (dest).
  * @size:   Bytes to read.
+ * 
+ * Return: Number of bytes successfully read, or -1 on error.
  */
 size_t read_tracee_mem(pid_t tracee, const void *addr, void *buf, size_t size);
 
+/**
+ * read_tracee_word - Reads a word from the tracee's memory at address addr.
+ * 
+ * @tracee: Tracee process PID.
+ * @addr:   Memory address (src).
+ * @out:    Pointer to store the read value.
+ *
+ * Return: 0 on success, -1 on error.
+ */
 int read_tracee_word(pid_t tracee, const void *addr, long *out);
