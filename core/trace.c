@@ -71,25 +71,35 @@ void cleanup_trace(struct trace_opts *opts, pid_t tracee)
 
 size_t read_tracee_mem(pid_t tracee, const void *addr, void *buf, size_t size)
 {
-        size_t i = 0;
         size_t word_size = sizeof(long);
+        uintptr_t start = (uintptr_t)addr;
 
-        while (i < size) {
+        uintptr_t aligned = start & ~(word_size - 1);
+        size_t offset = start - aligned;
+
+        size_t copied = 0;
+
+        while (copied < size) {
                 errno = 0;
-                long data = ptrace(PTRACE_PEEKDATA, tracee, (char *)addr + i, NULL);
+                long data = ptrace(PTRACE_PEEKDATA, tracee, (void *)(aligned), NULL);
 
                 if (data == -1 && errno)
                         return -1;
 
-                size_t copy_size = word_size;
-                if (i + copy_size > size)
-                        copy_size = size - i;
+                size_t copy_from = offset;
+                size_t copy_size = word_size - offset;
 
-                memcpy((char *)buf + i, &data, copy_size);
-                i += copy_size;
+                if (copy_size > size - copied)
+                        copy_size = size - copied;
+
+                memcpy((char *)buf + copied, ((char *)&data) + copy_from, copy_size);
+
+                copied += copy_size;
+                aligned += word_size;
+                offset = 0;
         }
 
-        return i;
+    return copied;
 }
 
 int read_tracee_word(pid_t tracee, const void *addr, long *out)

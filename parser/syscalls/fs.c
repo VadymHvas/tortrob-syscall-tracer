@@ -12,6 +12,7 @@
 #include "parser/syscalls/parser.h"
 #include "parser/syscalls/args/helpers.h"
 #include "parser/syscalls/fs.h"
+#include "parser/syscalls/args/array.h"
 
 #include "parser/syscalls/args/fs/flags.h"
 #include "parser/syscalls/args/fs/mask.h"
@@ -1222,7 +1223,6 @@ DEFINE_SYSCALL_ENTER_PARSER(open_tree)
 
 /* move_mount(int from_dirfd, const char *from_path,
               int to_dirfd, const char *to_path, unsigned int flags) */
-
 DEFINE_SYSCALL_ENTER_PARSER(move_mount)
 {
         FMT_FD(ctx, args[0]);
@@ -1258,6 +1258,24 @@ DEFINE_SYSCALL_ENTER_PARSER(futimens)
         FMT_FD(ctx, args[0]);
         FMT_SEPARATOR(ctx);
         FMT_TIMESPEC_ARR(ctx, args[1], 2);
+
+        return 0;
+}
+
+/* pipe(int pipefd[2]) */
+DEFINE_SYSCALL_EXIT_PARSER(pipe)
+{
+        FMT_SIZED_ARR_FD(ctx, args[0], 2);
+
+        return 0;
+}
+
+/* pipe2(int pipefd[2], int flags) */
+DEFINE_SYSCALL_EXIT_PARSER(pipe2)
+{
+        FMT_SIZED_ARR_FD(ctx, args[0], 2);
+        FMT_SEPARATOR(ctx);
+        FMT_PIPE2_FLAGS(ctx, args[1]);
 
         return 0;
 }

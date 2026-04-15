@@ -2,6 +2,7 @@
 
 #include <fcntl.h>
 #include <stdio.h>
+#include <unistd.h>
 #include <sys/stat.h>
 #include <sys/uio.h>
 #include <sys/statvfs.h>
@@ -188,6 +189,12 @@ DEFINE_FLAGS_ARRAY(move_mount_flags) = {
         INIT_FLAG_INFO(MOVE_MOUNT_F_EMPTY_PATH),
         INIT_FLAG_INFO(MOVE_MOUNT_F_AUTOMOUNTS),
         INIT_FLAG_INFO(MOVE_MOUNT_BENEATH)
+};
+
+DEFINE_FLAGS_ARRAY(pipe2_flags) = {
+        INIT_FLAG_INFO(O_CLOEXEC),
+        INIT_FLAG_INFO(O_DIRECT),
+        INIT_FLAG_INFO(O_NONBLOCK),
 };
 
 int fmt_open_flags(struct parser_ctx_struct *ctx, int flags)
@@ -431,6 +438,17 @@ int fmt_move_mount_flags(struct parser_ctx_struct *ctx, unsigned int flags)
                 flags,
                 move_mount_flags,
                 FLAGS_ARR_SIZE(move_mount_flags),
+                1
+        );
+}
+
+int fmt_pipe2_flags(struct parser_ctx_struct *ctx, int flags)
+{
+        return fmt_flags_generic(
+                ctx,
+                flags,
+                pipe2_flags,
+                FLAGS_ARR_SIZE(pipe2_flags),
                 1
         );
 }

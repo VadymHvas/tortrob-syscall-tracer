@@ -10,7 +10,9 @@
 
 #define FMT_SIZED_ARR(ctx, addr, size, type, type_size, fmt_struct_func) \
         struct el_info el = INIT_EL_INFO(type, type_size, fmt_struct_func); \
-        TRY_FMT(fmt_array_sized_common, ctx, addr, size, el) \
+        TRY_FMT(fmt_array_sized_common, ctx, addr, size, el)
+
+#define FMT_SIZED_ARR_FD(ctx, addr, size) FMT_SIZED_ARR(ctx, addr, size, EL_FD, sizeof(int), NULL)
 
 typedef enum {
         EL_INT,
@@ -20,7 +22,8 @@ typedef enum {
         EL_PTR,
         EL_CSTRING,
         EL_BYTES,
-        EL_STRUCT
+        EL_STRUCT,
+        EL_FD
 } arr_el_type;
 
 struct el_info {
