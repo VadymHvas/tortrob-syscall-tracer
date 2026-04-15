@@ -20,6 +20,7 @@
 #define FMT_OPEN_TREE_FLAGS(ctx, flags)    TRY_FMT(fmt_open_tree_flags, ctx, flags)
 #define FMT_MOVE_MOUNT_FLAGS(ctx, flags)   TRY_FMT(fmt_move_mount_flags, ctx, flags)
 #define FMT_PIPE2_FLAGS(ctx, flags)        TRY_FMT(fmt_pipe2_flags, ctx, flags)
+#define FMT_EVENTFD_FLAGS(ctx, flags)      TRY_FMT(fmt_eventfd_flags, ctx, flags)
 
 struct parser_ctx_struct;
 
@@ -42,3 +43,4 @@ int fmt_fspick_flags(struct parser_ctx_struct *ctx, unsigned int flags);
 int fmt_open_tree_flags(struct parser_ctx_struct *ctx, unsigned int flags);
 int fmt_move_mount_flags(struct parser_ctx_struct *ctx, unsigned int flags);
 int fmt_pipe2_flags(struct parser_ctx_struct *ctx, int flags);
+int fmt_eventfd_flags(struct parser_ctx_struct *ctx, int flags);

@@ -117,9 +117,11 @@
         X(utimensat,         280, 1, 0) \
         X(futimens,          261, 1, 0) \
         X(pipe,              22,  0, 0) \
-        X(pipe2,             293, 0, 1)
+        X(pipe2,             293, 0, 1) \
+        X(eventfd,           284, 1, 0) \
+        X(eventfd2,          290, 1, 0)
 
-#define FS_SYSCALL_COUNT 92
+#define FS_SYSCALL_COUNT 94
 
 #define X(name, nr, has_enter, has_exit) \
         DEFINE_SYSCALL_ENTER_PARSER(name);

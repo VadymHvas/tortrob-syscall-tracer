@@ -1279,3 +1279,19 @@ DEFINE_SYSCALL_EXIT_PARSER(pipe2)
 
         return 0;
 }
+
+/* eventfd(unsigned int initval, int flags) */
+DEFINE_SYSCALL_ENTER_PARSER(eventfd)
+{
+        FMT_INT(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_EVENTFD_FLAGS(ctx, args[1]);
+
+        return 0;
+}
+
+/* eventfd2(unsigned int initval, int flags) */
+DEFINE_SYSCALL_ENTER_PARSER(eventfd2)
+{
+        return 0;
+}

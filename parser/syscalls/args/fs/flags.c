@@ -9,6 +9,7 @@
 #include <sys/xattr.h>
 #include <sys/inotify.h>
 #include <sys/mount.h>
+#include <sys/eventfd.h>
 
 #include "parser/syscalls/args/helpers.h"
 #include "parser/syscalls/args/flag_info.h"
@@ -195,6 +196,12 @@ DEFINE_FLAGS_ARRAY(pipe2_flags) = {
         INIT_FLAG_INFO(O_CLOEXEC),
         INIT_FLAG_INFO(O_DIRECT),
         INIT_FLAG_INFO(O_NONBLOCK),
+};
+
+DEFINE_FLAGS_ARRAY(eventfd_flags) = {
+        INIT_FLAG_INFO(EFD_CLOEXEC),
+        INIT_FLAG_INFO(EFD_NONBLOCK),
+        INIT_FLAG_INFO(EFD_SEMAPHORE),
 };
 
 int fmt_open_flags(struct parser_ctx_struct *ctx, int flags)
@@ -449,6 +456,17 @@ int fmt_pipe2_flags(struct parser_ctx_struct *ctx, int flags)
                 flags,
                 pipe2_flags,
                 FLAGS_ARR_SIZE(pipe2_flags),
+                1
+        );
+}
+
+int fmt_eventfd_flags(struct parser_ctx_struct *ctx, int flags)
+{
+        return fmt_flags_generic(
+                ctx,
+                flags,
+                eventfd_flags,
+                FLAGS_ARR_SIZE(eventfd_flags),
                 1
         );
 }
