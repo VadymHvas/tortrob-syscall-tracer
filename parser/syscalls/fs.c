@@ -1295,3 +1295,15 @@ DEFINE_SYSCALL_ENTER_PARSER(eventfd2)
 {
         return 0;
 }
+
+/* getdents64(int fd, void dirp[count], size_t count) */
+DEFINE_SYSCALL_ENTER_PARSER(getdents64)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_ADDR(ctx, args[1]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[2]);
+
+        return 0;
+}
