@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include <fcntl.h>
+#include <time.h>
 
 #include "parser/syscalls/syscall-table.h"
 #include "parser/syscalls/parser.h"
@@ -17,6 +18,7 @@
 #include "parser/syscalls/args/fs/special.h"
 #include "parser/syscalls/args/fs/struct.h"
 #include "parser/syscalls/args/fs/value.h"
+#include "parser/syscalls/args/fs/array.h"
 
 const struct parser_struct fs_syscalls[] = {
 #define X(name, nr, has_enter, has_exit) \
@@ -1232,6 +1234,30 @@ DEFINE_SYSCALL_ENTER_PARSER(move_mount)
         FMT_CSTRING_MEM(ctx, args[3]);
         FMT_SEPARATOR(ctx);
         FMT_MOVE_MOUNT_FLAGS(ctx, args[4]);
+
+        return 0;
+}
+
+/* utimensat(int dirfd, const char *path, const struct timespec times[2], int flags) */
+DEFINE_SYSCALL_ENTER_PARSER(utimensat)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_CSTRING_MEM(ctx, args[1]);
+        FMT_SEPARATOR(ctx);
+        FMT_TIMESPEC_ARR(ctx, args[2], 2);
+        FMT_SEPARATOR(ctx);
+        FMT_AT_FLAGS(ctx, args[3]);
+
+        return 0;
+}
+
+/* futimens(int fd, const struct timespec times[2]) */
+DEFINE_SYSCALL_ENTER_PARSER(futimens)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_TIMESPEC_ARR(ctx, args[1], 2);
 
         return 0;
 }

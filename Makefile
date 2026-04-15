@@ -5,7 +5,7 @@ LDFLAGS =
 SRCS = main.c parser/opt.c core/trace.c core/process.c core/dispatch.c \
 	parser/syscall.c parser/syscalls/ABI/abi.c parser/syscalls/parser.c \
 	parser/syscalls/fs.c parser/syscalls/args/helpers.c parser/syscalls/args/struct_info.c \
-	parser/syscalls/args/value_info.c parser/syscalls/args/flag_info.c \
+	parser/syscalls/args/value_info.c parser/syscalls/args/flag_info.c  parser/syscalls/args/array.c \
 	parser/syscalls/args/fs/flags.c parser/syscalls/args/fs/mask.c parser/syscalls/args/fs/special.c \
 	parser/syscalls/args/fs/struct.c parser/syscalls/args/fs/value.c
 

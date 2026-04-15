@@ -38,3 +38,4 @@ int fmt_stat64_struct(struct parser_ctx_struct *ctx, struct stat64 *statbuf);
 int fmt_statx_struct(struct parser_ctx_struct *ctx, struct statx *statxbuf);
 int fmt_iovec_struct(struct parser_ctx_struct *ctx, struct iovec *iov);
 int fmt_statfs_struct(struct parser_ctx_struct *ctx, struct statfs *statfsbuf);
+int fmt_timespec_struct(struct parser_ctx_struct *ctx, struct timespec *timespec);

@@ -1,5 +1,7 @@
 #define _GNU_SOURCE
 
+#include <time.h>
+
 #include <sys/stat.h>
 #include <sys/statfs.h>
 #include <sys/uio.h>
@@ -51,6 +53,11 @@ DEFINE_FIELDS_ARRAY(statfs_fields) = {
         INIT_FIELD_INFO_FFLAGS(struct statfs, f_flags)
 };
 
+DEFINE_FIELDS_ARRAY(timespec_fields) = {
+        INIT_FIELD_INFO_LONG(struct timespec, tv_sec),
+        INIT_FIELD_INFO_LONG(struct timespec, tv_nsec)
+};
+
 int fmt_stat64_struct(struct parser_ctx_struct *ctx, struct stat64 *statbuf)
 {
         return fmt_struct_generic(ctx, statbuf, stat64_fields, FIELDS_ARR_SIZE(stat64_fields));
@@ -69,4 +76,9 @@ int fmt_iovec_struct(struct parser_ctx_struct *ctx, struct iovec *iov)
 int fmt_statfs_struct(struct parser_ctx_struct *ctx, struct statfs *statfsbuf)
 {
         return fmt_struct_generic(ctx, statfsbuf, statfs_fields, FIELDS_ARR_SIZE(statfs_fields));
+}
+
+int fmt_timespec_struct(struct parser_ctx_struct *ctx, struct timespec *timespec)
+{
+        return fmt_struct_generic(ctx, timespec, timespec_fields, FIELDS_ARR_SIZE(timespec_fields));
 }
