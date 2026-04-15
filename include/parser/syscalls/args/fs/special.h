@@ -12,7 +12,7 @@
  * FCNTL_INT         - F_SETOWN, F_SETPIPE_SZ, F_SETSIG (FMT_INT)
  * FCNTL_FLAGS       - F_SETFL (FMT_OPEN_FLAGS)
  * FCNTL_FD_FLAGS    - F_SETFD (there is only one flag O_CLOEXEC, FMT_STRING)
- * FCNTL_FLOCK       - F_SETLK, F_SETLKW, F_GETLK (FMT_ADDR) TODO: make flock struct formatter.
+ * FCNTL_FLOCK       - F_SETLK, F_SETLKW, F_GETLK (FMT_FLOCK_STRUCT).
  * FCNTL_INVALID     - Unknown fcntl command option.
  * FCNTL_IGNORE_ARG3 - Do not format 3rd argument, used by F_GET* commands (except F_GETLK).
  * 
@@ -29,5 +29,5 @@ enum fcntl_fmt_type {
         FCNTL_IGNORE_ARG3
 };
 
-int fmt_fcntl_arg3(struct parser_ctx_struct *ctx, int arg3);
+int fmt_fcntl_arg3(struct parser_ctx_struct *ctx, void *arg3);
 int fmt_fsconfig_value(struct parser_ctx_struct *ctx, const void *value, int aux);

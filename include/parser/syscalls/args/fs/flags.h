@@ -44,3 +44,4 @@ int fmt_open_tree_flags(struct parser_ctx_struct *ctx, unsigned int flags);
 int fmt_move_mount_flags(struct parser_ctx_struct *ctx, unsigned int flags);
 int fmt_pipe2_flags(struct parser_ctx_struct *ctx, int flags);
 int fmt_eventfd_flags(struct parser_ctx_struct *ctx, int flags);
+int fmt_flock_flags(struct parser_ctx_struct *ctx, short flags);

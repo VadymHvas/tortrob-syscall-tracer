@@ -84,6 +84,14 @@ DEFINE_VALUES_ARRAY(fsconfig_cmds) = {
         INIT_VALUE(FSCONFIG_CMD_RECONFIGURE)
 };
 
+DEFINE_VALUES_ARRAY(flock_whences) = {
+        INIT_VALUE(SEEK_CUR),
+        INIT_VALUE(SEEK_SET),
+        INIT_VALUE(SEEK_END),
+        INIT_VALUE(SEEK_DATA),
+        INIT_VALUE(SEEK_HOLE)
+};
+
 /* 
  * For F_GET* commands (except F_GETLK) we don't format 3rd argument, 
  * therefore ctx->extra is equals to FCNTL_IGNORE_ARG3.
@@ -153,5 +161,20 @@ int fmt_fsconfig_cmd(struct parser_ctx_struct *ctx, unsigned int cmd)
                 cmd,
                 fsconfig_cmds,
                 VALUES_ARR_SIZE(fsconfig_cmds)
+        );
+}
+
+int fmt_flock_whence(struct parser_ctx_struct *ctx, short whence)
+{
+        if (whence == SEEK_SET) {
+                FMT_STRING(ctx, "SEEK_SET");
+                return 0;
+        }
+
+        return fmt_value_generic(
+                ctx,
+                whence,
+                flock_whences,
+                VALUES_ARR_SIZE(flock_whences)
         );
 }

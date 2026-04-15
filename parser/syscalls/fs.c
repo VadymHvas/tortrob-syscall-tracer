@@ -619,7 +619,7 @@ DEFINE_SYSCALL_ENTER_PARSER(fcntl)
 
         if (ctx->extra != FCNTL_IGNORE_ARG3) {
                 FMT_SEPARATOR(ctx);
-                FMT_FCNTL_ARG3(ctx, args[2]);
+                FMT_FCNTL_ARG3(ctx, &args[2]);
         }
 
         return 0;

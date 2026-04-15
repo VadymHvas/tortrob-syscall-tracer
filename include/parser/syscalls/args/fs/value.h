@@ -12,3 +12,4 @@ int fmt_flock_op(struct parser_ctx_struct *ctx, int op);
 int fmt_fadvise64_advice(struct parser_ctx_struct *ctx, int advice);
 int fmt_statfs_fs_type(struct parser_ctx_struct *ctx, int fs_type);
 int fmt_fsconfig_cmd(struct parser_ctx_struct *ctx, unsigned int cmd);
+int fmt_flock_whence(struct parser_ctx_struct *ctx, short whence);

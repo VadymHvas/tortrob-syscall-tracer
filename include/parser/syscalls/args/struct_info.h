@@ -64,6 +64,7 @@
  * TYPE_UINT    - unsigned integer (REPR_DEC)
  * TYPE_LONG    - signed long integer (REPR_DEC)
  * TYPE_ULONG   - unsigned long integer (REPR_DEC)
+ * TYPE_SHORT   - short (REPR_DEC)
  * TYPE_PTR     - pointer value (REPR_ADDR)
  * TYPE_INO     - inode number (ino_t, REPR_DEC)
  * TYPE_OFF     - offset value (off_t, REPR_DEC)
@@ -80,6 +81,7 @@ typedef enum {
         TYPE_UINT,
         TYPE_LONG,
         TYPE_ULONG,
+        TYPE_SHORT,
         TYPE_PTR,
         TYPE_INO,       // ino_t
         TYPE_OFF,       // off_t

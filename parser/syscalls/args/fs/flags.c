@@ -204,6 +204,12 @@ DEFINE_FLAGS_ARRAY(eventfd_flags) = {
         INIT_FLAG_INFO(EFD_SEMAPHORE),
 };
 
+DEFINE_FLAGS_ARRAY(flock_flags) = {
+        INIT_FLAG_INFO(F_RDLCK),
+        INIT_FLAG_INFO(F_WRLCK),
+        INIT_FLAG_INFO(F_UNLCK),
+};
+
 int fmt_open_flags(struct parser_ctx_struct *ctx, int flags)
 {
         FMT_FLAGS_ZERO_IF_NONE(ctx, flags);
@@ -467,6 +473,17 @@ int fmt_eventfd_flags(struct parser_ctx_struct *ctx, int flags)
                 flags,
                 eventfd_flags,
                 FLAGS_ARR_SIZE(eventfd_flags),
+                1
+        );
+}
+
+int fmt_flock_flags(struct parser_ctx_struct *ctx, short flags)
+{
+        return fmt_flags_generic(
+                ctx,
+                flags,
+                flock_flags,
+                FLAGS_ARR_SIZE(flock_flags),
                 1
         );
 }

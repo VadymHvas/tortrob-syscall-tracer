@@ -15,6 +15,8 @@ unsigned long long read_field(void *ptr, field_type type)
                 return *(long *)ptr;
         case TYPE_ULONG: 
                 return *(unsigned long *)ptr;
+        case TYPE_SHORT:
+                return *(short *)ptr;
         case TYPE_OFF:   
                 return *(long *)ptr;
         case TYPE_INO:   

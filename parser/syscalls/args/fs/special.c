@@ -6,13 +6,14 @@
 
 #include "parser/syscalls/args/helpers.h"
 #include "parser/syscalls/args/fs/special.h"
+#include "parser/syscalls/args/fs/struct.h"
 
-int fmt_fcntl_arg3(struct parser_ctx_struct *ctx, int arg3)
+int fmt_fcntl_arg3(struct parser_ctx_struct *ctx, void *arg3)
 {
         switch (ctx->extra)
         {
         case FCNTL_FLAGS:
-                FMT_OPEN_FLAGS(ctx, arg3);
+                FMT_OPEN_FLAGS(ctx, *(int *)arg3);
                 break;
 
         case FCNTL_FD_FLAGS:
@@ -20,11 +21,11 @@ int fmt_fcntl_arg3(struct parser_ctx_struct *ctx, int arg3)
                 break;
 
         case FCNTL_FLOCK:
-                FMT_ADDR(ctx, arg3);
+                FMT_FLOCK_STRUCT(ctx, *(unsigned long long *)arg3);
                 break;
 
         default:
-                FMT_INT(ctx, arg3);
+                FMT_INT(ctx, *(int *)arg3);
                 break;
         }
 

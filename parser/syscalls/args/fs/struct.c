@@ -1,6 +1,7 @@
 #define _GNU_SOURCE
 
 #include <time.h>
+#include <fcntl.h>
 
 #include <sys/stat.h>
 #include <sys/statfs.h>
@@ -58,6 +59,13 @@ DEFINE_FIELDS_ARRAY(timespec_fields) = {
         INIT_FIELD_INFO_LONG(struct timespec, tv_nsec)
 };
 
+DEFINE_FIELDS_ARRAY(flock_fields) = {
+        INIT_FIELD_INFO_FLOCK_LTYPE(struct flock, l_type),
+        INIT_FIELD_INFO_FLOCK_LWHENCE(struct flock, l_whence),
+        INIT_FIELD_INFO_OFF(struct flock, l_start),
+        INIT_FIELD_INFO_LONG(struct flock, l_len)
+};
+
 int fmt_stat64_struct(struct parser_ctx_struct *ctx, struct stat64 *statbuf)
 {
         return fmt_struct_generic(ctx, statbuf, stat64_fields, FIELDS_ARR_SIZE(stat64_fields));
@@ -81,4 +89,9 @@ int fmt_statfs_struct(struct parser_ctx_struct *ctx, struct statfs *statfsbuf)
 int fmt_timespec_struct(struct parser_ctx_struct *ctx, struct timespec *timespec)
 {
         return fmt_struct_generic(ctx, timespec, timespec_fields, FIELDS_ARR_SIZE(timespec_fields));
+}
+
+int fmt_flock_struct(struct parser_ctx_struct *ctx, struct flock *lock)
+{
+        return fmt_struct_generic(ctx, lock, flock_fields, FIELDS_ARR_SIZE(flock_fields));
 }
