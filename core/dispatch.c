@@ -14,8 +14,12 @@
 static void enter_syscall(struct parser_ctx_struct *ctx, struct user_regs_struct *regs)
 {
         begin_syscall_fmt(ctx, regs);
-        
+
+        printf("%s", ctx->buf);
+        fflush(stdout);
+
         ctx->in_syscall = SYSCALL_EXIT;
+        ctx->offset = 0;
 }
 
 static void exit_syscall(struct parser_ctx_struct *ctx, struct user_regs_struct *regs)
