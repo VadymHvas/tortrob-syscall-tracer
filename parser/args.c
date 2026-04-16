@@ -12,10 +12,12 @@
 #include "syscalls/x86_64_table.h"
 #include "abi/x86_64.h"
 #include "parser/args.h"
-#include "args/fs.h"
 #include "args/helpers.h"
 
-#define INIT_PARSER_GROUP(g) { g, sizeof(g) / sizeof(g[0]) },
+#include "args/fs.h"
+#include "args/proc.h"
+
+#define INIT_PARSER_GROUP(g) { g, sizeof(g) / sizeof(g[0]) }
 
 /* 
  * Array of syscall parser groups.
@@ -23,7 +25,8 @@
  * (e.g., filesystem, process, network) along with their argument parsers.
  */
 static const struct parser_group_struct syscall_parsers[] = {
-        INIT_PARSER_GROUP(fs_syscalls)
+        INIT_PARSER_GROUP(fs_syscalls),
+        INIT_PARSER_GROUP(proc_syscalls)
 };
 
 static int default_syscall_parser(struct parser_ctx_struct *ctx, int nr_args, reg_t args[]);

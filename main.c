@@ -24,7 +24,6 @@ int main(int argc, char **argv)
 
         trace_loop(child);
 
-        putc('\n', stdout);
         cleanup_trace(opts, child);
         return 0;
 err:
