@@ -1,3 +1,5 @@
+#define _GNU_SOURCE
+
 #include <signal.h>
 #include <sys/wait.h>
 
@@ -43,6 +45,12 @@ static const char *siglist[] = {
         [SIGSYS]    = "SIGSYS"
 };
 
+DEFINE_VALUES_ARRAY(idtypes) = {
+        INIT_VALUE(P_ALL),
+        INIT_VALUE(P_PID),
+        INIT_VALUE(P_PGID)
+};
+
 static const char *get_sig_name(int sig);
 
 int fmt_wait4_status(struct parser_ctx_struct *ctx, unsigned long long addr)
@@ -59,7 +67,7 @@ int fmt_wait4_status(struct parser_ctx_struct *ctx, unsigned long long addr)
                 FMT_INT(ctx, WEXITSTATUS(status));
         } else if (WIFSIGNALED(status)) {
                 FMT_STRING(ctx, "killed by signal ");
-                FMT_STRING(ctx, get_sig_name(WTERMSIG(status)));
+                FMT_SIGNAL_NAME(ctx, WTERMSIG(status));
         } else if (WIFSTOPPED(status)) {
                 FMT_STRING(ctx, "WIFSTOPPED(s) == ");
                 FMT_INT(ctx, WSTOPSIG(status));
@@ -72,6 +80,16 @@ int fmt_wait4_status(struct parser_ctx_struct *ctx, unsigned long long addr)
         FMT_STRING(ctx, "]");
 
         return 0;
+}
+
+int fmt_idtype(struct parser_ctx_struct *ctx, idtype_t idtype)
+{
+        return fmt_value_generic(ctx, idtype, idtypes, VALUES_ARR_SIZE(idtypes));
+}
+
+int fmt_signal_name(struct parser_ctx_struct *ctx, int sig)
+{
+        return fmt_string(ctx, get_sig_name(sig));
 }
 
 static const char *get_sig_name(int sig)

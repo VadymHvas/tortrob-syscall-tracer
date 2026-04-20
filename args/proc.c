@@ -58,3 +58,23 @@ DEFINE_SYSCALL_EXIT_PARSER(wait4)
 
         return 0;
 }
+
+/* waitid(idtype_t idtype, id_t id, siginfo_t *infop, int options) */
+DEFINE_SYSCALL_ENTER_PARSER(waitid)
+{
+        FMT_IDTYPE(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[1]);
+        FMT_SEPARATOR(ctx);
+
+        return 0;
+}
+
+DEFINE_SYSCALL_EXIT_PARSER(waitid)
+{
+        FMT_SIGINFO_STRUCT(ctx, args[2]);
+        FMT_SEPARATOR(ctx);
+        FMT_WAIT4_FLAGS(ctx, args[3]);
+
+        return 0;
+}
