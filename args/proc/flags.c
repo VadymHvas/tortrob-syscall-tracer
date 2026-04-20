@@ -4,6 +4,7 @@
 
 #include "args/proc/flags.h"
 #include "args/flag_info.h"
+#include "args/helpers.h"
 
 DEFINE_FLAGS_ARRAY(wait4_flags) = {
         INIT_FLAG_INFO(WNOHANG),

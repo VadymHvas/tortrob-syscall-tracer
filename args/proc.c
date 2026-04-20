@@ -9,6 +9,7 @@
 
 #include "args/proc/flags.h"
 #include "args/proc/struct.h"
+#include "args/proc/value.h"
 
 const struct parser_struct proc_syscalls[] = {
 #define X(name, nr, has_enter, has_exit) \
@@ -49,7 +50,7 @@ DEFINE_SYSCALL_ENTER_PARSER(wait4)
 
 DEFINE_SYSCALL_EXIT_PARSER(wait4)
 {
-        FMT_ADDR(ctx, args[1]);
+        FMT_WAIT4_STATUS(ctx, args[1]);
         FMT_SEPARATOR(ctx);
         FMT_WAIT4_FLAGS(ctx, args[2]);
         FMT_SEPARATOR(ctx);
