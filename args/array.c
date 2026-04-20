@@ -61,6 +61,36 @@ int fmt_array_sized_common(struct parser_ctx_struct *ctx,
         return 0;
 }
 
+int fmt_string_array(struct parser_ctx_struct *ctx, unsigned long long addr) {
+        if (!addr) 
+                return fmt_null(ctx);
+
+        FMT_STRING(ctx, "[");
+
+        unsigned long long ptr;
+        int i = 0;
+
+        while (1) {
+                if (read_tracee_mem(ctx->tracee, (void *)(addr + i * sizeof(void *)), &ptr, sizeof(ptr)) <= 0) {
+                        FMT_STRING(ctx, "<failed>");
+                        break;
+                }
+
+                if (ptr == 0) 
+                        break;
+
+                if (i > 0) 
+                        FMT_SEPARATOR(ctx);
+
+                FMT_CSTRING_MEM(ctx, ptr); 
+
+                i++;
+        }
+
+        FMT_STRING(ctx, "]");
+        return 0;
+}
+
 static int fmt_array_el(struct parser_ctx_struct *ctx, struct el_info *el, void *element)
 {
         switch (el->type)

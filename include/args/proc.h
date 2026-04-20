@@ -8,9 +8,11 @@
         X(wait4,      61,  1, 1) \
         X(waitid,     247, 1, 1) \
         X(clone,      56,  1, 0) \
-        X(clone3,     435, 1, 0)
+        X(clone3,     435, 1, 0) \
+        X(execve,     59,  1, 0) \
+        X(execveat,   322, 1, 0)
 
-#define PROC_SYSCALL_COUNT 6
+#define PROC_SYSCALL_COUNT 8
 
 #define X(name, nr, has_enter, has_exit) \
         DEFINE_SYSCALL_ENTER_PARSER(name);

@@ -4,6 +4,8 @@
 
 #include "parser/args.h"
 #include "args/helpers.h"
+#include "args/array.h"
+#include "args/fs/flags.h"
 
 #include "args/proc.h"
 
@@ -101,6 +103,34 @@ DEFINE_SYSCALL_ENTER_PARSER(clone3)
         FMT_CLONE_ARGS_STRUCT(ctx, args[0]);
         FMT_SEPARATOR(ctx);
         FMT_LLU(ctx, args[1]);
+
+        return 0;
+}
+
+/* execve(const char *pathname, char *const argv[], char *const envp[]) */
+DEFINE_SYSCALL_ENTER_PARSER(execve)
+{
+        FMT_CSTRING_MEM(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_ARR(ctx, args[1]);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_ARR(ctx, args[2]);
+
+        return 0;
+}
+
+/* execveat(int dirfd, const char *pathname, char *const argv[], char *const envp[], int flags) */
+DEFINE_SYSCALL_ENTER_PARSER(execveat)
+{
+        FMT_FD(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_CSTRING_MEM(ctx, args[1]);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_ARR(ctx, args[2]);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING_ARR(ctx, args[3]);
+        FMT_SEPARATOR(ctx);
+        FMT_AT_FLAGS(ctx, args[4]);
 
         return 0;
 }
