@@ -1,6 +1,7 @@
 #define _GNU_SOURCE
 
 #include <signal.h>
+#include <linux/sched.h>
 #include <sys/resource.h>
 
 #include "args/proc/struct.h"
@@ -32,6 +33,17 @@ DEFINE_FIELDS_ARRAY(siginfo_fields) = {
         INIT_FIELD_INFO_INT(siginfo_t, si_code)
 };
 
+DEFINE_FIELDS_ARRAY(clone_args_fields) = {
+        INIT_FIELD_INFO_CLONE_FLAGS(struct clone_args, flags),
+        INIT_FIELD_INFO_PTR(struct clone_args, pidfd),
+        INIT_FIELD_INFO_PTR(struct clone_args, child_tid),
+        INIT_FIELD_INFO_PTR(struct clone_args, parent_tid),
+        INIT_FIELD_INFO_SIG(struct clone_args, exit_signal),
+        INIT_FIELD_INFO_PTR(struct clone_args, stack),
+        INIT_FIELD_INFO_ULONG(struct clone_args, stack_size),
+        INIT_FIELD_INFO_PTR(struct clone_args, tls)
+};
+
 int fmt_rusage_struct(struct parser_ctx_struct *ctx, struct rusage *rusage)
 {
         return fmt_struct_generic(ctx, rusage, rusage_fields, FIELDS_ARR_SIZE(rusage_fields));
@@ -40,4 +52,9 @@ int fmt_rusage_struct(struct parser_ctx_struct *ctx, struct rusage *rusage)
 int fmt_siginfo_struct(struct parser_ctx_struct *ctx, siginfo_t *siginfo)
 {
         return fmt_struct_generic(ctx, siginfo, siginfo_fields, FIELDS_ARR_SIZE(siginfo_fields));
+}
+
+int fmt_clone_args_struct(struct parser_ctx_struct *ctx, struct clone_args *cl_args)
+{
+        return fmt_struct_generic(ctx, cl_args, clone_args_fields, FIELDS_ARR_SIZE(clone_args_fields));
 }

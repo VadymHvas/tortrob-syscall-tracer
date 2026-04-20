@@ -78,3 +78,29 @@ DEFINE_SYSCALL_EXIT_PARSER(waitid)
 
         return 0;
 }
+
+/* clone(unsigned long flags,
+           void *child_stack,
+           int *ptid,
+           int *ctid,
+           unsigned long newtls) */
+DEFINE_SYSCALL_ENTER_PARSER(clone)
+{
+        FMT_STRING(ctx, "flags=");
+        FMT_CLONE_FLAGS(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_STRING(ctx, "child_stack=");
+        FMT_ADDR(ctx, args[1]);
+
+        return 0;
+}
+
+/* clone3(struct clone_args *cl_args, size_t size) */
+DEFINE_SYSCALL_ENTER_PARSER(clone3)
+{
+        FMT_CLONE_ARGS_STRUCT(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_LLU(ctx, args[1]);
+
+        return 0;
+}
