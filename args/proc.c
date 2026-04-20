@@ -134,3 +134,35 @@ DEFINE_SYSCALL_ENTER_PARSER(execveat)
 
         return 0;
 }
+
+/* kill(pid_t pid, int sig) */
+DEFINE_SYSCALL_ENTER_PARSER(kill)
+{
+        FMT_INT(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_SIGNAL_NAME(ctx, args[1]);
+
+        return 0;
+}
+
+/* tkill(pid_t pid, int sig) [DEPRECATED] */
+DEFINE_SYSCALL_ENTER_PARSER(tkill)
+{
+        FMT_INT(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_SIGNAL_NAME(ctx, args[1]);
+
+        return 0;
+}
+
+/* tgkill(pid_t tgid, pid_t tid, int sig) */
+DEFINE_SYSCALL_ENTER_PARSER(tgkill)
+{
+        FMT_INT(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_INT(ctx, args[1]);
+        FMT_SEPARATOR(ctx);
+        FMT_SIGNAL_NAME(ctx, args[2]);
+
+        return 0;
+}
