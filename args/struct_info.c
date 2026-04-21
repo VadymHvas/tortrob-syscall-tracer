@@ -6,6 +6,7 @@
  */
 
 #include <stdlib.h>
+#include <signal.h>
 #include <sys/types.h>
 
 #include "args/struct_info.h"
@@ -85,10 +86,10 @@ static unsigned long long read_field(void *ptr, field_type type)
                 return *(ino_t *)ptr;
         case TYPE_MODE:  
                 return *(mode_t *)ptr;
-        case TYPE_DEV:   
+        case TYPE_DEV:
                 return *(dev_t *)ptr;
         case TYPE_PTR:   
-                return (unsigned long long)*(void **)ptr;
+                return (unsigned long long)ptr;
         }
     return 0;
 }

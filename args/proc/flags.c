@@ -36,6 +36,19 @@ DEFINE_FLAGS_ARRAY(clone_flags) = {
         INIT_FLAG_INFO(CLONE_CHILD_SETTID),
 };
 
+DEFINE_FLAGS_ARRAY(sigaction_flags) = {
+        INIT_FLAG_INFO(SA_NOCLDSTOP),
+        INIT_FLAG_INFO(SA_NOCLDWAIT),
+        INIT_FLAG_INFO(SA_SIGINFO),
+        INIT_FLAG_INFO(SA_ONSTACK),
+        INIT_FLAG_INFO(SA_RESTART),
+        INIT_FLAG_INFO(SA_NODEFER),
+        INIT_FLAG_INFO(SA_RESETHAND),
+        INIT_FLAG_INFO(SA_NOMASK),
+        INIT_FLAG_INFO(SA_ONESHOT),
+        INIT_FLAG_INFO(SA_INTERRUPT)
+};
+
 int fmt_wait4_flags(struct parser_ctx_struct *ctx, int flags)
 {
         return fmt_flags_generic(ctx, flags, wait4_flags, FLAGS_ARR_SIZE(wait4_flags), 1); 
@@ -44,4 +57,9 @@ int fmt_wait4_flags(struct parser_ctx_struct *ctx, int flags)
 int fmt_clone_flags(struct parser_ctx_struct *ctx, unsigned long flags)
 {
         return fmt_flags_generic(ctx, flags, clone_flags, FLAGS_ARR_SIZE(clone_flags), 1); 
+}
+
+int fmt_sigaction_flags(struct parser_ctx_struct *ctx, int flags)
+{
+        return fmt_flags_generic(ctx, flags, sigaction_flags, FLAGS_ARR_SIZE(sigaction_flags), 1); 
 }

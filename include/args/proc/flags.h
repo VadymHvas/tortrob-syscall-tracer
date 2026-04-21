@@ -7,3 +7,4 @@
 
 int fmt_wait4_flags(struct parser_ctx_struct *ctx, int flags);
 int fmt_clone_flags(struct parser_ctx_struct *ctx, unsigned long flags);
+int fmt_sigaction_flags(struct parser_ctx_struct *ctx, int flags);

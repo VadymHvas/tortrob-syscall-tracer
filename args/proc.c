@@ -166,3 +166,21 @@ DEFINE_SYSCALL_ENTER_PARSER(tgkill)
 
         return 0;
 }
+
+/* rt_sigaction(int sig, const struct sigaction *act, struct sigaction *oldact) */
+DEFINE_SYSCALL_ENTER_PARSER(rt_sigaction)
+{
+        FMT_SIGNAL_NAME(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_SIGACTION_STRUCT(ctx, args[1]);
+        FMT_SEPARATOR(ctx);
+
+        return 0;
+}
+
+DEFINE_SYSCALL_EXIT_PARSER(rt_sigaction)
+{
+        FMT_STRUCT_IF_OK(FMT_SIGACTION_STRUCT, ctx, args[2], ctx->retval);
+        
+        return 0;
+}

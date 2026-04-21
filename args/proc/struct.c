@@ -44,6 +44,12 @@ DEFINE_FIELDS_ARRAY(clone_args_fields) = {
         INIT_FIELD_INFO_PTR(struct clone_args, tls)
 };
 
+DEFINE_FIELDS_ARRAY(sigaction_fields) = {
+        INIT_FIELD_INFO_PTR(struct sigaction, sa_handler),
+        INIT_FIELD_INFO_SIGSET(struct sigaction, sa_mask),
+        INIT_FIELD_INFO_SA_FLAGS(struct sigaction, sa_flags),
+};
+
 int fmt_rusage_struct(struct parser_ctx_struct *ctx, struct rusage *rusage)
 {
         return fmt_struct_generic(ctx, rusage, rusage_fields, FIELDS_ARR_SIZE(rusage_fields));
@@ -57,4 +63,9 @@ int fmt_siginfo_struct(struct parser_ctx_struct *ctx, siginfo_t *siginfo)
 int fmt_clone_args_struct(struct parser_ctx_struct *ctx, struct clone_args *cl_args)
 {
         return fmt_struct_generic(ctx, cl_args, clone_args_fields, FIELDS_ARR_SIZE(clone_args_fields));
+}
+
+int fmt_sigaction_struct(struct parser_ctx_struct *ctx, struct sigaction *act)
+{
+        return fmt_struct_generic(ctx, act, sigaction_fields, FIELDS_ARR_SIZE(sigaction_fields));
 }
