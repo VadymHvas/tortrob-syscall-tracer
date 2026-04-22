@@ -2,16 +2,20 @@
  * args/proc.c - Implementation of process-related syscall parsers.
  */
 
+#include <signal.h>
+
 #include "parser/args.h"
 #include "args/helpers.h"
 #include "args/array.h"
 #include "args/fs/flags.h"
+#include "args/fs/struct.h"
 
 #include "args/proc.h"
 
 #include "args/proc/flags.h"
 #include "args/proc/struct.h"
 #include "args/proc/value.h"
+#include "args/proc/mask.h"
 
 const struct parser_struct proc_syscalls[] = {
 #define X(name, nr, has_enter, has_exit) \
@@ -182,5 +186,63 @@ DEFINE_SYSCALL_EXIT_PARSER(rt_sigaction)
 {
         FMT_STRUCT_IF_OK(FMT_SIGACTION_STRUCT, ctx, args[2], ctx->retval);
         
+        return 0;
+}
+
+/* rt_sigpending(sigset_t *uset, size_t sigsetsize) */
+DEFINE_SYSCALL_ENTER_PARSER(rt_sigpending)
+{
+        FMT_SIGSET(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_LLU(ctx, args[1]);
+
+        return 0;
+}
+
+/* rt_sigtimedwait(const sigset_t *set, siginfo_t *info, const struct timespec *timeout, size_t sigsetsize) */
+DEFINE_SYSCALL_ENTER_PARSER(rt_sigtimedwait)
+{
+        FMT_SIGSET(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+
+        return 0;
+}
+
+DEFINE_SYSCALL_EXIT_PARSER(rt_sigtimedwait)
+{
+        FMT_STRUCT_IF_OK(FMT_SIGINFO_STRUCT, ctx, args[1], ctx->retval);
+        FMT_SEPARATOR(ctx);
+        FMT_STRUCT_IF_OK(FMT_TIMESPEC_STRUCT, ctx, args[2], ctx->retval);
+        FMT_SEPARATOR(ctx);
+        FMT_LLU(ctx, args[3]);
+
+        return 0;
+}
+
+/* rt_sigqueueinfo(pid_t pid, int sig, const siginfo_t *info) */
+DEFINE_SYSCALL_ENTER_PARSER(rt_sigqueueinfo)
+{
+        FMT_INT(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_SIGNAL_NAME(ctx, args[1]);
+        FMT_SEPARATOR(ctx);
+
+        return 0;
+}
+
+DEFINE_SYSCALL_EXIT_PARSER(rt_sigqueueinfo)
+{
+        FMT_STRUCT_IF_OK(FMT_SIGINFO_STRUCT, ctx, args[2], ctx->retval);
+
+        return 0;
+}
+
+/* rt_sigsuspend(const sigset_t *sigset, size_t sigsetsize) */
+DEFINE_SYSCALL_ENTER_PARSER(rt_sigsuspend)
+{
+        FMT_SIGSET(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_LLU(ctx, args[1]);
+
         return 0;
 }
