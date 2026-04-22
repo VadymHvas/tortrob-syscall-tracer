@@ -15,6 +15,12 @@ DEFINE_VALUES_ARRAY(idtypes) = {
         INIT_VALUE(P_PGID)
 };
 
+DEFINE_VALUES_ARRAY(signal_masks) = {
+        INIT_VALUE(SIG_BLOCK),
+        INIT_VALUE(SIG_UNBLOCK),
+        INIT_VALUE(SIG_SETMASK)
+};
+
 int fmt_wait4_status(struct parser_ctx_struct *ctx, unsigned long long addr)
 {
         FMT_STRING(ctx, "[");
@@ -156,4 +162,9 @@ int fmt_sig_name(struct parser_ctx_struct *ctx, int sig)
                 FMT_STRING(ctx, ")");
                 break;
         }
+}
+
+int fmt_sigprocmask_how(struct parser_ctx_struct *ctx, int how)
+{
+        return fmt_value_generic(ctx, how, signal_masks, VALUES_ARR_SIZE(signal_masks));
 }

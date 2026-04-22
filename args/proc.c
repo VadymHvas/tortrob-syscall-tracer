@@ -189,6 +189,20 @@ DEFINE_SYSCALL_EXIT_PARSER(rt_sigaction)
         return 0;
 }
 
+/* rt_sigprocmask(int how, sigset_t *nset, sigset_t *oset, size_t sigsetsize) */
+DEFINE_SYSCALL_ENTER_PARSER(rt_sigprocmask)
+{
+        FMT_SIGPROCMASK_HOW(ctx, args[0]);
+        FMT_SEPARATOR(ctx);
+        FMT_SIGSET(ctx, args[1]);
+        FMT_SEPARATOR(ctx);
+        FMT_SIGSET(ctx, args[2]);
+        FMT_SEPARATOR(ctx);
+        FMT_LLU(ctx, args[3]);
+
+        return 0;
+}
+
 /* rt_sigpending(sigset_t *uset, size_t sigsetsize) */
 DEFINE_SYSCALL_ENTER_PARSER(rt_sigpending)
 {
