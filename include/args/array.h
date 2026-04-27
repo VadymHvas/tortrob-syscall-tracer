@@ -12,6 +12,9 @@
         struct el_info el = INIT_EL_INFO(type, type_size, fmt_struct_func); \
         TRY_FMT(fmt_array_sized_common, ctx, addr, size, el)
 
+#define FMT_STRING_ARR(ctx, addr) \
+        TRY_FMT(fmt_string_array, ctx, addr)
+
 #define FMT_SIZED_ARR_FD(ctx, addr, size) FMT_SIZED_ARR(ctx, addr, size, EL_FD, sizeof(int), NULL)
 
 /**
@@ -65,3 +68,5 @@ struct el_info {
  */
 int fmt_array_sized_common(struct parser_ctx_struct *ctx, 
                            unsigned long long addr, size_t size, struct el_info el);
+
+int fmt_string_array(struct parser_ctx_struct *ctx, unsigned long long addr);

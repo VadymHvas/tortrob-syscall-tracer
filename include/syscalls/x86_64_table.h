@@ -250,7 +250,7 @@ static const struct syscall_entry syscall_table[] = {
     [244] = { .nr = 244, .name = "mq_notify", 2 },
     [245] = { .nr = 245, .name = "mq_getsetattr", 3 },
     [246] = { .nr = 246, .name = "kexec_load", 4 },
-    [247] = { .nr = 247, .name = "waitid", 5 },
+    [247] = { .nr = 247, .name = "waitid", 4 },
     [248] = { .nr = 248, .name = "add_key", 5 },
     [249] = { .nr = 249, .name = "request_key", 4 },
     [250] = { .nr = 250, .name = "keyctl", 5 },

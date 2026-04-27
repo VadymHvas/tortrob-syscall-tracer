@@ -45,6 +45,12 @@
 #define FMT_CSTRING_MEM(ctx, addr) TRY_FMT(fmt_cstring_from_mem, ctx, addr)
 
 #define FMT_WORD_MEM(ctx, addr) TRY_FMT(fmt_word_mem, ctx, addr)
+#define FMT_WORD_MEM_IF_OK(ctx, addr, retval) \
+        if (retval < 0) { \
+                FMT_ADDR(ctx, addr); \
+        } else { \
+                FMT_WORD_MEM(ctx, addr); \
+        }
 
 #define INIT_PARSER_CTX(var, buffer, buffer_size, tracee_pid) \
         struct parser_ctx_struct var = \

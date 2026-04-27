@@ -42,6 +42,9 @@
 #define FMT_STATFS_STRUCT(ctx, addr) \
         TRY_FMT(fmt_struct_common, ctx, fmt_statfs_struct, addr, sizeof(struct statfs))
 
+#define FMT_TIMESPEC_STRUCT(ctx, addr) \
+        TRY_FMT(fmt_struct_common, ctx, fmt_timespec_struct, addr, sizeof(struct timespec))
+
 #define FMT_FLOCK_STRUCT(ctx, addr) \
         TRY_FMT(fmt_struct_common, ctx, fmt_flock_struct, addr, sizeof(struct flock))
 

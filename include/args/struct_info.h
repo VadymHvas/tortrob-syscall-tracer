@@ -88,7 +88,7 @@ typedef enum {
         TYPE_OFF,       // off_t
         TYPE_DEV,       // dev_t
         TYPE_MODE,      // mode_t
-        TYPE_ST_MODE
+        TYPE_ST_MODE,
 } field_type;
 
 /**

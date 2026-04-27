@@ -29,6 +29,7 @@
 static int wait_and_set_tracesysgood(pid_t tracee);
 static int trace_syscall_and_wait(pid_t tracee, int *status);
 static int is_syscall_stop(int status);
+static void tracee_exit(int status);
 
 int init_trace(char **argv, struct trace_opts *opts, pid_t *tracee)
 {
@@ -50,8 +51,10 @@ void trace_loop(pid_t tracee)
         INIT_PARSER_CTX(ctx, output_buf, SYSCALL_BUF_SIZE, tracee);
 
         while (1) {
-                if (trace_syscall_and_wait(tracee, &status))
+                if (trace_syscall_and_wait(tracee, &status)) {
+                        tracee_exit(status);
                         break;
+                }
                 
                 /* 0x80 bit is set by wait_and_set_tracesysgood(). */
                 if (is_syscall_stop(status)) {
@@ -140,6 +143,14 @@ static int trace_syscall_and_wait(pid_t tracee, int *status)
                 return 1;
         
         return 0;
+}
+
+static void tracee_exit(int status)
+{
+        int exit_status = WEXITSTATUS(status);
+
+        printf(") = ?\n");
+        printf("+++ exited with %d +++\n", exit_status);
 }
 
 static int is_syscall_stop(int status)
